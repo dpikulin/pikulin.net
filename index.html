@@ -15,8 +15,8 @@
     #live-icon { font-size: 4rem; margin: 1rem 0; }
     .error { color: red; }
     canvas { max-width: 800px; margin: 2rem auto; display: block; background: white; padding: 1rem; border-radius: 8px; }
-    .csv-buttons { text-align: center; margin-top: 1rem; }
-    .csv-buttons button { margin: 0.3rem; padding: 0.5rem 1rem; border: none; border-radius: 5px; cursor: pointer; background: #004d80; color: #fff; }
+    .csv-buttons, .range-buttons { text-align: center; margin-top: 1rem; }
+    .csv-buttons button, .range-buttons button { margin: 0.3rem; padding: 0.5rem 1rem; border: none; border-radius: 5px; cursor: pointer; background: #004d80; color: #fff; }
   </style>
 </head>
 <body>
@@ -53,7 +53,19 @@
 
   <section id="archive">
     <h2>Historical Archive</h2>
-    <p>Coming soon: temperature, humidity, pressure, wind, rain, lightning</p>
+    <div class="range-buttons">
+      <p>Choose Range:</p>
+      <button onclick="loadArchive(1)">24 Hours</button>
+      <button onclick="loadArchive(7)">7 Days</button>
+      <button onclick="loadArchive(30)">30 Days</button>
+      <button onclick="loadArchive(365)">1 Year</button>
+    </div>
+    <canvas id="tempChart"></canvas>
+    <canvas id="humidityChart"></canvas>
+    <canvas id="pressureChart"></canvas>
+    <canvas id="windChart"></canvas>
+    <canvas id="precipChart"></canvas>
+    <canvas id="lightningChart"></canvas>
   </section>
 
   <section id="webcam">
@@ -65,12 +77,14 @@
     const token = 'a3808762-f028-4161-bf9d-085ed84725b8';
     const stationId = 148425;
     let trendChartInstance = null;
+    let archiveCharts = {};
 
     function showTab(tabId) {
       document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
       document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
       document.getElementById(tabId).classList.add('active');
       event.target.classList.add('active');
+      if (tabId === 'archive') loadArchive(7);
     }
 
     function getIconFromConditions(obs) {
@@ -111,25 +125,18 @@
             document.getElementById('live-weather').innerHTML =
               '<div class="error">No station data available.</div>';
           }
-        })
-        .catch(err => {
-          console.error(err);
-          document.getElementById('live-weather').innerHTML =
-            '<div class="error">Error loading weather data.</div>';
         });
     }
 
     function loadTrends(days = 1) {
       const now = Math.floor(Date.now() / 1000);
       const start = now - days * 24 * 60 * 60;
-
       fetch(`https://swd.weatherflow.com/swd/rest/observations/station/${stationId}?token=${token}&time_start=${start}&time_end=${now}`)
         .then(res => res.json())
         .then(data => {
           if (data.obs && data.obs.length > 0) {
             const times = [];
             const temps = [], humidities = [], pressures = [], winds = [], rains = [], lightning = [];
-
             data.obs.forEach(entry => {
               const ts = entry.timestamp || entry.time;
               const date = new Date(ts * 1000);
@@ -142,13 +149,10 @@
               rains.push(entry.precip || 0);
               lightning.push(entry.lightning_strike_count_last_3hr || 0);
             });
-
             if (trendChartInstance) trendChartInstance.destroy();
-            const ctx = document.getElementById('trendChart').getContext('2d');
-            trendChartInstance = new Chart(ctx, {
+            trendChartInstance = new Chart(document.getElementById('trendChart'), {
               type: 'line',
-              data: {
-                labels: times,
+              data: { labels: times,
                 datasets: [
                   { label: 'Temperature (°F)', data: temps, borderColor: '#e74c3c', fill: false },
                   { label: 'Humidity (%)', data: humidities, borderColor: '#3498db', fill: false },
@@ -158,29 +162,53 @@
                   { label: 'Lightning (3hr)', data: lightning, borderColor: '#f39c12', fill: false }
                 ]
               },
-              options: {
-                responsive: true,
-                interaction: { mode: 'index', intersect: false },
-                plugins: {
-                  legend: { display: true, onClick: (e, legendItem, legend) => {
-                    const index = legendItem.datasetIndex;
-                    const ci = legend.chart;
-                    const meta = ci.getDatasetMeta(index);
-                    meta.hidden = meta.hidden === null ? !ci.data.datasets[index].hidden : null;
-                    ci.update();
-                  }}
-                },
-                scales: { y: { beginAtZero: false } }
-              }
+              options: { plugins: { legend: { display: true } }, interaction: { mode: 'index' } }
             });
           }
+        });
+    }
+
+    function loadArchive(days = 7) {
+      const now = Math.floor(Date.now() / 1000);
+      const start = now - days * 24 * 60 * 60;
+      fetch(`https://swd.weatherflow.com/swd/rest/observations/station/${stationId}?token=${token}&time_start=${start}&time_end=${now}`)
+        .then(res => res.json())
+        .then(data => {
+          if (!data.obs) return;
+          const times = [];
+          const temps = [], humidities = [], pressures = [], winds = [], rains = [], lightning = [];
+          data.obs.forEach(entry => {
+            const ts = entry.timestamp || entry.time;
+            const date = new Date(ts * 1000);
+            const label = `${date.getMonth()+1}/${date.getDate()} ${date.getHours()}:00`;
+            times.push(label);
+            temps.push((entry.air_temperature * 9/5 + 32).toFixed(1));
+            humidities.push(entry.relative_humidity);
+            pressures.push(entry.sea_level_pressure);
+            winds.push(entry.wind_avg);
+            rains.push(entry.precip || 0);
+            lightning.push(entry.lightning_strike_count_last_3hr || 0);
+          });
+
+          const cfg = (label, dataArr, color) => ({
+            type: 'line',
+            data: { labels: times, datasets: [{ label, data: dataArr, borderColor: color, fill: false }] },
+            options: { responsive: true, plugins: { legend: { display: true } } }
+          });
+
+          if (archiveCharts.temp) Object.values(archiveCharts).forEach(c => c.destroy());
+          archiveCharts.temp = new Chart(document.getElementById('tempChart'), cfg('Temperature (°F)', temps, '#e74c3c'));
+          archiveCharts.humidity = new Chart(document.getElementById('humidityChart'), cfg('Humidity (%)', humidities, '#3498db'));
+          archiveCharts.pressure = new Chart(document.getElementById('pressureChart'), cfg('Pressure (mb)', pressures, '#2ecc71'));
+          archiveCharts.wind = new Chart(document.getElementById('windChart'), cfg('Wind (m/s)', winds, '#9b59b6'));
+          archiveCharts.precip = new Chart(document.getElementById('precipChart'), cfg('Precip (mm)', rains, '#1abc9c'));
+          archiveCharts.lightning = new Chart(document.getElementById('lightningChart'), cfg('Lightning (3hr)', lightning, '#f39c12'));
         });
     }
 
     function downloadCSV(days) {
       const now = Math.floor(Date.now() / 1000);
       const start = now - days * 24 * 60 * 60;
-
       fetch(`https://swd.weatherflow.com/swd/rest/observations/station/${stationId}?token=${token}&time_start=${start}&time_end=${now}`)
         .then(res => res.json())
         .then(data => {
@@ -192,14 +220,11 @@
             const tempF = (entry.air_temperature * 9/5 + 32).toFixed(1);
             csv += `${date.toISOString()},${tempF},${entry.relative_humidity},${entry.sea_level_pressure},${entry.wind_avg},${entry.precip || 0},${entry.lightning_strike_count_last_3hr || 0}\n`;
           });
-
           const blob = new Blob([csv], { type: 'text/csv' });
-          const url = window.URL.createObjectURL(blob);
+          const url = URL.createObjectURL(blob);
           const a = document.createElement('a');
-          a.href = url;
-          a.download = `weather_${days}d.csv`;
-          a.click();
-          window.URL.revokeObjectURL(url);
+          a.href = url; a.download = `weather_${days}d.csv`; a.click();
+          URL.revokeObjectURL(url);
         });
     }
 
