@@ -148,48 +148,52 @@
 
     // Trends chart (Temperature 24h)
     function loadTrends() {
-      fetch(`https://swd.weatherflow.com/swd/rest/observations/station/${stationId}?token=${token}`)
-        .then(res => res.json())
-        .then(data => {
-          if (data.obs && data.obs.length > 0) {
-            const times = [];
-            const temps = [];
+  fetch(`https://swd.weatherflow.com/swd/rest/observations/station/${stationId}?token=${token}&day_offset=0`)
+    .then(res => res.json())
+    .then(data => {
+      console.log('Trends API response:', data);
 
-            data.obs.forEach(entry => {
-              const date = new Date(entry.time * 1000);
-              times.push(date.getHours() + ':00');
-              temps.push((entry.air_temperature * 9/5 + 32).toFixed(1));
-            });
+      if (data.obs && data.obs.length > 0) {
+        const times = [];
+        const temps = [];
 
-            const ctx = document.getElementById('trendChart').getContext('2d');
-            new Chart(ctx, {
-              type: 'line',
-              data: {
-                labels: times,
-                datasets: [{
-                  label: 'Temperature (°F)',
-                  data: temps,
-                  borderColor: '#3366cc',
-                  backgroundColor: 'rgba(51, 102, 204, 0.1)',
-                  fill: true,
-                  tension: 0.3
-                }]
-              },
-              options: {
-                responsive: true,
-                scales: {
-                  y: {
-                    beginAtZero: false
-                  }
-                }
-              }
-            });
-          } else {
-            console.warn('No obs array found in trends API');
+        data.obs.forEach(entry => {
+          const date = new Date(entry.timestamp * 1000); // Tempest uses 'timestamp'
+          const hour = date.getHours().toString().padStart(2, '0');
+          const minute = date.getMinutes().toString().padStart(2, '0');
+          times.push(`${hour}:${minute}`);
+          temps.push((entry.air_temperature * 9/5 + 32).toFixed(1));
+        });
+
+        const ctx = document.getElementById('trendChart').getContext('2d');
+        new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: times,
+            datasets: [{
+              label: 'Temperature (°F)',
+              data: temps,
+              borderColor: '#3366cc',
+              backgroundColor: 'rgba(51, 102, 204, 0.1)',
+              fill: true,
+              tension: 0.3
+            }]
+          },
+          options: {
+            responsive: true,
+            scales: {
+              x: { ticks: { maxTicksLimit: 12 } },
+              y: { beginAtZero: false }
+            }
           }
-        })
-        .catch(err => console.error('Error loading trends:', err));
-    }
+        });
+      } else {
+        document.getElementById('trends').innerHTML += '<p class="error">No trend data available.</p>';
+      }
+    })
+    .catch(err => console.error('Error loading trends:', err));
+}
+
 
     updateLiveWeather();
     loadTrends();
