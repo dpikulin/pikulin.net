@@ -14,7 +14,9 @@
     section.active { display: block; }
     #live-icon { font-size: 4rem; margin: 1rem 0; }
     .error { color: red; }
-    canvas { max-width: 700px; margin: 1rem auto; display: block; background: white; padding: 1rem; border-radius: 8px; }
+    canvas { max-width: 800px; margin: 2rem auto; display: block; background: white; padding: 1rem; border-radius: 8px; }
+    .csv-buttons { text-align: center; margin-top: 1rem; }
+    .csv-buttons button { margin: 0.3rem; padding: 0.5rem 1rem; border: none; border-radius: 5px; cursor: pointer; background: #004d80; color: #fff; }
   </style>
 </head>
 <body>
@@ -33,8 +35,15 @@
   </section>
 
   <section id="trends">
-    <h2>Weather Trends (Last 24h)</h2>
+    <h2>Weather Trends</h2>
     <canvas id="trendChart"></canvas>
+    <div class="csv-buttons">
+      <p>Download Data as CSV:</p>
+      <button onclick="downloadCSV(1)">24 Hours</button>
+      <button onclick="downloadCSV(7)">7 Days</button>
+      <button onclick="downloadCSV(30)">30 Days</button>
+      <button onclick="downloadCSV(365)">1 Year</button>
+    </div>
   </section>
 
   <section id="forecast">
@@ -55,6 +64,7 @@
   <script>
     const token = 'a3808762-f028-4161-bf9d-085ed84725b8';
     const stationId = 148425;
+    let trendChartInstance = null;
 
     function showTab(tabId) {
       document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
@@ -109,58 +119,92 @@
         });
     }
 
-    function loadTrends() {
+    function loadTrends(days = 1) {
       const now = Math.floor(Date.now() / 1000);
-      const yesterday = now - 24 * 60 * 60;
+      const start = now - days * 24 * 60 * 60;
 
-      fetch(`https://swd.weatherflow.com/swd/rest/observations/station/${stationId}?token=${token}&time_start=${yesterday}&time_end=${now}`)
+      fetch(`https://swd.weatherflow.com/swd/rest/observations/station/${stationId}?token=${token}&time_start=${start}&time_end=${now}`)
         .then(res => res.json())
         .then(data => {
-          console.log('Trends API response:', data);
-
           if (data.obs && data.obs.length > 0) {
             const times = [];
-            const temps = [];
+            const temps = [], humidities = [], pressures = [], winds = [], rains = [], lightning = [];
 
             data.obs.forEach(entry => {
-              const date = new Date(entry.timestamp * 1000);
-              const hour = date.getHours().toString().padStart(2, '0');
-              const minute = date.getMinutes().toString().padStart(2, '0');
-              times.push(`${hour}:${minute}`);
-              temps.push(entry.air_temperature);
+              const ts = entry.timestamp || entry.time;
+              const date = new Date(ts * 1000);
+              const label = `${date.getMonth()+1}/${date.getDate()} ${date.getHours()}:00`;
+              times.push(label);
+              temps.push((entry.air_temperature * 9/5 + 32).toFixed(1));
+              humidities.push(entry.relative_humidity);
+              pressures.push(entry.sea_level_pressure);
+              winds.push(entry.wind_avg);
+              rains.push(entry.precip || 0);
+              lightning.push(entry.lightning_strike_count_last_3hr || 0);
             });
 
+            if (trendChartInstance) trendChartInstance.destroy();
             const ctx = document.getElementById('trendChart').getContext('2d');
-            new Chart(ctx, {
+            trendChartInstance = new Chart(ctx, {
               type: 'line',
               data: {
                 labels: times,
-                datasets: [{
-                  label: 'Temperature (°F)',
-                  data: temps,
-                  borderColor: '#3366cc',
-                  backgroundColor: 'rgba(51, 102, 204, 0.1)',
-                  fill: true,
-                  tension: 0.3
-                }]
+                datasets: [
+                  { label: 'Temperature (°F)', data: temps, borderColor: '#e74c3c', fill: false },
+                  { label: 'Humidity (%)', data: humidities, borderColor: '#3498db', fill: false },
+                  { label: 'Pressure (mb)', data: pressures, borderColor: '#2ecc71', fill: false },
+                  { label: 'Wind (m/s)', data: winds, borderColor: '#9b59b6', fill: false },
+                  { label: 'Precip (mm)', data: rains, borderColor: '#1abc9c', fill: false },
+                  { label: 'Lightning (3hr)', data: lightning, borderColor: '#f39c12', fill: false }
+                ]
               },
               options: {
                 responsive: true,
-                scales: {
-                  x: { ticks: { maxTicksLimit: 12 } },
-                  y: { beginAtZero: false }
-                }
+                interaction: { mode: 'index', intersect: false },
+                plugins: {
+                  legend: { display: true, onClick: (e, legendItem, legend) => {
+                    const index = legendItem.datasetIndex;
+                    const ci = legend.chart;
+                    const meta = ci.getDatasetMeta(index);
+                    meta.hidden = meta.hidden === null ? !ci.data.datasets[index].hidden : null;
+                    ci.update();
+                  }}
+                },
+                scales: { y: { beginAtZero: false } }
               }
             });
-          } else {
-            document.getElementById('trends').innerHTML += '<p class="error">No trend data available.</p>';
           }
-        })
-        .catch(err => console.error('Error loading trends:', err));
+        });
+    }
+
+    function downloadCSV(days) {
+      const now = Math.floor(Date.now() / 1000);
+      const start = now - days * 24 * 60 * 60;
+
+      fetch(`https://swd.weatherflow.com/swd/rest/observations/station/${stationId}?token=${token}&time_start=${start}&time_end=${now}`)
+        .then(res => res.json())
+        .then(data => {
+          if (!data.obs) return;
+          let csv = "Time,Temperature (°F),Humidity (%),Pressure (mb),Wind (m/s),Precip (mm),Lightning (3hr)\n";
+          data.obs.forEach(entry => {
+            const ts = entry.timestamp || entry.time;
+            const date = new Date(ts * 1000);
+            const tempF = (entry.air_temperature * 9/5 + 32).toFixed(1);
+            csv += `${date.toISOString()},${tempF},${entry.relative_humidity},${entry.sea_level_pressure},${entry.wind_avg},${entry.precip || 0},${entry.lightning_strike_count_last_3hr || 0}\n`;
+          });
+
+          const blob = new Blob([csv], { type: 'text/csv' });
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `weather_${days}d.csv`;
+          a.click();
+          window.URL.revokeObjectURL(url);
+        });
     }
 
     updateLiveWeather();
-    loadTrends();
+    loadTrends(1);
     setInterval(updateLiveWeather, 15 * 60 * 1000);
   </script>
 </body>
