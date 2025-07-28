@@ -6,52 +6,15 @@
   <title>Pikulin Weather Station</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f0f4f8;
-    }
-    nav {
-      display: flex;
-      justify-content: center;
-      background-color: #004d80;
-      padding: 1rem;
-    }
-    nav button {
-      background: #fff;
-      border: none;
-      padding: 0.5rem 1rem;
-      margin: 0 0.5rem;
-      cursor: pointer;
-      font-weight: bold;
-      border-radius: 5px;
-    }
-    nav button.active {
-      background: #ffd700;
-    }
-    section {
-      display: none;
-      padding: 2rem;
-    }
-    section.active {
-      display: block;
-    }
-    #live-icon {
-      font-size: 4rem;
-      margin: 1rem 0;
-    }
-    .error {
-      color: red;
-    }
-    canvas {
-      max-width: 700px;
-      margin: 1rem auto;
-      display: block;
-      background: white;
-      padding: 1rem;
-      border-radius: 8px;
-    }
+    body { font-family: Arial, sans-serif; margin: 0; background: #f0f4f8; }
+    nav { display: flex; justify-content: center; background: #004d80; padding: 1rem; }
+    nav button { background: #fff; border: none; padding: 0.5rem 1rem; margin: 0 0.5rem; cursor: pointer; font-weight: bold; border-radius: 5px; }
+    nav button.active { background: #ffd700; }
+    section { display: none; padding: 2rem; }
+    section.active { display: block; }
+    #live-icon { font-size: 4rem; margin: 1rem 0; }
+    .error { color: red; }
+    canvas { max-width: 700px; margin: 1rem auto; display: block; background: white; padding: 1rem; border-radius: 8px; }
   </style>
 </head>
 <body>
@@ -146,54 +109,55 @@
         });
     }
 
-    // Trends chart (Temperature 24h)
     function loadTrends() {
-  fetch(`https://swd.weatherflow.com/swd/rest/observations/station/${stationId}?token=${token}&day_offset=0`)
-    .then(res => res.json())
-    .then(data => {
-      console.log('Trends API response:', data);
+      const now = Math.floor(Date.now() / 1000);
+      const yesterday = now - 24 * 60 * 60;
 
-      if (data.obs && data.obs.length > 0) {
-        const times = [];
-        const temps = [];
+      fetch(`https://swd.weatherflow.com/swd/rest/observations/station/${stationId}?token=${token}&time_start=${yesterday}&time_end=${now}`)
+        .then(res => res.json())
+        .then(data => {
+          console.log('Trends API response:', data);
 
-        data.obs.forEach(entry => {
-          const date = new Date(entry.timestamp * 1000); // Tempest uses 'timestamp'
-          const hour = date.getHours().toString().padStart(2, '0');
-          const minute = date.getMinutes().toString().padStart(2, '0');
-          times.push(`${hour}:${minute}`);
-          temps.push((entry.air_temperature * 9/5 + 32).toFixed(1));
-        });
+          if (data.obs && data.obs.length > 0) {
+            const times = [];
+            const temps = [];
 
-        const ctx = document.getElementById('trendChart').getContext('2d');
-        new Chart(ctx, {
-          type: 'line',
-          data: {
-            labels: times,
-            datasets: [{
-              label: 'Temperature (°F)',
-              data: temps,
-              borderColor: '#3366cc',
-              backgroundColor: 'rgba(51, 102, 204, 0.1)',
-              fill: true,
-              tension: 0.3
-            }]
-          },
-          options: {
-            responsive: true,
-            scales: {
-              x: { ticks: { maxTicksLimit: 12 } },
-              y: { beginAtZero: false }
-            }
+            data.obs.forEach(entry => {
+              const date = new Date(entry.timestamp * 1000);
+              const hour = date.getHours().toString().padStart(2, '0');
+              const minute = date.getMinutes().toString().padStart(2, '0');
+              times.push(`${hour}:${minute}`);
+              temps.push(entry.air_temperature);
+            });
+
+            const ctx = document.getElementById('trendChart').getContext('2d');
+            new Chart(ctx, {
+              type: 'line',
+              data: {
+                labels: times,
+                datasets: [{
+                  label: 'Temperature (°F)',
+                  data: temps,
+                  borderColor: '#3366cc',
+                  backgroundColor: 'rgba(51, 102, 204, 0.1)',
+                  fill: true,
+                  tension: 0.3
+                }]
+              },
+              options: {
+                responsive: true,
+                scales: {
+                  x: { ticks: { maxTicksLimit: 12 } },
+                  y: { beginAtZero: false }
+                }
+              }
+            });
+          } else {
+            document.getElementById('trends').innerHTML += '<p class="error">No trend data available.</p>';
           }
-        });
-      } else {
-        document.getElementById('trends').innerHTML += '<p class="error">No trend data available.</p>';
-      }
-    })
-    .catch(err => console.error('Error loading trends:', err));
-}
-
+        })
+        .catch(err => console.error('Error loading trends:', err));
+    }
 
     updateLiveWeather();
     loadTrends();
