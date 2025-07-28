@@ -17,6 +17,7 @@
     canvas { max-width: 800px; margin: 2rem auto; display: block; background: white; padding: 1rem; border-radius: 8px; }
     .csv-buttons, .range-buttons { text-align: center; margin-top: 1rem; }
     .csv-buttons button, .range-buttons button { margin: 0.3rem; padding: 0.5rem 1rem; border: none; border-radius: 5px; cursor: pointer; background: #004d80; color: #fff; }
+    .loading { text-align: center; font-style: italic; color: #555; margin: 1rem; }
   </style>
 </head>
 <body>
@@ -36,6 +37,7 @@
 
   <section id="trends">
     <h2>Weather Trends</h2>
+    <div id="trends-loading" class="loading">Fetching trend data...</div>
     <canvas id="trendChart"></canvas>
     <div class="csv-buttons">
       <p>Download Data as CSV:</p>
@@ -60,6 +62,7 @@
       <button onclick="loadArchive(30)">30 Days</button>
       <button onclick="loadArchive(365)">1 Year</button>
     </div>
+    <div id="archive-loading" class="loading">Select a range to view archive data.</div>
     <canvas id="tempChart"></canvas>
     <canvas id="humidityChart"></canvas>
     <canvas id="pressureChart"></canvas>
@@ -129,21 +132,21 @@
     }
 
     function loadTrends(days = 1) {
+      document.getElementById('trends-loading').style.display = 'block';
       const now = Math.floor(Date.now() / 1000);
       const start = now - days * 24 * 60 * 60;
 
       fetch(`https://swd.weatherflow.com/swd/rest/observations/station/${stationId}?token=${token}&time_start=${start}&time_end=${now}`)
         .then(res => res.json())
         .then(data => {
+          document.getElementById('trends-loading').style.display = 'none';
           if (data.obs && data.obs.length > 1) {
             const times = [];
             const temps = [], humidities = [], pressures = [], winds = [], rains = [], lightning = [];
-
             data.obs.forEach(entry => {
               const ts = entry.timestamp || entry.time;
               const date = new Date(ts * 1000);
-              const label = `${date.getMonth()+1}/${date.getDate()} ${date.getHours()}:00`;
-              times.push(label);
+              times.push(`${date.getMonth()+1}/${date.getDate()} ${date.getHours()}:00`);
               temps.push((entry.air_temperature * 9/5 + 32).toFixed(1));
               humidities.push(entry.relative_humidity);
               pressures.push(entry.sea_level_pressure);
@@ -151,7 +154,6 @@
               rains.push(entry.precip || 0);
               lightning.push(entry.lightning_strike_count_last_3hr || 0);
             });
-
             if (trendChartInstance) trendChartInstance.destroy();
             trendChartInstance = new Chart(document.getElementById('trendChart'), {
               type: 'line',
@@ -165,11 +167,7 @@
                   { label: 'Lightning (3hr)', data: lightning, borderColor: '#f39c12', fill: false }
                 ]
               },
-              options: {
-                responsive: true,
-                plugins: { legend: { display: true } },
-                interaction: { mode: 'index', intersect: false }
-              }
+              options: { responsive: true, plugins: { legend: { display: true } } }
             });
           } else {
             document.getElementById('trendChart').outerHTML = "<p class='error'>No trend data available.</p>";
@@ -178,21 +176,23 @@
     }
 
     function loadArchive(days = 7) {
+      document.getElementById('archive-loading').textContent = "Fetching archive data...";
       const now = Math.floor(Date.now() / 1000);
       const start = now - days * 24 * 60 * 60;
-
       fetch(`https://swd.weatherflow.com/swd/rest/observations/station/${stationId}?token=${token}&time_start=${start}&time_end=${now}`)
         .then(res => res.json())
         .then(data => {
-          if (!data.obs || data.obs.length < 2) return;
+          document.getElementById('archive-loading').textContent = "";
+          if (!data.obs || data.obs.length < 2) {
+            document.getElementById('archive-loading').textContent = "No archive data available.";
+            return;
+          }
           const times = [];
           const temps = [], humidities = [], pressures = [], winds = [], rains = [], lightning = [];
-
           data.obs.forEach(entry => {
             const ts = entry.timestamp || entry.time;
             const date = new Date(ts * 1000);
-            const label = `${date.getMonth()+1}/${date.getDate()} ${date.getHours()}:00`;
-            times.push(label);
+            times.push(`${date.getMonth()+1}/${date.getDate()} ${date.getHours()}:00`);
             temps.push((entry.air_temperature * 9/5 + 32).toFixed(1));
             humidities.push(entry.relative_humidity);
             pressures.push(entry.sea_level_pressure);
@@ -200,13 +200,11 @@
             rains.push(entry.precip || 0);
             lightning.push(entry.lightning_strike_count_last_3hr || 0);
           });
-
           const cfg = (label, dataArr, color) => ({
             type: 'line',
             data: { labels: times, datasets: [{ label, data: dataArr, borderColor: color, fill: false }] },
             options: { responsive: true }
           });
-
           Object.values(archiveCharts).forEach(c => c.destroy && c.destroy());
           archiveCharts.temp = new Chart(document.getElementById('tempChart'), cfg('Temperature (°F)', temps, '#e74c3c'));
           archiveCharts.humidity = new Chart(document.getElementById('humidityChart'), cfg('Humidity (%)', humidities, '#3498db'));
