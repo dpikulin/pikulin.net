@@ -1,0 +1,25 @@
+<meta charset="UTF-8">
+<title>Live Weather</title>
+<style>body { font-family: sans-serif; text-align: center; padding: 2rem; background: #e7f1fc; }
+    h1 { color: #222; }
+    #weather { margin-top: 2rem; font-size: 1.2rem; }</style>
+<h1>Current Weather at Pikulin.net</h1>
+<div id="weather">Loading...</div>
+<script>const token = 'a3808762-f028-4161-bf9d-085ed84725b8';
+    const stationId = 148425;
+    fetch(`https://swd.weatherflow.com/swd/rest/observations/station/${stationId}?token=${token}`)
+      .then(res => res.json())
+      .then(data => {
+        const obs = data.stations[0].last_ob;
+        const html = `
+          <strong>Temperature:</strong> ${obs.air_temperature} °C<br>
+          <strong>Humidity:</strong> ${obs.relative_humidity} %<br>
+          <strong>Pressure:</strong> ${obs.sea_level_pressure} mb<br>
+          <strong>Wind:</strong> ${obs.wind_avg} m/s
+        `;
+        document.getElementById('weather').innerHTML = html;
+      })
+      .catch(err => {
+        document.getElementById('weather').textContent = 'Error loading data.';
+        console.error(err);
+      });</script>
