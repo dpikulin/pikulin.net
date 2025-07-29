@@ -7,7 +7,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body { font-family: Arial, sans-serif; margin: 0; background: #f0f4f8; }
-    nav { display: flex; justify-content: center; background: #004d80; padding: 1rem; flex-wrap: wrap; }
+    nav { display: flex; justify-content: center; flex-wrap: wrap; background: #004d80; padding: 1rem; }
     nav button { background: #fff; border: none; padding: 0.5rem 1rem; margin: 0.3rem; cursor: pointer; font-weight: bold; border-radius: 5px; }
     nav button.active { background: #ffd700; }
     section { display: none; padding: 1rem; }
@@ -21,6 +21,15 @@
     .forecast-card { background: white; border-radius: 8px; padding: 1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.2); text-align: center; }
     .forecast-icon { font-size: 2rem; }
     .quip { font-style: italic; color: #555; margin-top: 0.5rem; }
+    .radar-container { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+    iframe { width: 100%; height: 300px; border: none; border-radius: 8px; }
+    .alert { margin: 0.5rem 0; padding: 0.5rem; border-radius: 5px; }
+    .warning { background: #ffcccc; }
+    .watch { background: #ffe5b4; }
+    .advisory { background: #ffffcc; }
+    .info { background: #e0e0e0; }
+    .alert button { background: none; border: none; color: blue; cursor: pointer; text-decoration: underline; }
+    small { display: block; margin-top: 0.5rem; color: #333; }
   </style>
 </head>
 <body>
@@ -28,6 +37,7 @@
     <button onclick="showTab('live')" class="active">Live</button>
     <button onclick="showTab('forecast')">Forecast</button>
     <button onclick="showTab('archive')">Archive</button>
+    <button onclick="showTab('radar')">Radar & Alerts</button>
     <button onclick="showTab('webcam')">Webcam</button>
     <button id="unitToggle">Switch to Metric</button>
   </nav>
@@ -68,27 +78,47 @@
     </div>
   </section>
 
+  <section id="radar">
+    <h2>Radar & Alerts</h2>
+    <div class="radar-container">
+      <div>
+        <h3>Home (08853)</h3>
+        <iframe id="radar-home" src="https://embed.windy.com/embed2.html?lat=40.6&lon=-74.6&zoom=7&level=surface&overlay=radar"></iframe>
+        <div id="alerts-home">Loading alerts...</div>
+        <small id="updated-home"></small>
+      </div>
+      <div>
+        <h3>LBI (08008)</h3>
+        <iframe id="radar-lbi" src="https://embed.windy.com/embed2.html?lat=39.6&lon=-74.2&zoom=7&level=surface&overlay=radar"></iframe>
+        <div id="alerts-lbi">Loading alerts...</div>
+        <small id="updated-lbi"></small>
+      </div>
+    </div>
+  </section>
+
   <section id="webcam">
     <h2>Webcam</h2>
-    <p>Coming soon!</p>
+    <p>Login required — coming soon!</p>
   </section>
 
 <script>
+// === GLOBAL SETTINGS ===
 const token = 'a3808762-f028-4161-bf9d-085ed84725b8';
 const stationId = 148425;
 let unitSystem = localStorage.getItem('unitSystem') || 'imperial';
 let archiveChartInstance = null;
 
-// ---- TAB CONTROL ----
+// === TAB CONTROL ===
 function showTab(tabId) {
   document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
   document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
   document.getElementById(tabId).classList.add('active');
   event.target.classList.add('active');
   if (tabId === 'archive') loadArchive(7);
+  if (tabId === 'radar') { loadAlerts(); }
 }
 
-// ---- UNIT TOGGLE ----
+// === UNIT TOGGLE ===
 document.getElementById('unitToggle').addEventListener('click', () => {
   unitSystem = unitSystem === 'imperial' ? 'metric' : 'imperial';
   localStorage.setItem('unitSystem', unitSystem);
@@ -97,18 +127,9 @@ document.getElementById('unitToggle').addEventListener('click', () => {
   updateLiveWeather();
 });
 
-// ---- LIVE WEATHER ----
-function getIconFromConditions(obs) {
-  if (!obs) return '❓';
-  if (obs.lightning_strike_count_last_3hr > 0) return '🌩️';
-  if (obs.precip > 0) return '🌧️';
-  if (obs.wind_avg > 6) return '🌬️';
-  if (obs.air_temperature < 0) return '❄️';
-  return '☀️';
-}
-
+// === LIVE WEATHER (Tempest) ===
 function clothingAdvice(tempF, wind, humidity) {
-  let feels = tempF - (wind > 5 ? 3 : 0) + (humidity > 70 ? 2 : 0) + 5; // menopausal adjust
+  let feels = tempF - (wind > 5 ? 3 : 0) + (humidity > 70 ? 2 : 0) + 5;
   if (feels >= 80) return {emoji:'🩳',text:'Shorts weather! Stay cool today.',quip:'“Could I BE wearing any more clothes?” — Friends'};
   if (feels >= 65) return {emoji:'👕',text:'Light shirt weather. Perfect for a stroll.',quip:'“Ew, David.” — Schitt’s Creek'};
   if (feels >= 50) return {emoji:'🧥',text:'Sweater weather! A light jacket should be comfy.',quip:'“That’s what she said.” — The Office'};
@@ -126,8 +147,6 @@ function updateLiveWeather() {
       const tempF = tempC * 9/5 + 32;
       const temp = unitSystem === 'imperial' ? `${tempF.toFixed(1)} °F` : `${tempC.toFixed(1)} °C`;
       const wind = unitSystem === 'imperial' ? (obs.wind_avg*2.237).toFixed(1)+" mph" : obs.wind_avg.toFixed(1)+" m/s";
-      const icon = getIconFromConditions(obs);
-      document.getElementById('live-icon').textContent = icon;
       document.getElementById('live-weather').innerHTML = `
         <strong>Temperature:</strong> ${temp}<br>
         <strong>Humidity:</strong> ${obs.relative_humidity}%<br>
@@ -143,117 +162,59 @@ function updateLiveWeather() {
 }
 updateLiveWeather();
 
-// ---- FORECAST ----
-function mapConditionToEmoji(code) {
-  if (code === 0) return '☀️';
-  if ([1,2,3].includes(code)) return '🌤️';
-  if ([45,48].includes(code)) return '🌫️';
-  if ([51,53,55,61,63,65].includes(code)) return '🌧️';
-  if ([71,73,75].includes(code)) return '❄️';
-  if ([95,96,99].includes(code)) return '🌩️';
-  return '☁️';
-}
-function buildForecastCard(day, highF, lowF, wind, precip, code) {
-  const advice = clothingAdvice(highF, wind, 50);
-  return `
-    <div class="forecast-card">
-      <div class="forecast-icon">${mapConditionToEmoji(code)}</div>
-      <h4>${day}</h4>
-      High: ${(unitSystem==='imperial'? highF+" °F":((highF-32)*5/9).toFixed(1)+" °C")}<br>
-      Low: ${(unitSystem==='imperial'? lowF+" °F":((lowF-32)*5/9).toFixed(1)+" °C")}<br>
-      Wind: ${(unitSystem==='imperial'? wind+" mph":(wind*1.609).toFixed(1)+" km/h")}<br>
-      Rain: ${precip} mm<br>
-      ${advice.emoji} <b>${advice.text}</b>
-      <div class="quip">${advice.quip}</div>
-    </div>
-  `;
-}
-async function getForecastByZip() {
-  const zip = document.getElementById('zipInput').value;
-  const geo = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${zip}&count=1`).then(r=>r.json());
-  if (!geo.results) return;
-  const { latitude, longitude, name } = geo.results[0];
-  fetchForecast(latitude, longitude, name);
-}
-function getForecastByLocation() {
-  navigator.geolocation.getCurrentPosition(pos => {
-    fetchForecast(pos.coords.latitude, pos.coords.longitude, "Your Location");
-  });
-}
-function fetchForecast(lat, lon, place) {
-  fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,windspeed_10m_max,weathercode&timezone=auto`)
-    .then(r=>r.json()).then(data => {
-      const grid = document.getElementById('forecast-grid');
-      grid.innerHTML = "";
-      for (let i=0;i<data.daily.time.length;i++) {
-        const date = new Date(data.daily.time[i]);
-        const day = date.toLocaleDateString(undefined,{weekday:'short', month:'short', day:'numeric'});
-        const highF = data.daily.temperature_2m_max[i]*9/5+32;
-        const lowF = data.daily.temperature_2m_min[i]*9/5+32;
-        const wind = data.daily.windspeed_10m_max[i];
-        const precip = data.daily.precipitation_sum[i];
-        const code = data.daily.weathercode[i];
-        grid.innerHTML += buildForecastCard(day, highF.toFixed(1), lowF.toFixed(1), wind.toFixed(1), precip.toFixed(1), code);
-      }
-    });
+// === NOAA ALERTS ===
+const locations = [
+  { label: "Home", zip: "08853", lat: 40.6, lon: -74.6, divId: "alerts-home", updatedId: "updated-home" },
+  { label: "LBI", zip: "08008", lat: 39.6, lon: -74.2, divId: "alerts-lbi", updatedId: "updated-lbi" }
+];
+
+function severityClass(sev) {
+  if (sev === "Warning") return "warning";
+  if (sev === "Watch") return "watch";
+  if (sev === "Advisory") return "advisory";
+  return "info";
 }
 
-// ---- ARCHIVE ----
-function loadArchive(days=7) {
-  const now = Math.floor(Date.now()/1000);
-  const start = now - days*24*60*60;
-  fetch(`https://swd.weatherflow.com/swd/rest/observations/station/${stationId}?token=${token}&time_start=${start}&time_end=${now}`)
-    .then(r=>r.json()).then(data => {
-      if (!data.obs || data.obs.length<2) return;
-      const times=[],temps=[],hum=[],press=[],wind=[],rain=[],light=[];
-      data.obs.forEach(e=>{
-        const d=new Date((e.timestamp||e.time)*1000);
-        times.push(`${d.getMonth()+1}/${d.getDate()} ${d.getHours()}:00`);
-        const tF=e.air_temperature*9/5+32;
-        temps.push(unitSystem==='imperial'? tF.toFixed(1):e.air_temperature.toFixed(1));
-        hum.push(e.relative_humidity);
-        press.push(e.sea_level_pressure);
-        wind.push(unitSystem==='imperial'?(e.wind_avg*2.237).toFixed(1):(e.wind_avg).toFixed(1));
-        rain.push(e.precip||0);
-        light.push(e.lightning_strike_count_last_3hr||0);
-      });
-      if (archiveChartInstance) archiveChartInstance.destroy();
-      archiveChartInstance = new Chart(document.getElementById('archiveChart'),{
-        type:'line',
-        data:{labels:times,datasets:[
-          {label:`Temp (${unitSystem==='imperial'?'°F':'°C'})`,data:temps,borderColor:'#e74c3c',yAxisID:'y1'},
-          {label:'Humidity (%)',data:hum,borderColor:'#3498db',yAxisID:'y1'},
-          {label:'Pressure (mb)',data:press,borderColor:'#2ecc71',yAxisID:'y1'},
-          {label:`Wind (${unitSystem==='imperial'?'mph':'m/s'})`,data:wind,borderColor:'#9b59b6',yAxisID:'y1'},
-          {label:'Precip (mm)',data:rain,borderColor:'#1abc9c',yAxisID:'y2'},
-          {label:'Lightning (3hr)',data:light,borderColor:'#f39c12',yAxisID:'y2'}
-        ]},
-        options:{responsive:true,
-          plugins:{legend:{display:true}},
-          scales:{y1:{type:'linear',position:'left'},y2:{type:'linear',position:'right'}}
-        }
-      });
-    });
+async function loadAlerts() {
+  for (let loc of locations) {
+    try {
+      const pointData = await fetch(`https://api.weather.gov/points/${loc.lat},${loc.lon}`).then(r=>r.json());
+      const zone = pointData.properties.forecastZone.split('/').pop();
+      const alertsData = await fetch(`https://api.weather.gov/alerts/active?zone=${zone}`).then(r=>r.json());
+      const div = document.getElementById(loc.divId);
+      div.innerHTML = "";
+      if (!alertsData.features.length) {
+        div.innerHTML = "<p>No active alerts.</p>";
+      } else {
+        alertsData.features.forEach(alert => {
+          const sev = alert.properties.severity || "Info";
+          const headline = alert.properties.headline || "Weather Alert";
+          const desc = alert.properties.description || "";
+          const id = Math.random().toString(36).substr(2,9);
+          div.innerHTML += `
+            <div class="alert ${severityClass(sev)}">
+              <b>${headline}</b><br>
+              <span>${desc.split(".")[0]}...</span>
+              <button onclick="document.getElementById('${id}').style.display='block'">Read More</button>
+              <div id="${id}" style="display:none;">${desc}</div>
+            </div>
+          `;
+        });
+      }
+      document.getElementById(loc.updatedId).innerText = "Last updated: " + new Date().toLocaleTimeString();
+    } catch(e) {
+      document.getElementById(loc.divId).innerHTML = "<p>Error loading alerts.</p>";
+      document.getElementById(loc.updatedId).innerText = "Last attempt: " + new Date().toLocaleTimeString();
+    }
+  }
 }
-function downloadCSV(days) {
-  const now=Math.floor(Date.now()/1000);
-  const start=now-days*24*60*60;
-  fetch(`https://swd.weatherflow.com/swd/rest/observations/station/${stationId}?token=${token}&time_start=${start}&time_end=${now}`)
-    .then(r=>r.json()).then(data=>{
-      if (!data.obs) return;
-      let csv="Time,Temp,Humidity,Pressure,Wind,Precip,Lightning\n";
-      data.obs.forEach(e=>{
-        const d=new Date((e.timestamp||e.time)*1000);
-        const tF=e.air_temperature*9/5+32;
-        csv+=`${d.toISOString()},${unitSystem==='imperial'?tF.toFixed(1):e.air_temperature.toFixed(1)},${e.relative_humidity},${e.sea_level_pressure},${unitSystem==='imperial'?(e.wind_avg*2.237).toFixed(1):(e.wind_avg).toFixed(1)},${e.precip||0},${e.lightning_strike_count_last_3hr||0}\n`;
-      });
-      const blob=new Blob([csv],{type:'text/csv'});
-      const url=URL.createObjectURL(blob);
-      const a=document.createElement('a');
-      a.href=url;a.download=`weather_${days}d.csv`;a.click();
-      URL.revokeObjectURL(url);
-    });
-}
+
+// Auto Refresh Radar & Alerts
+setInterval(() => {
+  document.getElementById('radar-home').src += '';
+  document.getElementById('radar-lbi').src += '';
+  loadAlerts();
+}, 15*60*1000);
 </script>
 </body>
 </html>
