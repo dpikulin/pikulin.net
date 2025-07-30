@@ -107,7 +107,9 @@
   <section id="drawing">
     <h2>Dad’s Drawing of the Day</h2>
     <div class="drawing">
-      <img id="drawingImg" src="https://drive.google.com/uc?export=view&id=1EwjUljnvcahRUNqmEE1as3Sx822hIWWT" alt="Dad’s Drawing of the Day">
+      <img id="drawingImg" 
+           src="https://drive.google.com/uc?export=view&id=11t2imTT1wOk5DcXT2LpzZAuWqJ8TxcAO" 
+           alt="Dad’s Drawing of the Day">
     </div>
   </section>
 
@@ -247,6 +249,10 @@ async function loadAlerts() {
     }
   }
 }
+
+// === Cache Busting for Dad's Drawing ===
+const drawing = document.getElementById('drawingImg');
+drawing.src = drawing.src + "&t=" + new Date().getTime();
 </script>
 </body>
 </html>
