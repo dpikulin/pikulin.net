@@ -30,6 +30,8 @@
     .info { background: #e0e0e0; }
     .alert button { background: none; border: none; color: blue; cursor: pointer; text-decoration: underline; }
     small { display: block; margin-top: 0.5rem; color: #333; }
+    .drawing { text-align: center; margin-top: 1em; }
+    .drawing img { max-width: 90%; border: 2px solid #ccc; }
   </style>
 </head>
 <body>
@@ -38,10 +40,12 @@
     <button onclick="showTab('forecast')">Forecast</button>
     <button onclick="showTab('archive')">Archive</button>
     <button onclick="showTab('radar')">Radar & Alerts</button>
+    <button onclick="showTab('drawing')">Dad’s Drawing</button>
     <button onclick="showTab('webcam')">Webcam</button>
     <button id="unitToggle">Switch to Metric</button>
   </nav>
 
+  <!-- Live -->
   <section id="live" class="active">
     <h2>Live Weather</h2>
     <div id="live-icon">⛅</div>
@@ -49,6 +53,7 @@
     <div id="clothing-advice"></div>
   </section>
 
+  <!-- Forecast -->
   <section id="forecast">
     <h2>7-Day Forecast</h2>
     <div>
@@ -59,6 +64,7 @@
     <div id="forecast-grid" class="forecast-grid"></div>
   </section>
 
+  <!-- Archive -->
   <section id="archive">
     <h2>Historical Archive</h2>
     <div class="range-buttons">
@@ -78,6 +84,7 @@
     </div>
   </section>
 
+  <!-- Radar -->
   <section id="radar">
     <h2>Radar & Alerts</h2>
     <div class="radar-container">
@@ -96,6 +103,15 @@
     </div>
   </section>
 
+  <!-- Dad's Drawing -->
+  <section id="drawing">
+    <h2>Dad’s Drawing of the Day</h2>
+    <div class="drawing">
+      <img id="drawingImg" src="https://drive.google.com/uc?export=view&id=1EwjUljnvcahRUNqmEE1as3Sx822hIWWT" alt="Dad’s Drawing of the Day">
+    </div>
+  </section>
+
+  <!-- Webcam -->
   <section id="webcam">
     <h2>Webcam</h2>
     <p>Login required — coming soon!</p>
@@ -106,7 +122,6 @@
 const token = 'a3808762-f028-4161-bf9d-085ed84725b8';
 const stationId = 148425;
 let unitSystem = localStorage.getItem('unitSystem') || 'imperial';
-let archiveChartInstance = null;
 
 // === TAB CONTROL ===
 function showTab(tabId) {
@@ -130,11 +145,11 @@ document.getElementById('unitToggle').addEventListener('click', () => {
 // === LIVE WEATHER (Tempest) ===
 function clothingAdvice(tempF, wind, humidity) {
   let feels = tempF - (wind > 5 ? 3 : 0) + (humidity > 70 ? 2 : 0) + 5;
-  if (feels >= 80) return {emoji:'🩳',text:'Shorts weather! Stay cool today.',quip:'“Could I BE wearing any more clothes?” — Friends'};
-  if (feels >= 65) return {emoji:'👕',text:'Light shirt weather. Perfect for a stroll.',quip:'“Ew, David.” — Schitt’s Creek'};
-  if (feels >= 50) return {emoji:'🧥',text:'Sweater weather! A light jacket should be comfy.',quip:'“That’s what she said.” — The Office'};
-  if (feels >= 35) return {emoji:'🧥🧣',text:'Jacket weather! Bundle up a bit.',quip:'“You can’t spare a square?” — Seinfeld'};
-  return {emoji:'🧥🧤',text:'Coat weather. Time to layer up.',quip:'“No soup for you!” — Seinfeld'};
+  if (feels >= 80) return {emoji:'🩳',text:'Shorts weather! Stay cool today.'};
+  if (feels >= 65) return {emoji:'👕',text:'Light shirt weather.'};
+  if (feels >= 50) return {emoji:'🧥',text:'Sweater weather!'};
+  if (feels >= 35) return {emoji:'🧥🧣',text:'Jacket weather!'};
+  return {emoji:'🧥🧤',text:'Coat weather. Layer up.'};
 }
 
 function updateLiveWeather() {
@@ -152,28 +167,64 @@ function updateLiveWeather() {
         <strong>Humidity:</strong> ${obs.relative_humidity}%<br>
         <strong>Pressure:</strong> ${obs.sea_level_pressure} mb<br>
         <strong>Wind:</strong> ${wind}<br>
-        <strong>Rain (24h):</strong> ${obs.precip || 0} mm<br>
-        <strong>Lightning:</strong> ${obs.lightning_strike_count_last_3hr || 0} strikes
       `;
       const advice = clothingAdvice(tempF, obs.wind_avg*2.237, obs.relative_humidity);
       document.getElementById('clothing-advice').innerHTML =
-        `${advice.emoji} <b>${advice.text}</b><br><span class="quip">${advice.quip}</span>`;
+        `${advice.emoji} <b>${advice.text}</b>`;
     });
 }
 updateLiveWeather();
 
+// === FORECAST (Tempest) ===
+async function getForecastByZip() {
+  const zip = document.getElementById('zipInput').value.trim();
+  if (!zip) return alert('Please enter a ZIP code.');
+  const geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${zip}&count=1&language=en&format=json`;
+  try {
+    const geoRes = await fetch(geoUrl);
+    const geoData = await geoRes.json();
+    if (!geoData.results || geoData.results.length === 0) throw new Error('Invalid ZIP');
+    const { latitude, longitude } = geoData.results[0];
+    fetchForecast(latitude, longitude);
+  } catch {
+    document.getElementById('forecast-grid').innerHTML = "<p>Could not find that ZIP code.</p>";
+  }
+}
+
+function getForecastByLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(pos => {
+      fetchForecast(pos.coords.latitude, pos.coords.longitude);
+    }, () => alert("Couldn't get your location."));
+  }
+}
+
+async function fetchForecast(lat, lon) {
+  const url = `https://swd.weatherflow.com/swd/rest/better_forecast?lat=${lat}&lon=${lon}&token=${token}`;
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+    const grid = document.getElementById('forecast-grid');
+    grid.innerHTML = "";
+    data.forecast.daily.forEach(day => {
+      grid.innerHTML += `
+        <div class="forecast-card">
+          <div class="forecast-icon">☀️</div>
+          <h4>${day.day_name}</h4>
+          <p>${day.conditions}</p>
+          <p>High: ${day.air_temp_high}°F<br>Low: ${day.air_temp_low}°F</p>
+        </div>`;
+    });
+  } catch {
+    document.getElementById('forecast-grid').innerHTML = "<p>Error fetching forecast.</p>";
+  }
+}
+
 // === NOAA ALERTS ===
 const locations = [
-  { label: "Home", zip: "08853", lat: 40.6, lon: -74.6, divId: "alerts-home", updatedId: "updated-home" },
-  { label: "LBI", zip: "08008", lat: 39.6, lon: -74.2, divId: "alerts-lbi", updatedId: "updated-lbi" }
+  { label: "Home", lat: 40.6, lon: -74.6, divId: "alerts-home", updatedId: "updated-home" },
+  { label: "LBI", lat: 39.6, lon: -74.2, divId: "alerts-lbi", updatedId: "updated-lbi" }
 ];
-
-function severityClass(sev) {
-  if (sev === "Warning") return "warning";
-  if (sev === "Watch") return "watch";
-  if (sev === "Advisory") return "advisory";
-  return "info";
-}
 
 async function loadAlerts() {
   for (let loc of locations) {
@@ -187,34 +238,15 @@ async function loadAlerts() {
         div.innerHTML = "<p>No active alerts.</p>";
       } else {
         alertsData.features.forEach(alert => {
-          const sev = alert.properties.severity || "Info";
-          const headline = alert.properties.headline || "Weather Alert";
-          const desc = alert.properties.description || "";
-          const id = Math.random().toString(36).substr(2,9);
-          div.innerHTML += `
-            <div class="alert ${severityClass(sev)}">
-              <b>${headline}</b><br>
-              <span>${desc.split(".")[0]}...</span>
-              <button onclick="document.getElementById('${id}').style.display='block'">Read More</button>
-              <div id="${id}" style="display:none;">${desc}</div>
-            </div>
-          `;
+          div.innerHTML += `<div class="alert">${alert.properties.headline}</div>`;
         });
       }
       document.getElementById(loc.updatedId).innerText = "Last updated: " + new Date().toLocaleTimeString();
     } catch(e) {
       document.getElementById(loc.divId).innerHTML = "<p>Error loading alerts.</p>";
-      document.getElementById(loc.updatedId).innerText = "Last attempt: " + new Date().toLocaleTimeString();
     }
   }
 }
-
-// Auto Refresh Radar & Alerts
-setInterval(() => {
-  document.getElementById('radar-home').src += '';
-  document.getElementById('radar-lbi').src += '';
-  loadAlerts();
-}, 15*60*1000);
 </script>
 </body>
 </html>
