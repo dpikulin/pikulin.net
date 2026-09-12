@@ -1,6 +1,20 @@
 const WEATHERFLOW_BASE = 'https://swd.weatherflow.com/swd/rest';
 const DEFAULT_STATION_ID = '148425';
 
+// The station-history endpoint does NOT use the same compact array layout as
+// device obs_st messages. Request only the fields we need, in an explicit
+// order, so the response can be decoded deterministically.
+const ARCHIVE_FIELDS = [
+  'timestamp',
+  'air_temp',
+  'rh',
+  'wind_avg',
+  'wind_gust',
+  'sea_level_pressure',
+  'precip_accumulation',
+  'report_interval',
+];
+
 export async function onRequestGet(context) {
   const { request, env } = context;
   const url = new URL(request.url);
@@ -45,6 +59,7 @@ async function archiveObservations(token, stationId, days) {
       time_start: String(window.start),
       time_end: String(window.end),
       bucket: String(window.bucket),
+      ob_fields: ARCHIVE_FIELDS.join(','),
       units_temp: 'f',
       units_wind: 'mph',
       units_pressure: 'mb',
@@ -54,10 +69,13 @@ async function archiveObservations(token, stationId, days) {
     const response = await fetch(`${WEATHERFLOW_BASE}/observations/stn/${encodeURIComponent(stationId)}?${params}`, { headers: { Accept: 'application/json' } });
     if (!response.ok) throw new Error(`Tempest archive failed (${response.status}) for a ${window.bucket}-minute bucket.`);
     const payload = await response.json();
-    allPoints.push(...normalizeArchivePayload(payload));
+    allPoints.push(...normalizeArchivePayload(payload, ARCHIVE_FIELDS));
   }
 
   const deduped = dedupeByTimestamp(allPoints).filter(point => point.timestamp >= start && point.timestamp <= now);
+  if (!deduped.length) {
+    throw new Error('Tempest returned archive data, but no plausible weather observations could be decoded.');
+  }
   return json({ station_id: Number(stationId), days, points: deduped }, 200, 'public, max-age=120');
 }
 
@@ -76,35 +94,47 @@ function buildWindows(start, end, days) {
   return windows;
 }
 
-function normalizeArchivePayload(payload) {
+function normalizeArchivePayload(payload, requestedFields) {
   const obs = Array.isArray(payload?.obs) ? payload.obs : [];
   if (!obs.length) return [];
 
+  // Some WeatherFlow responses are object-shaped.
   if (!Array.isArray(obs[0])) {
     return obs.map(item => ({
-      timestamp: Number(item.timestamp),
-      air_temp_f: item.air_temperature ?? item.air_temp,
-      humidity: item.relative_humidity ?? item.rh,
-      wind_mph: item.wind_avg,
-      gust_mph: item.wind_gust,
-      pressure_mb: item.sea_level_pressure ?? item.barometric_pressure ?? item.station_pressure,
-      precip_in: item.precip ?? item.precip_accumulation ?? 0,
+      timestamp: nullableNumber(item.timestamp),
+      air_temp_f: nullableNumber(item.air_temp ?? item.air_temperature),
+      humidity: nullableNumber(item.rh ?? item.relative_humidity),
+      wind_mph: nullableNumber(item.wind_avg),
+      gust_mph: nullableNumber(item.wind_gust),
+      pressure_mb: nullableNumber(item.sea_level_pressure ?? item.barometric_pressure ?? item.station_pressure),
+      precip_in: nullableNumber(item.precip_accumulation ?? item.precip) ?? 0,
     })).filter(validPoint);
   }
 
-  if (payload.type === 'obs_st' || obs[0].length >= 18) {
-    return obs.map(row => ({
-      timestamp: Number(row[0]),
-      wind_mph: nullableNumber(row[2]),
-      gust_mph: nullableNumber(row[3]),
-      pressure_mb: nullableNumber(row[6]),
-      air_temp_f: nullableNumber(row[7]),
-      humidity: nullableNumber(row[8]),
-      precip_in: nullableNumber(row[12]) || 0,
-    })).filter(validPoint);
+  // Newer station-observation responses may echo the selected field order.
+  const echoedFields = normalizeFieldList(payload.ob_fields ?? payload.obs_fields ?? payload.fields);
+  const fields = echoedFields.length === obs[0].length ? echoedFields : requestedFields;
+
+  if (fields.length !== obs[0].length) {
+    throw new Error(`Tempest archive field count mismatch (expected ${fields.length}, received ${obs[0].length}).`);
   }
 
-  throw new Error('Tempest returned an archive format this site does not recognize yet.');
+  const index = Object.fromEntries(fields.map((field, i) => [field, i]));
+  return obs.map(row => ({
+    timestamp: nullableNumber(row[index.timestamp]),
+    air_temp_f: nullableNumber(row[index.air_temp]),
+    humidity: nullableNumber(row[index.rh]),
+    wind_mph: nullableNumber(row[index.wind_avg]),
+    gust_mph: nullableNumber(row[index.wind_gust]),
+    pressure_mb: nullableNumber(row[index.sea_level_pressure]),
+    precip_in: nullableNumber(row[index.precip_accumulation]) ?? 0,
+  })).filter(validPoint);
+}
+
+function normalizeFieldList(value) {
+  if (Array.isArray(value)) return value.map(String);
+  if (typeof value === 'string') return value.split(',').map(v => v.trim()).filter(Boolean);
+  return [];
 }
 
 function nullableNumber(value) {
@@ -114,7 +144,12 @@ function nullableNumber(value) {
 }
 
 function validPoint(point) {
-  return Number.isFinite(point.timestamp) && Number.isFinite(Number(point.air_temp_f));
+  if (!Number.isFinite(point.timestamp)) return false;
+  if (!Number.isFinite(point.air_temp_f) || point.air_temp_f < -150 || point.air_temp_f > 160) return false;
+  if (point.humidity !== null && (!Number.isFinite(point.humidity) || point.humidity < 0 || point.humidity > 100)) return false;
+  if (point.pressure_mb !== null && (!Number.isFinite(point.pressure_mb) || point.pressure_mb < 800 || point.pressure_mb > 1100)) return false;
+  if (point.precip_in !== null && (!Number.isFinite(point.precip_in) || point.precip_in < 0 || point.precip_in > 10)) return false;
+  return true;
 }
 
 function dedupeByTimestamp(points) {
