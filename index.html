@@ -3,256 +3,204 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pikulin Weather Station</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 0; background: #f0f4f8; }
-    nav { display: flex; justify-content: center; flex-wrap: wrap; background: #004d80; padding: 1rem; }
-    nav button { background: #fff; border: none; padding: 0.5rem 1rem; margin: 0.3rem; cursor: pointer; font-weight: bold; border-radius: 5px; }
-    nav button.active { background: #ffd700; }
-    section { display: none; padding: 1rem; }
-    section.active { display: block; }
-    #live-icon { font-size: 4rem; margin: 1rem 0; }
-    .error { color: red; }
-    canvas { max-width: 1000px; margin: 2rem auto; display: block; background: white; padding: 1rem; border-radius: 8px; }
-    .csv-buttons, .range-buttons { text-align: center; margin-top: 1rem; }
-    .csv-buttons button, .range-buttons button, #unitToggle { margin: 0.3rem; padding: 0.5rem 1rem; border: none; border-radius: 5px; cursor: pointer; background: #004d80; color: #fff; }
-    .forecast-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); margin-top: 1rem; }
-    .forecast-card { background: white; border-radius: 8px; padding: 1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.2); text-align: center; }
-    .forecast-icon { font-size: 2rem; }
-    .quip { font-style: italic; color: #555; margin-top: 0.5rem; }
-    .radar-container { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
-    iframe { width: 100%; height: 300px; border: none; border-radius: 8px; }
-    .alert { margin: 0.5rem 0; padding: 0.5rem; border-radius: 5px; }
-    .warning { background: #ffcccc; }
-    .watch { background: #ffe5b4; }
-    .advisory { background: #ffffcc; }
-    .info { background: #e0e0e0; }
-    .alert button { background: none; border: none; color: blue; cursor: pointer; text-decoration: underline; }
-    small { display: block; margin-top: 0.5rem; color: #333; }
-    .drawing { text-align: center; margin-top: 1em; }
-    .drawing img { max-width: 90%; border: 2px solid #ccc; }
-  </style>
+  <meta name="theme-color" content="#0f2742">
+  <meta name="description" content="Pikulin Weather: backyard weather, forecasts, radar, alerts, archives, and highly opinionated wardrobe advice.">
+  <title>Pikulin Weather</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" defer></script>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
 </head>
 <body>
-  <nav>
-    <button onclick="showTab('live')" class="active">Live</button>
-    <button onclick="showTab('forecast')">Forecast</button>
-    <button onclick="showTab('archive')">Archive</button>
-    <button onclick="showTab('radar')">Radar & Alerts</button>
-    <button onclick="showTab('drawing')">Dad’s Drawing</button>
-    <button onclick="showTab('webcam')">Webcam</button>
-    <button id="unitToggle">Switch to Metric</button>
-  </nav>
-
-  <!-- Live -->
-  <section id="live" class="active">
-    <h2>Live Weather</h2>
-    <div id="live-icon">⛅</div>
-    <div id="live-weather">Loading...</div>
-    <div id="clothing-advice"></div>
-  </section>
-
-  <!-- Forecast -->
-  <section id="forecast">
-    <h2>7-Day Forecast</h2>
-    <div>
-      <input type="text" id="zipInput" placeholder="Enter ZIP Code">
-      <button onclick="getForecastByZip()">Search</button>
-      <button onclick="getForecastByLocation()">Use My Location</button>
-    </div>
-    <div id="forecast-grid" class="forecast-grid"></div>
-  </section>
-
-  <!-- Archive -->
-  <section id="archive">
-    <h2>Historical Archive</h2>
-    <div class="range-buttons">
-      <p>Choose Range:</p>
-      <button onclick="loadArchive(1)">24 Hours</button>
-      <button onclick="loadArchive(7)">7 Days</button>
-      <button onclick="loadArchive(30)">30 Days</button>
-      <button onclick="loadArchive(365)">1 Year</button>
-    </div>
-    <canvas id="archiveChart"></canvas>
-    <div class="csv-buttons">
-      <p>Download Data as CSV:</p>
-      <button onclick="downloadCSV(1)">24 Hours</button>
-      <button onclick="downloadCSV(7)">7 Days</button>
-      <button onclick="downloadCSV(30)">30 Days</button>
-      <button onclick="downloadCSV(365)">1 Year</button>
-    </div>
-  </section>
-
-  <!-- Radar -->
-  <section id="radar">
-    <h2>Radar & Alerts</h2>
-    <div class="radar-container">
-      <div>
-        <h3>Home (08853)</h3>
-        <iframe id="radar-home" src="https://embed.windy.com/embed2.html?lat=40.6&lon=-74.6&zoom=7&level=surface&overlay=radar"></iframe>
-        <div id="alerts-home">Loading alerts...</div>
-        <small id="updated-home"></small>
+  <div class="site-shell">
+    <header class="site-header">
+      <div class="brand-wrap">
+        <div class="brand-mark" aria-hidden="true">⛅</div>
+        <div>
+          <p class="eyebrow">Backyard meteorology · Readington, NJ</p>
+          <h1>Pikulin Weather</h1>
+          <p class="tagline">Useful weather. Questionable wardrobe authority.</p>
+        </div>
       </div>
-      <div>
-        <h3>LBI (08008)</h3>
-        <iframe id="radar-lbi" src="https://embed.windy.com/embed2.html?lat=39.6&lon=-74.2&zoom=7&level=surface&overlay=radar"></iframe>
-        <div id="alerts-lbi">Loading alerts...</div>
-        <small id="updated-lbi"></small>
-      </div>
-    </div>
-  </section>
+      <button id="unitToggle" class="unit-toggle" type="button" aria-label="Switch units">°F / mph</button>
+    </header>
 
-  <!-- Dad's Drawing -->
-  <section id="drawing">
-    <h2>Dad’s Drawing of the Day</h2>
-    <div class="drawing">
-      <img id="drawingImg" 
-           src="https://drive.google.com/uc?export=view&id=11t2imTT1wOk5DcXT2LpzZAuWqJ8TxcAO" 
-           alt="Dad’s Drawing of the Day">
-    </div>
-  </section>
+    <nav class="tab-bar" aria-label="Weather site sections">
+      <button class="tab-button active" data-tab="live" type="button">Live</button>
+      <button class="tab-button" data-tab="forecast" type="button">Forecast</button>
+      <button class="tab-button" data-tab="archive" type="button">Archive</button>
+      <button class="tab-button" data-tab="radar" type="button">Radar & Alerts</button>
+      <button class="tab-button" data-tab="drawing" type="button">Dad’s Drawing</button>
+      <button class="tab-button" data-tab="webcam" type="button">Webcam</button>
+    </nav>
 
-  <!-- Webcam -->
-  <section id="webcam">
-    <h2>Webcam</h2>
-    <p>Login required — coming soon!</p>
-  </section>
+    <main>
+      <section id="live" class="tab-panel active" aria-labelledby="live-heading">
+        <div class="section-heading compact-heading">
+          <div>
+            <p class="eyebrow">Tempest station · live observation</p>
+            <h2 id="live-heading">Right now at home</h2>
+          </div>
+          <div class="live-status"><span class="pulse-dot"></span><span id="liveUpdated">Connecting…</span></div>
+        </div>
 
-<script>
-// === GLOBAL SETTINGS ===
-const token = 'a3808762-f028-4161-bf9d-085ed84725b8';
-const stationId = 148425;
-let unitSystem = localStorage.getItem('unitSystem') || 'imperial';
+        <div id="liveError" class="notice error-notice hidden" role="alert"></div>
 
-// === TAB CONTROL ===
-function showTab(tabId) {
-  document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
-  document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
-  document.getElementById(tabId).classList.add('active');
-  event.target.classList.add('active');
-  if (tabId === 'archive') loadArchive(7);
-  if (tabId === 'radar') { loadAlerts(); }
-}
+        <div class="live-layout">
+          <article class="hero-weather card">
+            <div class="hero-topline">
+              <span id="liveWeatherIcon" class="weather-emoji" aria-hidden="true">⛅</span>
+              <span class="station-label">Pikulin Backyard Station</span>
+            </div>
+            <div class="temperature-row">
+              <span id="liveTemp" class="hero-temp">--°</span>
+              <div class="feels-block">
+                <span>Feels like</span>
+                <strong id="liveFeels">--°</strong>
+              </div>
+            </div>
+            <p id="liveSummary" class="hero-summary">Fetching the backyard truth…</p>
+            <div class="mini-stats">
+              <div><span>Humidity</span><strong id="liveHumidity">--</strong></div>
+              <div><span>Pressure</span><strong id="livePressure">--</strong></div>
+              <div><span>Rain today</span><strong id="liveRain">--</strong></div>
+            </div>
+          </article>
 
-// === UNIT TOGGLE ===
-document.getElementById('unitToggle').addEventListener('click', () => {
-  unitSystem = unitSystem === 'imperial' ? 'metric' : 'imperial';
-  localStorage.setItem('unitSystem', unitSystem);
-  document.getElementById('unitToggle').innerText =
-    unitSystem === 'imperial' ? "Switch to Metric" : "Switch to Imperial";
-  updateLiveWeather();
-});
+          <article class="wardrobe-card card" id="wardrobeCard">
+            <div class="card-kicker-row">
+              <span class="card-kicker">Linda’s Wardrobe Advisory™</span>
+              <span id="wardrobeEmoji" class="wardrobe-emoji" aria-hidden="true">🧥</span>
+            </div>
+            <h3 id="wardrobeTitle">Consulting the closet council…</h3>
+            <p id="wardrobeAdvice" class="wardrobe-copy">The station is gathering evidence.</p>
+            <p id="wardrobeSource" class="wardrobe-source"></p>
+          </article>
+        </div>
 
-// === LIVE WEATHER (Tempest) ===
-function clothingAdvice(tempF, wind, humidity) {
-  let feels = tempF - (wind > 5 ? 3 : 0) + (humidity > 70 ? 2 : 0) + 5;
-  if (feels >= 80) return {emoji:'🩳',text:'Shorts weather! Stay cool today.'};
-  if (feels >= 65) return {emoji:'👕',text:'Light shirt weather.'};
-  if (feels >= 50) return {emoji:'🧥',text:'Sweater weather!'};
-  if (feels >= 35) return {emoji:'🧥🧣',text:'Jacket weather!'};
-  return {emoji:'🧥🧤',text:'Coat weather. Layer up.'};
-}
+        <div class="metric-grid" aria-label="Current weather details">
+          <article class="metric-card card"><span class="metric-label">Wind</span><strong id="windAvg">--</strong><span id="windDetail" class="metric-sub">--</span></article>
+          <article class="metric-card card"><span class="metric-label">UV index</span><strong id="uvIndex">--</strong><span id="uvDetail" class="metric-sub">--</span></article>
+          <article class="metric-card card"><span class="metric-label">Solar</span><strong id="solarRadiation">--</strong><span class="metric-sub">W/m²</span></article>
+          <article class="metric-card card"><span class="metric-label">Lightning</span><strong id="lightningCount">--</strong><span id="lightningDetail" class="metric-sub">last 3 hr</span></article>
+        </div>
+      </section>
 
-function updateLiveWeather() {
-  fetch(`https://swd.weatherflow.com/swd/rest/observations/station/${stationId}?token=${token}`)
-    .then(res => res.json())
-    .then(data => {
-      let obs = data.stations?.[0]?.last_ob || data.obs?.[0];
-      if (!obs) return;
-      const tempC = obs.air_temperature;
-      const tempF = tempC * 9/5 + 32;
-      const temp = unitSystem === 'imperial' ? `${tempF.toFixed(1)} °F` : `${tempC.toFixed(1)} °C`;
-      const wind = unitSystem === 'imperial' ? (obs.wind_avg*2.237).toFixed(1)+" mph" : obs.wind_avg.toFixed(1)+" m/s";
-      document.getElementById('live-weather').innerHTML = `
-        <strong>Temperature:</strong> ${temp}<br>
-        <strong>Humidity:</strong> ${obs.relative_humidity}%<br>
-        <strong>Pressure:</strong> ${obs.sea_level_pressure} mb<br>
-        <strong>Wind:</strong> ${wind}<br>
-      `;
-      const advice = clothingAdvice(tempF, obs.wind_avg*2.237, obs.relative_humidity);
-      document.getElementById('clothing-advice').innerHTML =
-        `${advice.emoji} <b>${advice.text}</b>`;
-    });
-}
-updateLiveWeather();
+      <section id="forecast" class="tab-panel" aria-labelledby="forecast-heading">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">7-day outlook</p>
+            <h2 id="forecast-heading">Forecast anywhere</h2>
+            <p class="section-copy">Search a ZIP code or city, or use your current location.</p>
+          </div>
+        </div>
 
-// === FORECAST (Tempest) ===
-async function getForecastByZip() {
-  const zip = document.getElementById('zipInput').value.trim();
-  if (!zip) return alert('Please enter a ZIP code.');
-  const geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${zip}&count=1&language=en&format=json`;
-  try {
-    const geoRes = await fetch(geoUrl);
-    const geoData = await geoRes.json();
-    if (!geoData.results || geoData.results.length === 0) throw new Error('Invalid ZIP');
-    const { latitude, longitude } = geoData.results[0];
-    fetchForecast(latitude, longitude);
-  } catch {
-    document.getElementById('forecast-grid').innerHTML = "<p>Could not find that ZIP code.</p>";
-  }
-}
+        <form id="forecastForm" class="search-bar">
+          <label class="sr-only" for="locationInput">ZIP code or city</label>
+          <input id="locationInput" type="text" inputmode="search" autocomplete="postal-code" placeholder="ZIP code or city, e.g. 08853" required>
+          <button class="primary-button" type="submit">Get forecast</button>
+          <button id="geoButton" class="secondary-button" type="button">Use my location</button>
+        </form>
 
-function getForecastByLocation() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(pos => {
-      fetchForecast(pos.coords.latitude, pos.coords.longitude);
-    }, () => alert("Couldn't get your location."));
-  }
-}
+        <div id="forecastNotice" class="notice hidden"></div>
+        <div id="forecastLocation" class="forecast-location hidden"></div>
+        <div id="forecastGrid" class="forecast-grid" aria-live="polite"></div>
+      </section>
 
-async function fetchForecast(lat, lon) {
-  const url = `https://swd.weatherflow.com/swd/rest/better_forecast?lat=${lat}&lon=${lon}&token=${token}`;
-  try {
-    const res = await fetch(url);
-    const data = await res.json();
-    const grid = document.getElementById('forecast-grid');
-    grid.innerHTML = "";
-    data.forecast.daily.forEach(day => {
-      grid.innerHTML += `
-        <div class="forecast-card">
-          <div class="forecast-icon">☀️</div>
-          <h4>${day.day_name}</h4>
-          <p>${day.conditions}</p>
-          <p>High: ${day.air_temp_high}°F<br>Low: ${day.air_temp_low}°F</p>
-        </div>`;
-    });
-  } catch {
-    document.getElementById('forecast-grid').innerHTML = "<p>Error fetching forecast.</p>";
-  }
-}
+      <section id="archive" class="tab-panel" aria-labelledby="archive-heading">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Actual station observations</p>
+            <h2 id="archive-heading">Weather archive</h2>
+            <p class="section-copy">This is your Tempest data, not modeled historical weather.</p>
+          </div>
+        </div>
 
-// === NOAA ALERTS ===
-const locations = [
-  { label: "Home", lat: 40.6, lon: -74.6, divId: "alerts-home", updatedId: "updated-home" },
-  { label: "LBI", lat: 39.6, lon: -74.2, divId: "alerts-lbi", updatedId: "updated-lbi" }
-];
+        <div class="range-toolbar" role="group" aria-label="Archive range">
+          <button class="range-button active" data-days="1" type="button">24 hours</button>
+          <button class="range-button" data-days="7" type="button">7 days</button>
+          <button class="range-button" data-days="30" type="button">30 days</button>
+          <button class="range-button" data-days="365" type="button">1 year</button>
+        </div>
 
-async function loadAlerts() {
-  for (let loc of locations) {
-    try {
-      const pointData = await fetch(`https://api.weather.gov/points/${loc.lat},${loc.lon}`).then(r=>r.json());
-      const zone = pointData.properties.forecastZone.split('/').pop();
-      const alertsData = await fetch(`https://api.weather.gov/alerts/active?zone=${zone}`).then(r=>r.json());
-      const div = document.getElementById(loc.divId);
-      div.innerHTML = "";
-      if (!alertsData.features.length) {
-        div.innerHTML = "<p>No active alerts.</p>";
-      } else {
-        alertsData.features.forEach(alert => {
-          div.innerHTML += `<div class="alert">${alert.properties.headline}</div>`;
-        });
-      }
-      document.getElementById(loc.updatedId).innerText = "Last updated: " + new Date().toLocaleTimeString();
-    } catch(e) {
-      document.getElementById(loc.divId).innerHTML = "<p>Error loading alerts.</p>";
-    }
-  }
-}
+        <div id="archiveNotice" class="notice hidden"></div>
+        <article class="chart-card card">
+          <div class="chart-header">
+            <div>
+              <span class="card-kicker">Temperature</span>
+              <h3 id="archiveChartTitle">Last 24 hours</h3>
+            </div>
+            <button id="downloadCsv" class="secondary-button" type="button" disabled>Download CSV</button>
+          </div>
+          <div class="chart-wrap"><canvas id="archiveChart"></canvas></div>
+        </article>
 
-// === Cache Busting for Dad's Drawing ===
-const drawing = document.getElementById('drawingImg');
-drawing.src = drawing.src + "&t=" + new Date().getTime();
-</script>
+        <div id="archiveSummary" class="metric-grid archive-summary"></div>
+      </section>
+
+      <section id="radar" class="tab-panel" aria-labelledby="radar-heading">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Radar + NOAA</p>
+            <h2 id="radar-heading">Radar & alerts</h2>
+            <p class="section-copy">Home and LBI, because apparently one weather obsession was not enough.</p>
+          </div>
+          <button id="refreshAlerts" class="secondary-button" type="button">Refresh alerts</button>
+        </div>
+
+        <div class="radar-grid">
+          <article class="radar-card card">
+            <div class="radar-card-header"><div><span class="card-kicker">Home</span><h3>Readington area</h3></div><span class="zip-chip">08853</span></div>
+            <iframe title="Radar near home" loading="lazy" src="https://embed.windy.com/embed2.html?lat=40.6&lon=-74.6&zoom=7&level=surface&overlay=radar"></iframe>
+            <div id="alerts-home" class="alerts-list"><p class="muted">Loading alerts…</p></div>
+            <small id="updated-home" class="updated-text"></small>
+          </article>
+
+          <article class="radar-card card">
+            <div class="radar-card-header"><div><span class="card-kicker">LBI</span><h3>Long Beach Island</h3></div><span class="zip-chip">08008</span></div>
+            <iframe title="Radar near Long Beach Island" loading="lazy" src="https://embed.windy.com/embed2.html?lat=39.6&lon=-74.2&zoom=7&level=surface&overlay=radar"></iframe>
+            <div id="alerts-lbi" class="alerts-list"><p class="muted">Loading alerts…</p></div>
+            <small id="updated-lbi" class="updated-text"></small>
+          </article>
+        </div>
+      </section>
+
+      <section id="drawing" class="tab-panel" aria-labelledby="drawing-heading">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Family corner</p>
+            <h2 id="drawing-heading">Dad’s Drawing of the Day</h2>
+            <p class="section-copy">The gallery plumbing is still on the rebuild list. The current drawing stays here while we give this feature a proper home.</p>
+          </div>
+        </div>
+        <article class="drawing-card card">
+          <img id="drawingImg" src="https://drive.google.com/uc?export=view&id=11t2imTT1wOk5DcXT2LpzZAuWqJ8TxcAO" alt="Dad’s Drawing of the Day">
+          <div id="drawingFallback" class="drawing-fallback hidden">
+            <span aria-hidden="true">🎨</span>
+            <h3>Gallery intermission</h3>
+            <p>The current Google Drive image link did not load. We’ll replace this with a more reliable latest-drawing feed.</p>
+          </div>
+        </article>
+      </section>
+
+      <section id="webcam" class="tab-panel" aria-labelledby="webcam-heading">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Under construction</p>
+            <h2 id="webcam-heading">Backyard webcam</h2>
+            <p class="section-copy">The camera is still in development. When it is ready, this will become the authenticated live view.</p>
+          </div>
+        </div>
+        <article class="coming-soon card">
+          <div class="coming-icon" aria-hidden="true">📹</div>
+          <h3>Camera feed coming later</h3>
+          <p>Weather first. Surveillance of squirrels second.</p>
+        </article>
+      </section>
+    </main>
+
+    <footer>
+      <span>Pikulin Weather · powered by a Tempest station, public weather data, and family-level meteorological opinions.</span>
+    </footer>
+  </div>
 </body>
 </html>
