@@ -34,3 +34,7 @@ After adding or changing secrets, redeploy so Cloudflare binds them to the Pages
 ## ChatGPT recipe workflow
 
 Finalized recipes can also be committed directly through the connected GitHub workflow. Follow `recipes/README.md`: create/update the recipe JSON and the searchable `recipes/index.json` manifest together.
+
+## Deployment note
+
+Production redeploy triggered September 12, 2026 after configuring the recipe editor secret.
