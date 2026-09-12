@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0f2742">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>Pikulin Kitchen · Recipe Editor</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="recipes.css">
+  <link rel="stylesheet" href="recipe-admin.css">
+  <script src="recipe-admin.js" defer></script>
+</head>
+<body>
+  <div class="site-shell admin-shell">
+    <header class="site-header">
+      <div class="brand-wrap">
+        <div class="brand-mark" aria-hidden="true">🔐</div>
+        <div>
+          <p class="eyebrow">Pikulin Kitchen · private editor</p>
+          <h1>Recipe Editor</h1>
+          <p class="tagline">Add or revise a recipe without touching GitHub by hand.</p>
+        </div>
+      </div>
+      <a class="header-home-link" href="recipes.html">Recipe box →</a>
+    </header>
+
+    <main class="admin-main">
+      <section id="loginPanel" class="admin-card card login-card">
+        <p class="eyebrow">Authentication required</p>
+        <h2>Kitchen access</h2>
+        <p class="section-copy">The password is checked server-side. It is never committed to the repository.</p>
+        <form id="loginForm" class="login-form">
+          <label for="adminPassword">Editor password</label>
+          <input id="adminPassword" type="password" autocomplete="current-password" required>
+          <button class="primary-button" type="submit">Unlock editor</button>
+        </form>
+        <div id="loginNotice" class="notice hidden"></div>
+      </section>
+
+      <section id="editorPanel" class="hidden">
+        <div class="admin-toolbar card">
+          <div>
+            <p class="eyebrow">Recipe repository</p>
+            <h2>Add or edit</h2>
+          </div>
+          <div class="existing-recipe-picker">
+            <label for="existingRecipe">Load existing</label>
+            <select id="existingRecipe"><option value="">New recipe</option></select>
+          </div>
+        </div>
+
+        <form id="recipeForm" class="recipe-form card">
+          <input id="recipeSlug" type="hidden">
+          <div class="form-grid">
+            <label class="field span-2"><span>Recipe title *</span><input id="recipeTitle" required maxlength="120" placeholder="Buffalo Chicken Dip"></label>
+            <label class="field span-2"><span>Short description</span><textarea id="recipeDescription" rows="2" maxlength="360" placeholder="The version worth making again."></textarea></label>
+            <label class="field"><span>Category *</span><input id="recipeCategory" list="categoryOptions" required maxlength="80" placeholder="Appetizers & Dips"></label>
+            <label class="field"><span>Tags</span><input id="recipeTags" maxlength="300" placeholder="party, hot dip, chicken"></label>
+            <label class="field"><span>Prep time</span><input id="recipePrep" maxlength="60" placeholder="15 min"></label>
+            <label class="field"><span>Cook time</span><input id="recipeCook" maxlength="60" placeholder="25 min"></label>
+            <label class="field"><span>Total time</span><input id="recipeTotal" maxlength="60" placeholder="40 min"></label>
+            <label class="field"><span>Yield</span><input id="recipeYield" maxlength="80" placeholder="Serves 8"></label>
+            <label class="field span-2"><span>Ingredients * · one per line</span><textarea id="recipeIngredients" rows="10" required placeholder="2 cups shredded chicken&#10;8 oz cream cheese&#10;..."></textarea></label>
+            <label class="field span-2"><span>Directions * · one step per line</span><textarea id="recipeSteps" rows="10" required placeholder="Mix the base ingredients.&#10;Fold in the chicken.&#10;Bake until bubbling."></textarea></label>
+            <label class="field span-2"><span>Kitchen notes</span><textarea id="recipeNotes" rows="5" maxlength="4000" placeholder="What we changed, what worked, what to do next time."></textarea></label>
+          </div>
+
+          <datalist id="categoryOptions">
+            <option value="Appetizers & Dips"><option value="Breakfast"><option value="Soups & Stews"><option value="Salads & Sides"><option value="Main Dishes"><option value="Pasta & Rice"><option value="Grilling"><option value="Sauces & Condiments"><option value="Desserts"><option value="Drinks"><option value="Other">
+          </datalist>
+
+          <div class="form-actions">
+            <button id="saveRecipe" class="primary-button" type="submit">Save recipe to Pikulin.net</button>
+            <button id="newRecipe" class="secondary-button" type="button">Clear for new recipe</button>
+            <span id="saveStatus" class="save-status"></span>
+          </div>
+        </form>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
