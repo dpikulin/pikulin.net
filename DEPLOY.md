@@ -7,10 +7,11 @@ The old site exposed the Tempest personal access token in public browser source.
 In Cloudflare:
 
 1. Workers & Pages → `pikulin-net` → Settings.
-2. Find Variables and Secrets / Environment variables.
-3. Add a production secret named `TEMPEST_TOKEN` and paste the existing Tempest personal access token.
-4. Optional: add `TEMPEST_STATION_ID=148425`. If omitted, the function already defaults to station 148425.
-5. Redeploy after adding the secret if Cloudflare does not automatically make it available to the current deployment.
+2. Choose the environment you are deploying to (`Preview` while testing, `Production` when promoting V2).
+3. Find Variables and Secrets / Environment variables.
+4. Add a secret named `TEMPEST_TOKEN` and paste the new Tempest personal access token.
+5. Optional: add `TEMPEST_STATION_ID=148425`. If omitted, the function already defaults to station 148425.
+6. Redeploy after adding the secret so it is available to the new deployment.
 
 Do **not** commit the Tempest token to GitHub.
 
@@ -25,7 +26,7 @@ Do **not** commit the Tempest token to GitHub.
 
 ## Safe rollout
 
-Before merging into `main`, a Cloudflare Pages preview deployment is ideal. Confirm:
+Before merging into `main`, use the Cloudflare Pages preview deployment for `v2-preview`. Confirm:
 
 - `/api/tempest?action=current` returns JSON, not a secret-configuration error.
 - Live data matches the Tempest app closely.
@@ -35,3 +36,7 @@ Before merging into `main`, a Cloudflare Pages preview deployment is ideal. Conf
 - Mobile navigation and cards look correct.
 
 If the archive endpoint reports an unrecognized WeatherFlow format, the live site is still safe. The function deliberately fails with a readable error rather than fabricating archive values.
+
+## Preview redeploy
+
+The `v2-preview` branch was redeployed after configuring the Preview secret so Cloudflare can bind `TEMPEST_TOKEN` to the Pages Function.
