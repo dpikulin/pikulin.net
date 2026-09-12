@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0f2742">
+  <meta name="description" content="The Pikulin family recipe box: searchable favorites, experiments worth repeating, and the food we actually cook.">
+  <title>Pikulin Kitchen</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="recipes.css">
+  <script src="recipes.js" defer></script>
+</head>
+<body>
+  <div class="site-shell recipe-shell">
+    <header class="site-header recipe-header">
+      <div class="brand-wrap">
+        <div class="brand-mark" aria-hidden="true">🍳</div>
+        <div>
+          <p class="eyebrow">Pikulin.net · family recipe box</p>
+          <h1>Pikulin Kitchen</h1>
+          <p class="tagline">The things we actually cooked, liked, and intend to find again.</p>
+        </div>
+      </div>
+      <a class="header-home-link" href="index.html">Weather →</a>
+    </header>
+
+    <main class="recipe-main">
+      <section class="recipe-hero card">
+        <div>
+          <p class="eyebrow">Search the kitchen</p>
+          <h2>What are we making?</h2>
+          <p class="section-copy">Search by recipe, ingredient, category, or tag. Categories update automatically as the collection grows.</p>
+        </div>
+        <label class="recipe-search-wrap" for="recipeSearch">
+          <span aria-hidden="true">⌕</span>
+          <input id="recipeSearch" type="search" autocomplete="off" placeholder="Try corn, dip, Blackstone, pasta…">
+        </label>
+      </section>
+
+      <div id="recipeNotice" class="notice hidden" role="status"></div>
+
+      <div class="recipe-layout">
+        <aside class="recipe-sidebar card" aria-label="Recipe categories">
+          <div class="sidebar-heading">
+            <span class="card-kicker">Categories</span>
+            <button id="clearFilters" class="text-button hidden" type="button">Clear</button>
+          </div>
+          <nav id="categoryList" class="category-list"></nav>
+        </aside>
+
+        <section class="recipe-results" aria-live="polite">
+          <div class="results-heading">
+            <div>
+              <p class="eyebrow" id="resultsEyebrow">All recipes</p>
+              <h2 id="resultsTitle">Recipe box</h2>
+            </div>
+            <span id="recipeCount" class="recipe-count"></span>
+          </div>
+          <div id="recipeGrid" class="recipe-grid"></div>
+          <div id="emptyState" class="empty-state card hidden">
+            <div aria-hidden="true">🥄</div>
+            <h3>No recipes match that yet.</h3>
+            <p>Try another search or clear the category filter.</p>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer>
+      <span>Pikulin Kitchen · family recipes, successful experiments, and only the useful amount of culinary chaos.</span>
+    </footer>
+  </div>
+
+  <dialog id="recipeDialog" class="recipe-dialog">
+    <button id="closeRecipe" class="dialog-close" type="button" aria-label="Close recipe">×</button>
+    <div id="recipeDetail" class="recipe-detail"></div>
+  </dialog>
+</body>
+</html>
