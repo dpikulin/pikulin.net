@@ -54,6 +54,7 @@ async function loadExistingRecipe() {
     $('recipeDescription').value = recipe.description || '';
     $('recipeCategory').value = recipe.category || '';
     $('recipeTags').value = (recipe.tags || []).join(', ');
+    $('recipeImage').value = recipe.image || '';
     $('recipePrep').value = recipe.prepTime || '';
     $('recipeCook').value = recipe.cookTime || '';
     $('recipeTotal').value = recipe.totalTime || '';
@@ -76,6 +77,7 @@ async function saveRecipe(event) {
     description: $('recipeDescription').value.trim(),
     category: $('recipeCategory').value.trim(),
     tags: splitCsv($('recipeTags').value),
+    image: $('recipeImage').value.trim(),
     prepTime: $('recipePrep').value.trim(),
     cookTime: $('recipeCook').value.trim(),
     totalTime: $('recipeTotal').value.trim(),
@@ -131,5 +133,5 @@ function setSaveStatus(message, error = false, success = false) {
 function splitLines(value) { return value.split('\n').map(v => v.trim()).filter(Boolean); }
 function splitCsv(value) { return value.split(',').map(v => v.trim()).filter(Boolean); }
 async function safeJson(response) { try { return await response.json(); } catch { return null; } }
-function escapeHtml(value = '') { return String(value).replace(/[&<>'"]/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' }[char])); }
+function escapeHtml(value = '') { return String(value).replace(/[&<>'\"]/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '\"':'&quot;' }[char])); }
 function escapeAttr(value = '') { return escapeHtml(value); }
