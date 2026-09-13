@@ -101,7 +101,7 @@
   display: flex;
   flex-direction: column;
   min-height: 235px;
-  padding: 20px;
+  overflow: hidden;
   border: 1px solid rgba(207, 221, 230, 0.85);
   border-radius: var(--radius-lg);
   background: rgba(255,255,255,0.96);
@@ -110,6 +110,14 @@
   transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
 }
 .recipe-card:hover { transform: translateY(-2px); border-color: rgba(40,123,181,0.32); box-shadow: var(--shadow); }
+.recipe-card-image {
+  display: block;
+  width: 100%;
+  height: 175px;
+  object-fit: cover;
+  background: var(--sky-100);
+}
+.recipe-card-body { display: flex; flex: 1; flex-direction: column; padding: 20px; }
 .recipe-card h3 { margin: 10px 0 8px; font-size: 1.25rem; line-height: 1.12; }
 .recipe-card p { color: var(--muted); line-height: 1.45; }
 .recipe-card-meta { margin-top: auto; padding-top: 16px; color: var(--muted); font-size: 0.76rem; }
@@ -138,24 +146,41 @@
   box-shadow: 0 35px 100px rgba(8,24,39,0.35);
 }
 .recipe-dialog::backdrop { background: rgba(8,24,39,0.52); backdrop-filter: blur(5px); }
-.dialog-close {
+.dialog-actions {
   position: sticky;
   top: 12px;
   z-index: 4;
+  display: flex;
   float: right;
+  gap: 7px;
+  margin: 12px 12px -54px 0;
+}
+.dialog-icon-button {
+  display: grid;
+  place-items: center;
   width: 42px;
   height: 42px;
-  margin: 12px 12px -54px 0;
+  padding: 0;
   border: 0;
   border-radius: 50%;
   background: rgba(15,39,66,0.92);
   color: #fff;
   cursor: pointer;
-  font-size: 1.7rem;
+  font-size: 1.2rem;
   line-height: 1;
 }
+#closeRecipe { font-size: 1.7rem; }
 .recipe-detail { padding: 34px; }
-.recipe-detail-head { padding-right: 42px; }
+.recipe-detail-image {
+  display: block;
+  width: calc(100% + 68px);
+  max-height: 420px;
+  margin: -34px -34px 30px;
+  object-fit: cover;
+  border-radius: 24px 24px 0 0;
+  background: var(--sky-100);
+}
+.recipe-detail-head { padding-right: 90px; }
 .recipe-detail-head h2 { margin: 8px 0 10px; font-size: clamp(2rem, 5vw, 3.2rem); }
 .recipe-detail-head .lead { max-width: 700px; color: #4b6071; font-size: 1.05rem; line-height: 1.6; }
 .recipe-stat-row { justify-content: flex-start; flex-wrap: wrap; margin: 18px 0 24px; }
@@ -182,6 +207,7 @@
   .category-button { flex: 0 0 auto; width: auto; white-space: nowrap; }
   .recipe-grid { grid-template-columns: 1fr; }
   .recipe-detail { padding: 24px 20px; }
+  .recipe-detail-image { width: calc(100% + 40px); margin: -24px -20px 24px; }
   .recipe-detail-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 520px) {
@@ -189,4 +215,38 @@
   .header-home-link { padding: 8px 11px; font-size: 0.8rem; }
   .recipe-hero { padding: 21px; }
   .results-heading { align-items: flex-start; }
+}
+
+@media print {
+  @page { margin: 0.55in; }
+  body { background: #fff !important; color: #000; }
+  body > .site-shell { display: none !important; }
+  .recipe-dialog {
+    display: block !important;
+    position: static !important;
+    width: 100% !important;
+    max-width: none !important;
+    max-height: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+  }
+  .recipe-dialog::backdrop, .dialog-actions { display: none !important; }
+  .recipe-detail { padding: 0 !important; }
+  .recipe-detail-image {
+    width: 100% !important;
+    max-height: 3.25in !important;
+    margin: 0 0 0.25in !important;
+    border-radius: 0 !important;
+    object-fit: contain !important;
+  }
+  .recipe-detail-head { padding-right: 0 !important; }
+  .recipe-detail-head h2 { font-size: 26pt !important; }
+  .recipe-stat { border-color: #bbb !important; background: #fff !important; }
+  .recipe-category-chip, .recipe-tag { border: 1px solid #bbb; background: #fff !important; color: #000 !important; }
+  .recipe-detail-grid { grid-template-columns: 0.8fr 1.2fr !important; gap: 0.35in !important; }
+  .recipe-notes { background: #fff !important; border-color: #bbb !important; break-inside: avoid; }
 }
