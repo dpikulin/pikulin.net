@@ -1,0 +1,37 @@
+{
+  "slug": "kit-kat-ice-cream",
+  "title": "Kit Kat Ice Cream",
+  "description": "Chocolate malt ice cream with chopped milk chocolate and Kit Kat pieces folded through after churning.",
+  "category": "Desserts",
+  "tags": ["ice cream", "chocolate", "Kit Kat", "malted milk"],
+  "prepTime": "",
+  "cookTime": "",
+  "totalTime": "",
+  "yield": "",
+  "ingredients": [
+    "244 g whole milk",
+    "150 g granulated sugar",
+    "10 g cocoa powder",
+    "30 g malted milk powder",
+    "0.5 g salt",
+    "54 g egg yolks (about 3 large yolks)",
+    "85 g milk chocolate, chopped",
+    "238 g heavy cream",
+    "13 g vanilla extract",
+    "About 126 g full-size Kit Kat bars (approximately 3 standard bars)"
+  ],
+  "steps": [
+    "In a saucepan, combine the milk, sugar, cocoa powder, malted milk powder, and salt. Stir and heat to a simmer until the sugar and cocoa dissolve; do not boil.",
+    "Whisk the egg yolks in a medium bowl.",
+    "Slowly drizzle about half of the hot cocoa mixture into the yolks while whisking to temper them. Return the tempered egg mixture to the saucepan and heat until thickened.",
+    "Remove from the heat and strain into a heatproof bowl. Add the chopped milk chocolate, heavy cream, and vanilla and mix well.",
+    "Cover and chill completely, preferably overnight.",
+    "Freeze according to your ice cream maker’s instructions.",
+    "Chop the Kit Kat bars into small pieces.",
+    "Transfer the churned ice cream to a container and fold in the Kit Kat pieces.",
+    "Freeze until firm. Garnish with additional Kit Kat pieces if desired."
+  ],
+  "notes": "Source: Baked Bree. Volume and count measurements were converted to approximate gram weights; Kit Kat bar mass varies by package size.",
+  "created": "2026-09-13T02:04:00.000Z",
+  "updated": "2026-09-13T02:04:00.000Z"
+}
