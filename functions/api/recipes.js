@@ -53,12 +53,16 @@ function normalizeRecipe(raw) {
   const slug = slugify(cleanText(raw.slug, 140) || title);
   if (!slug) throw badRequest('A valid recipe slug could not be created.');
 
+  const image = cleanText(raw.image, 1200);
+  if (image && !/^https?:\/\//i.test(image)) throw badRequest('Image URL must begin with http:// or https://.');
+
   return {
     slug,
     title,
     description: cleanText(raw.description, 360),
     category,
     tags: cleanList(raw.tags, 30, 60),
+    image,
     prepTime: cleanText(raw.prepTime, 60),
     cookTime: cleanText(raw.cookTime, 60),
     totalTime: cleanText(raw.totalTime, 60),
@@ -95,6 +99,7 @@ async function commitRecipe({ token, repo, branch, recipe }) {
     description: fullRecipe.description,
     category: fullRecipe.category,
     tags: fullRecipe.tags,
+    image: fullRecipe.image,
     prepTime: fullRecipe.prepTime,
     cookTime: fullRecipe.cookTime,
     totalTime: fullRecipe.totalTime,
