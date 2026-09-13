@@ -1,0 +1,29 @@
+{
+  "slug": "melting-potatoes",
+  "title": "Melting Potatoes",
+  "description": "Thick-cut Yukon Gold potatoes roasted in butter and herbs, then finished with stock and garlic until crisp-edged and creamy inside.",
+  "category": "Sides",
+  "tags": ["potatoes", "roasted", "garlic", "herbs"],
+  "prepTime": "10 minutes",
+  "cookTime": "45 minutes",
+  "totalTime": "55 minutes",
+  "yield": "4 servings",
+  "ingredients": [
+    "907 g Yukon Gold potatoes, peeled and sliced about 2.5 cm thick",
+    "57 g unsalted butter, melted",
+    "2 g fresh thyme leaves or 3 g chopped fresh rosemary",
+    "3 g kosher salt",
+    "2 g freshly ground black pepper",
+    "240 g chicken or vegetable stock",
+    "9 g garlic, smashed (about 3 cloves)"
+  ],
+  "steps": [
+    "Preheat the oven to 500°F (260°C) with the rack in the upper third. Toss the potatoes with butter, thyme or rosemary, salt, and pepper. Transfer to a 13 x 9 inch (33 x 23 cm) metal baking dish and arrange in a single layer. Do not use glass at this temperature.",
+    "Bake 15 minutes, flip the potatoes, then bake 15 minutes more.",
+    "Remove the dish from the oven and add the stock and garlic. Return to the oven at 500°F (260°C) until most of the stock is absorbed, about 15 minutes more.",
+    "Transfer to a serving platter and spoon any remaining pan liquid over the potatoes. Serve warm."
+  ],
+  "notes": "Source: Real Simple. Volume and count measurements were converted to approximate gram weights.",
+  "created": "2026-09-13T02:01:00.000Z",
+  "updated": "2026-09-13T02:01:00.000Z"
+}
