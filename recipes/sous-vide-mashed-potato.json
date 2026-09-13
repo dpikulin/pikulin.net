@@ -1,0 +1,32 @@
+{
+  "slug": "sous-vide-mashed-potato",
+  "title": "Sous Vide Mashed Potato",
+  "description": "Creamy mashed potatoes cooked sous vide with butter, cream, milk, and seasoning, with an optional baked crust finish.",
+  "category": "Sides",
+  "tags": ["potatoes", "sous vide", "mashed potatoes"],
+  "prepTime": "25 minutes",
+  "cookTime": "45 minutes",
+  "totalTime": "1 hour 10 minutes",
+  "yield": "6 servings",
+  "ingredients": [
+    "900 g potatoes",
+    "100 g butter",
+    "8 g salt",
+    "2 g onion powder, optional",
+    "200 g cream, heavy or light",
+    "50 g milk"
+  ],
+  "steps": [
+    "Heat the water bath to 190°F (88°C). Hot tap water or the stove can be used to shorten preheating time.",
+    "Peel the potatoes and cut into 1 cm slices.",
+    "Add the potatoes to a cooking bag, then add the butter, cream, milk, salt, and optional onion powder or other seasonings.",
+    "Remove the air using a vacuum sealer or the displacement method and seal the bag.",
+    "Cook in the 190°F (88°C) water bath for about 45 minutes, or until the potatoes are tender enough to mash.",
+    "Remove the potatoes from the bag and mash to the desired consistency. For a smoother texture, use a ricer or sieve.",
+    "Serve immediately. Optionally, transfer to a casserole and bake at 350°F (177°C) for about 15 minutes to develop a crust.",
+    "Optional: add rosemary or garlic to the bag for a seasoned variation."
+  ],
+  "notes": "Paprika source recipe. Liquid measures were converted to approximate gram weights.",
+  "created": "2026-09-13T02:02:00.000Z",
+  "updated": "2026-09-13T02:02:00.000Z"
+}
