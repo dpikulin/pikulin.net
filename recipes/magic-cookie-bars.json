@@ -1,0 +1,33 @@
+{
+  "slug": "magic-cookie-bars",
+  "title": "Magic Cookie Bars",
+  "description": "Graham-cracker bars layered with sweetened condensed milk, bittersweet chocolate, pecans, and coconut.",
+  "category": "Desserts",
+  "tags": ["bars", "chocolate", "coconut", "pecans"],
+  "prepTime": "",
+  "cookTime": "1 hour",
+  "totalTime": "1 hour",
+  "yield": "15 bars",
+  "ingredients": [
+    "85 g unsalted butter, melted and cooled slightly, plus more for greasing",
+    "310 g graham crackers",
+    "50 g packed light or dark brown sugar",
+    "6 g baking powder",
+    "2 g kosher salt",
+    "50 g large egg (about 1 egg, without shell)",
+    "397 g sweetened condensed milk",
+    "227 g bittersweet chocolate, chopped",
+    "110 g pecans, chopped",
+    "114 g unsweetened flaked coconut"
+  ],
+  "steps": [
+    "Heat the oven to 350°F (177°C). Butter a 13 x 9 inch (33 x 23 cm) baking pan. Line with parchment, leaving about a 2 inch (5 cm) overhang on two sides.",
+    "In a food processor, process the graham crackers until finely ground. Add the brown sugar, baking powder, and salt and pulse to combine. With the machine running, add the butter and egg and process until the crumbs are completely moistened and large clumps form.",
+    "Tip the graham cracker mixture into the prepared pan. Distribute evenly and lightly press into an even layer. Bake until set and dry, about 15 minutes.",
+    "Pour the sweetened condensed milk evenly over the crust. Sprinkle half the chocolate and half the pecans over the surface. Add the coconut in an even layer, then top with the remaining chocolate and pecans.",
+    "Bake at 350°F (177°C) until the toppings are evenly golden brown, about 25 to 30 minutes. Cool in the pan on a wire rack, then lift out using the parchment and cut into 15 bars."
+  ],
+  "notes": "Source: NYT Cooking. Volume and count measurements were converted to approximate gram weights where the original did not already provide grams.",
+  "created": "2026-09-13T02:00:00.000Z",
+  "updated": "2026-09-13T02:00:00.000Z"
+}
