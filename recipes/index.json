@@ -16,5 +16,43 @@
     "created": "2026-09-13T01:39:16.253Z",
     "updated": "2026-09-13T01:39:16.253Z",
     "searchText": "Corn Cacio y Pepe A summer flavored corn forward cacio y Pepe inspired dish. Goes great over pasta. Could also work as a dip. Sauces & Condiments Corn pepper summer 320g corn or ~3 ears 15g peppercorns 60g water Salt 625g Pasta, fettuccini works best ~125g Parmesan , freshly grated 15-30g butter, taste depending"
+  },
+  {
+    "slug": "davids-oven-reduced-tomato-sauce",
+    "title": "David’s Oven-Reduced Tomato Sauce",
+    "description": "A deep, long-cooked tomato sauce built on onion, carrot, celery, garlic, toasted tomato paste, red wine, and Parmesan, then slowly reduced in the oven.",
+    "category": "Sauces & Condiments",
+    "tags": [
+      "tomato",
+      "pasta sauce",
+      "oven reduced",
+      "batch cooking"
+    ],
+    "prepTime": "30 minutes",
+    "cookTime": "4–6 hours",
+    "totalTime": "4½–6½ hours",
+    "yield": "Large batch",
+    "created": "2026-09-13T01:15:00.000Z",
+    "updated": "2026-09-13T01:15:00.000Z",
+    "searchText": "David’s Oven-Reduced Tomato Sauce A deep, long-cooked tomato sauce built on onion, carrot, celery, garlic, toasted tomato paste, red wine, and Parmesan, then slowly reduced in the oven. Sauces & Condiments tomato pasta sauce oven reduced batch cooking 10.9 kg crushed tomatoes 800 g tomato paste 6 onions about 900 g 450 g carrots 450 g celery 25–30 g garlic 1 cup red wine Parmesan herbs seasonings"
+  },
+  {
+    "slug": "hot-elote-dip",
+    "title": "Hot Elote Dip",
+    "description": "A lighter hot elote-style corn dip built around deeply charred corn and a strained corn purée, with cotija, lime, garlic, and smoky chile instead of a heavy mayo base.",
+    "category": "Appetizers & Dips",
+    "tags": [
+      "corn",
+      "elote",
+      "hot dip",
+      "summer"
+    ],
+    "prepTime": "20 minutes",
+    "cookTime": "20 minutes",
+    "totalTime": "40 minutes",
+    "yield": "Serves 6–8",
+    "created": "2026-09-13T01:16:00.000Z",
+    "updated": "2026-09-13T01:16:00.000Z",
+    "searchText": "Hot Elote Dip A lighter hot elote-style corn dip built around deeply charred corn and a strained corn purée, with cotija, lime, garlic, and smoky chile instead of a heavy mayo base. Appetizers & Dips corn elote hot dip summer corn kernels water butter garlic cotija mayonnaise lime chipotle ancho black pepper salt"
   }
 ]
