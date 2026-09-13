@@ -1,1 +1,20 @@
-[]
+[
+  {
+    "slug": "corn-cacio-y-pepe",
+    "title": "Corn Cacio y Pepe",
+    "description": "A summer flavored corn forward cacio y Pepe inspired dish. Goes great over pasta. Could also work as a dip.",
+    "category": "Sauces & Condiments",
+    "tags": [
+      "Corn",
+      "pepper",
+      "summer"
+    ],
+    "prepTime": "20 minutes",
+    "cookTime": "15 minutes",
+    "totalTime": "35",
+    "yield": "Serves 5",
+    "created": "2026-09-13T01:39:16.253Z",
+    "updated": "2026-09-13T01:39:16.253Z",
+    "searchText": "Corn Cacio y Pepe A summer flavored corn forward cacio y Pepe inspired dish. Goes great over pasta. Could also work as a dip. Sauces & Condiments Corn pepper summer 320g corn or ~3 ears 15g peppercorns 60g water Salt 625g Pasta, fettuccini works best ~125g Parmesan , freshly grated 15-30g butter, taste depending"
+  }
+]
