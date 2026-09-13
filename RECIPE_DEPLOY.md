@@ -38,3 +38,4 @@ Finalized recipes can also be committed directly through the connected GitHub wo
 ## Deployment note
 
 Production redeploy triggered September 12, 2026 after configuring the recipe editor secret.
+Production redeploy triggered again September 12, 2026 after configuring `GITHUB_RECIPE_TOKEN`.
