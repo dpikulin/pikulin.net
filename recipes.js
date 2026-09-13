@@ -13,6 +13,7 @@ async function initRecipes() {
   });
   $('clearFilters').addEventListener('click', clearFilters);
   $('closeRecipe').addEventListener('click', () => $('recipeDialog').close());
+  $('printRecipe').addEventListener('click', () => window.print());
   $('recipeDialog').addEventListener('click', event => {
     if (event.target === $('recipeDialog')) $('recipeDialog').close();
   });
@@ -73,14 +74,18 @@ function renderRecipes() {
   $('emptyState').classList.toggle('hidden', recipes.length > 0);
   $('recipeGrid').innerHTML = recipes.map(recipe => {
     const time = totalTime(recipe);
+    const image = recipe.image ? `<img class="recipe-card-image" src="${escapeAttr(recipe.image)}" alt="${escapeAttr(recipe.title)}" loading="lazy">` : '';
     return `
-      <article class="recipe-card" tabindex="0" role="button" data-slug="${escapeAttr(recipe.slug)}" aria-label="Open ${escapeAttr(recipe.title)}">
-        <div><span class="recipe-category-chip">${escapeHtml(recipe.category || 'Other')}</span></div>
-        <h3>${escapeHtml(recipe.title)}</h3>
-        <p>${escapeHtml(recipe.description || 'A Pikulin kitchen keeper.')}</p>
-        <div class="recipe-card-meta">
-          <span>${time ? `⏱ ${escapeHtml(time)}` : 'Pikulin Kitchen'}</span>
-          <span>${recipe.yield ? escapeHtml(recipe.yield) : ''}</span>
+      <article class="recipe-card${image ? ' has-image' : ''}" tabindex="0" role="button" data-slug="${escapeAttr(recipe.slug)}" aria-label="Open ${escapeAttr(recipe.title)}">
+        ${image}
+        <div class="recipe-card-body">
+          <div><span class="recipe-category-chip">${escapeHtml(recipe.category || 'Other')}</span></div>
+          <h3>${escapeHtml(recipe.title)}</h3>
+          <p>${escapeHtml(recipe.description || 'A Pikulin kitchen keeper.')}</p>
+          <div class="recipe-card-meta">
+            <span>${time ? `⏱ ${escapeHtml(time)}` : 'Pikulin Kitchen'}</span>
+            <span>${recipe.yield ? escapeHtml(recipe.yield) : ''}</span>
+          </div>
         </div>
       </article>`;
   }).join('');
@@ -121,7 +126,9 @@ function renderRecipeDetail(recipe) {
   const tags = (recipe.tags || []).map(tag => `<span class="recipe-tag">${escapeHtml(tag)}</span>`).join('');
   const ingredients = (recipe.ingredients || []).map(item => `<li>${escapeHtml(item)}</li>`).join('');
   const steps = (recipe.steps || []).map(item => `<li>${escapeHtml(item)}</li>`).join('');
+  const image = recipe.image ? `<img class="recipe-detail-image" src="${escapeAttr(recipe.image)}" alt="${escapeAttr(recipe.title)}">` : '';
   $('recipeDetail').innerHTML = `
+    ${image}
     <header class="recipe-detail-head">
       <span class="recipe-category-chip">${escapeHtml(recipe.category || 'Other')}</span>
       <h2>${escapeHtml(recipe.title || 'Recipe')}</h2>
