@@ -133,5 +133,5 @@ function setSaveStatus(message, error = false, success = false) {
 function splitLines(value) { return value.split('\n').map(v => v.trim()).filter(Boolean); }
 function splitCsv(value) { return value.split(',').map(v => v.trim()).filter(Boolean); }
 async function safeJson(response) { try { return await response.json(); } catch { return null; } }
-function escapeHtml(value = '') { return String(value).replace(/[&<>'\"]/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '\"':'&quot;' }[char])); }
+function escapeHtml(value = '') { return String(value).replace(/[&<>'"]/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' }[char])); }
 function escapeAttr(value = '') { return escapeHtml(value); }
