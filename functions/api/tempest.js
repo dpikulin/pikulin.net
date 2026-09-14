@@ -1,5 +1,4 @@
 const WEATHERFLOW_BASE = 'https://swd.weatherflow.com/swd/rest';
-const DEFAULT_STATION_ID = '148425';
 
 // The station-history endpoint does NOT use the same compact array layout as
 // device obs_st messages. Request only the fields we need, in an explicit
@@ -15,14 +14,36 @@ const ARCHIVE_FIELDS = [
   'report_interval',
 ];
 
+const CURRENT_FIELDS = [
+  'timestamp',
+  'air_temperature',
+  'sea_level_pressure',
+  'barometric_pressure',
+  'station_pressure',
+  'relative_humidity',
+  'precip',
+  'precip_accum_last_1hr',
+  'precip_accum_local_day',
+  'precip_accum_local_yesterday',
+  'wind_avg',
+  'wind_direction',
+  'wind_gust',
+  'solar_radiation',
+  'uv',
+  'lightning_strike_count_last_3hr',
+  'lightning_strike_last_distance',
+  'feels_like',
+];
+
 export async function onRequestGet(context) {
   const { request, env } = context;
   const url = new URL(request.url);
   const action = url.searchParams.get('action') || 'current';
   const token = env.TEMPEST_TOKEN;
-  const stationId = env.TEMPEST_STATION_ID || DEFAULT_STATION_ID;
+  const stationId = env.TEMPEST_STATION_ID;
 
   if (!token) return json({ error: 'TEMPEST_TOKEN is not configured in Cloudflare Pages.' }, 500);
+  if (!stationId) return json({ error: 'TEMPEST_STATION_ID is not configured in Cloudflare Pages.' }, 500);
 
   try {
     if (action === 'current') return await currentObservation(token, stationId);
@@ -41,10 +62,42 @@ async function currentObservation(token, stationId) {
   const upstream = `${WEATHERFLOW_BASE}/observations/station/${encodeURIComponent(stationId)}?token=${encodeURIComponent(token)}`;
   const response = await fetch(upstream, { headers: { Accept: 'application/json' } });
   if (!response.ok) throw new Error(`Tempest current observation failed (${response.status}).`);
-  return new Response(await response.text(), {
-    status: 200,
-    headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'public, max-age=30' },
-  });
+  const payload = await response.json();
+  const observation = sanitizeCurrentObservation(payload);
+  if (!observation) throw new Error('Tempest returned no usable current observation.');
+
+  // Return only the weather values the browser needs. Do not proxy station
+  // metadata, identifiers, coordinates, or other upstream account details.
+  return json({ ob: observation }, 200, 'public, max-age=30');
+}
+
+function sanitizeCurrentObservation(payload) {
+  const source = payload?.obs?.[0] || payload?.stations?.[0]?.last_ob || payload?.ob || null;
+  if (!source) return null;
+
+  if (Array.isArray(source)) {
+    return {
+      timestamp: source[0],
+      wind_avg: source[2],
+      wind_gust: source[3],
+      wind_direction: source[4],
+      sea_level_pressure: source[6],
+      air_temperature: source[7],
+      relative_humidity: source[8],
+      uv: source[10],
+      solar_radiation: source[11],
+      precip: source[12],
+      lightning_strike_last_distance: source[14],
+      lightning_strike_count_last_3hr: source[15],
+      precip_accum_local_day: source[20] ?? source[18],
+    };
+  }
+
+  const sanitized = {};
+  for (const field of CURRENT_FIELDS) {
+    if (source[field] !== undefined) sanitized[field] = source[field];
+  }
+  return Object.keys(sanitized).length ? sanitized : null;
 }
 
 async function archiveObservations(token, stationId, days) {
@@ -76,7 +129,7 @@ async function archiveObservations(token, stationId, days) {
   if (!deduped.length) {
     throw new Error('Tempest returned archive data, but no plausible weather observations could be decoded.');
   }
-  return json({ station_id: Number(stationId), days, points: deduped }, 200, 'public, max-age=120');
+  return json({ days, points: deduped }, 200, 'public, max-age=120');
 }
 
 function buildWindows(start, end, days) {
