@@ -163,6 +163,29 @@ function doodleHash(value) {
   return hash >>> 0;
 }
 
+function doodleDateFromKey(key) {
+  const [year, month, day] = key.split('-').map(Number);
+  return new Date(Date.UTC(year, month - 1, day, 12));
+}
+
+function doodleIndexForDay(dayKey) {
+  if (DOODLES.length <= 1) return 0;
+
+  const epoch = new Date(Date.UTC(2026, 0, 1, 12));
+  const target = doodleDateFromKey(dayKey);
+  const dayCount = Math.max(0, Math.round((target - epoch) / 86400000));
+  let index = doodleHash('pikulin-daily-doodle|2026-01-01') % DOODLES.length;
+
+  for (let day = 1; day <= dayCount; day++) {
+    const date = new Date(epoch);
+    date.setUTCDate(epoch.getUTCDate() + day);
+    const key = date.toISOString().slice(0, 10);
+    const step = 1 + (doodleHash(`pikulin-daily-doodle-step|${key}`) % (DOODLES.length - 1));
+    index = (index + step) % DOODLES.length;
+  }
+  return index;
+}
+
 function loadDailyDoodle() {
   const image = $('drawingImg');
   if (!image || !DOODLES.length) return;
@@ -171,7 +194,7 @@ function loadDailyDoodle() {
   if (dayKey === activeDoodleKey) return;
   activeDoodleKey = dayKey;
 
-  const doodle = DOODLES[doodleHash(`pikulin-daily-doodle|${dayKey}`) % DOODLES.length];
+  const doodle = DOODLES[doodleIndexForDay(dayKey)];
   image.classList.remove('hidden');
   $('drawingFallback')?.classList.add('hidden');
   image.src = `${doodle.src}?day=${dayKey}`;
