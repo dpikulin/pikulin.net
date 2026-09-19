@@ -117,6 +117,68 @@ const WEATHER_CODES = {
   99: ['⛈️', 'Severe thunderstorms with hail'],
 };
 
+
+const DOODLES = [
+  { src: 'doodles/trex-goalie.svg', alt: 'T. rex loves playing goalie. Other teams hate it.' },
+  { src: 'doodles/trex-pullover.svg', alt: 'T. rex hates pullovers.' },
+  { src: 'doodles/bear-minimum.svg', alt: 'I’m doing the bear minimum.' },
+  { src: 'doodles/chicken-peep-pressure.svg', alt: 'Why don’t I share secrets? Too much peep pressure.' },
+  { src: 'doodles/pig-cuteness.svg', alt: 'I’m not chubby. I’m just hogging all the cuteness.' },
+  { src: 'doodles/squirrel-fund.svg', alt: 'I’m building my squirrel fund.' },
+  { src: 'doodles/giraffe-high-standards.svg', alt: 'I have really high standards.' },
+];
+
+let activeDoodleKey = null;
+
+function easternDoodleDayKey(date = new Date()) {
+  const parts = Object.fromEntries(
+    new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'America/New_York',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      hourCycle: 'h23',
+    })
+      .formatToParts(date)
+      .filter(part => part.type !== 'literal')
+      .map(part => [part.type, part.value])
+  );
+
+  let key = `${parts.year}-${parts.month}-${parts.day}`;
+  if (Number(parts.hour) < 4) {
+    const previous = new Date(`${key}T12:00:00Z`);
+    previous.setUTCDate(previous.getUTCDate() - 1);
+    key = previous.toISOString().slice(0, 10);
+  }
+  return key;
+}
+
+function doodleHash(value) {
+  let hash = 2166136261;
+  for (let i = 0; i < value.length; i++) {
+    hash ^= value.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0;
+}
+
+function loadDailyDoodle() {
+  const image = $('drawingImg');
+  if (!image || !DOODLES.length) return;
+
+  const dayKey = easternDoodleDayKey();
+  if (dayKey === activeDoodleKey) return;
+  activeDoodleKey = dayKey;
+
+  const doodle = DOODLES[doodleHash(`pikulin-daily-doodle|${dayKey}`) % DOODLES.length];
+  image.classList.remove('hidden');
+  $('drawingFallback')?.classList.add('hidden');
+  image.src = `${doodle.src}?day=${dayKey}`;
+  image.alt = doodle.alt;
+  if ($('drawingMeta')) $('drawingMeta').textContent = 'New doodle daily at 4:00 AM Eastern';
+}
+
 function $(id) { return document.getElementById(id); }
 function clamp(v, min, max) { return Math.min(Math.max(v, min), max); }
 function isLocalPreview() { return ['localhost', '127.0.0.1'].includes(location.hostname); }
@@ -885,7 +947,6 @@ $('drawingImg').addEventListener('error', () => {
   $('drawingImg').classList.add('hidden');
   $('drawingFallback').classList.remove('hidden');
 });
-$('drawingImg').src = `${$('drawingImg').src}&t=${Date.now()}`;
 
 function boot() {
   const requestedTab = location.hash.replace('#','');
@@ -893,7 +954,9 @@ function boot() {
   $('unitToggle').textContent = APP.unitSystem === 'imperial' ? '°F / mph' : '°C / km/h';
   updateLiveWeather();
   loadAlerts(false);
+  loadDailyDoodle();
   setInterval(updateLiveWeather, 5 * 60 * 1000);
+  setInterval(loadDailyDoodle, 30 * 1000);
 }
 
 boot();
