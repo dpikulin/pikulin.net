@@ -230,6 +230,217 @@ iframe { display: block; width: 100%; height: 360px; margin: 16px 0; border: 0; 
 .alert-item p { margin: 8px 0 0; color: #465b6d; font-size: 0.85rem; line-height: 1.45; white-space: pre-line; }
 .updated-text { display: block; margin-top: 10px; }
 
+
+.beach-dashboard {
+  margin-top: 30px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(207, 221, 230, 0.9);
+}
+.beach-heading { margin-top: 22px; }
+.beach-overview {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(340px, 0.95fr);
+  gap: 16px;
+}
+.beach-hero {
+  padding: 26px;
+  overflow: hidden;
+  background: linear-gradient(145deg, #ffffff 0%, #edf8fb 58%, #fff6dd 100%);
+}
+.beach-hero-icon { font-size: 2.8rem; }
+.beach-hero h3 {
+  margin-top: 20px;
+  font-size: clamp(1.5rem, 3vw, 2.1rem);
+  line-height: 1.08;
+}
+.beach-hero-copy {
+  color: #395064;
+  font-size: 1.02rem;
+  line-height: 1.55;
+}
+.beach-now-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 9px;
+  margin-top: 20px;
+}
+.beach-now-grid > div {
+  padding: 12px 13px;
+  border: 1px solid rgba(214, 228, 236, 0.92);
+  border-radius: 14px;
+  background: rgba(255,255,255,0.76);
+}
+.beach-now-grid span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 750;
+}
+.beach-now-grid strong {
+  display: block;
+  margin-top: 4px;
+  font-size: 1.05rem;
+}
+.beach-advisory-card {
+  position: relative;
+  overflow: hidden;
+  padding: 26px;
+  background: linear-gradient(150deg, #fff8e5 0%, #fff 54%, #eaf6fb 100%);
+}
+.beach-advisory-card::after {
+  content: "🌊";
+  position: absolute;
+  right: -8px;
+  bottom: -20px;
+  font-size: 7rem;
+  opacity: 0.07;
+  transform: rotate(-8deg);
+}
+.beach-advisory-top {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+.beach-advisory-top h3 {
+  margin: 9px 0 0;
+  font-size: clamp(1.35rem, 2.8vw, 1.9rem);
+  line-height: 1.12;
+}
+.beach-voice-label {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.beach-voice-label select {
+  min-width: 155px;
+  padding: 9px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(255,255,255,0.92);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 750;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.beach-advisory-copy {
+  position: relative;
+  z-index: 2;
+  margin: 20px 0 16px;
+  font-size: 1.02rem;
+  line-height: 1.58;
+}
+.gear-chips {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 16px;
+}
+.gear-chip {
+  padding: 7px 10px;
+  border: 1px solid #d8e4ea;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.82);
+  color: #3f5669;
+  font-size: 0.78rem;
+  font-weight: 750;
+}
+.beach-metric-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 14px;
+}
+.beach-metric-card { padding: 18px 20px; }
+.beach-metric-card > strong {
+  display: block;
+  margin: 9px 0 4px;
+  font-size: 1.35rem;
+}
+.beach-metric-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.beach-zone {
+  flex: 0 0 auto;
+  padding: 5px 8px;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 850;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.beach-zone.ocean { background: #e5f4ff; color: #276c96; }
+.beach-zone.bay { background: #eef7e9; color: #4b7750; }
+.beach-zone.shore { background: #fff2cf; color: #8d681f; }
+.tide-card {
+  margin-top: 14px;
+  padding: 20px;
+}
+.tide-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+.tide-card-header h3 { margin-bottom: 0; }
+.tide-strip {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(115px, 1fr));
+  gap: 8px;
+  overflow-x: auto;
+  padding: 2px 1px 6px;
+}
+.tide-event {
+  min-width: 115px;
+  padding: 11px 12px;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: #f8fbfd;
+}
+.tide-event span,
+.tide-event small {
+  display: block;
+  color: var(--muted);
+  font-size: 0.72rem;
+}
+.tide-event strong {
+  display: block;
+  margin: 4px 0 3px;
+  font-size: 0.88rem;
+}
+
+@media (max-width: 900px) {
+  .beach-overview { grid-template-columns: 1fr; }
+  .beach-metric-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 640px) {
+  .beach-hero, .beach-advisory-card { padding: 20px; }
+  .beach-now-grid { grid-template-columns: repeat(2, 1fr); }
+  .beach-metric-grid { grid-template-columns: repeat(2, 1fr); gap: 9px; }
+  .beach-metric-card { padding: 15px; }
+  .beach-advisory-top { flex-direction: column; }
+  .beach-voice-label, .beach-voice-label select { width: 100%; }
+  .tide-card { padding: 16px; }
+  .tide-card-header { align-items: flex-start; flex-direction: column; }
+  .tide-strip { grid-template-columns: repeat(8, 115px); }
+}
+
 .drawing-card { display: grid; place-items: center; min-height: 430px; padding: 24px; overflow: hidden; }
 .drawing-card img { max-width: 100%; max-height: 70vh; border-radius: var(--radius-lg); box-shadow: 0 16px 40px rgba(15,39,66,0.12); }
 .drawing-fallback, .coming-soon { text-align: center; }
