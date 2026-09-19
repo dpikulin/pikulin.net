@@ -1,0 +1,39 @@
+{
+  "slug": "dark-chocolate-ice-cream",
+  "title": "Dark Chocolate Ice Cream",
+  "description": "Deep, bittersweet chocolate ice cream made with 92% cacao chocolate, a rich light-cream base, and just enough cinnamon to give it a subtle Mexican-hot-chocolate character.",
+  "category": "Desserts",
+  "tags": [
+    "ice cream",
+    "dark chocolate",
+    "92% cacao",
+    "cinnamon",
+    "house recipe"
+  ],
+  "prepTime": "20 minutes",
+  "cookTime": "15 minutes",
+  "totalTime": "Overnight chilling plus churning and freezing",
+  "yield": "About 1 quart",
+  "ingredients": [
+    "476 g light cream",
+    "244 g whole milk",
+    "100 g whole egg (about 2 large eggs, without shells)",
+    "165 g granulated sugar",
+    "100 g 92% cacao dark chocolate, finely chopped",
+    "5 g pure vanilla extract",
+    "1 g kosher salt",
+    "0.3 g ground cinnamon"
+  ],
+  "steps": [
+    "Whisk the eggs until light and slightly foamy, then gradually whisk in the sugar until fully combined.",
+    "Warm the light cream and whole milk over medium-low heat. Add the chopped 92% chocolate and stir until completely melted and smooth.",
+    "Slowly whisk some of the warm chocolate mixture into the egg-and-sugar mixture to temper the eggs, then return everything to the saucepan.",
+    "Cook gently, stirring constantly, until the base reaches 170°F (77°C). Do not boil.",
+    "Remove from the heat and stir in the vanilla, salt, and cinnamon.",
+    "Cover and chill completely, preferably overnight.",
+    "Churn according to your ice cream maker’s instructions, then transfer to a container and freeze until firm."
+  ],
+  "notes": "The 165 g sugar is intentional: it balances the bitterness of the 92% cacao chocolate. Keep the cinnamon subtle; it should register as a warm undertone rather than obvious cinnamon. The original discussion did not preserve the exact chocolate-bar weight, so 100 g is the house baseline within the 85–115 g range we had discussed.",
+  "created": "2026-09-19T04:30:00.000Z",
+  "updated": "2026-09-19T04:30:00.000Z"
+}

@@ -1,5 +1,44 @@
 [
   {
+    "slug": "house-vanilla-ice-cream",
+    "title": "House Vanilla Ice Cream",
+    "description": "A rich vanilla ice cream built on a light-cream, whole-milk, and whole-egg base with an intentionally generous dose of vanilla.",
+    "category": "Desserts",
+    "tags": [
+      "ice cream",
+      "vanilla",
+      "house recipe",
+      "frozen dessert"
+    ],
+    "prepTime": "15 minutes",
+    "cookTime": "10 minutes",
+    "totalTime": "Overnight chilling plus churning and freezing",
+    "yield": "About 1 quart",
+    "created": "2026-09-19T04:30:00.000Z",
+    "updated": "2026-09-19T04:30:00.000Z",
+    "searchText": "House Vanilla Ice Cream A rich vanilla ice cream built on a light-cream, whole-milk, and whole-egg base with an intentionally generous dose of vanilla. Desserts ice cream vanilla house recipe frozen dessert 476 g light cream 244 g whole milk 100 g whole egg (about 2 large eggs, without shells) 150 g granulated sugar 28 g pure vanilla extract"
+  },
+  {
+    "slug": "dark-chocolate-ice-cream",
+    "title": "Dark Chocolate Ice Cream",
+    "description": "Deep, bittersweet chocolate ice cream made with 92% cacao chocolate, a rich light-cream base, and just enough cinnamon to give it a subtle Mexican-hot-chocolate character.",
+    "category": "Desserts",
+    "tags": [
+      "ice cream",
+      "dark chocolate",
+      "92% cacao",
+      "cinnamon",
+      "house recipe"
+    ],
+    "prepTime": "20 minutes",
+    "cookTime": "15 minutes",
+    "totalTime": "Overnight chilling plus churning and freezing",
+    "yield": "About 1 quart",
+    "created": "2026-09-19T04:30:00.000Z",
+    "updated": "2026-09-19T04:30:00.000Z",
+    "searchText": "Dark Chocolate Ice Cream Deep, bittersweet chocolate ice cream made with 92% cacao chocolate, a rich light-cream base, and just enough cinnamon to give it a subtle Mexican-hot-chocolate character. Desserts ice cream dark chocolate 92% cacao cinnamon house recipe 476 g light cream 244 g whole milk 100 g whole egg (about 2 large eggs, without shells) 165 g granulated sugar 100 g 92% cacao dark chocolate, finely chopped 5 g pure vanilla extract 1 g kosher salt 0.3 g ground cinnamon"
+  },
+  {
     "slug": "charred-corn-chimichurri",
     "title": "Charred Corn Chimichurri",
     "description": "A tangy, herb-forward chimichurri folded with deeply charred sweet corn, jalapeño, shallot, lime, and a touch of smoked paprika.",
