@@ -4,6 +4,7 @@ const APP = {
   archiveData: [],
   archiveChart: null,
   lastCurrent: null,
+  lastBeach: null,
 };
 
 const DEMO_CURRENT = {
@@ -309,7 +310,7 @@ function setTab(tabId) {
   document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.toggle('active', panel.id === tabId));
   document.querySelectorAll('.tab-button').forEach(btn => btn.classList.toggle('active', btn.dataset.tab === tabId));
   history.replaceState(null, '', `#${tabId}`);
-  if (tabId === 'radar') loadAlerts(false);
+  if (tabId === 'radar') { loadAlerts(false); loadBeachData(false); }
   if (tabId === 'archive' && APP.archiveData.length === 0) loadArchive(APP.archiveDays);
 }
 
@@ -320,6 +321,7 @@ $('unitToggle').addEventListener('click', () => {
   localStorage.setItem('unitSystem', APP.unitSystem);
   if (APP.lastCurrent) renderCurrent(APP.lastCurrent);
   if (APP.archiveData.length) renderArchive(APP.archiveData, APP.archiveDays);
+  if (APP.lastBeach) renderBeach(APP.lastBeach);
   if (!$('forecastGrid').hasChildNodes()) return;
   const previous = $('locationInput').dataset.lastQuery;
   if (previous) searchForecast(previous);
@@ -592,6 +594,292 @@ function renderAlert(alert) {
   return `<div class="alert-item ${cls}"><strong>${escapeHtml(alert.headline || alert.event || 'Weather alert')}</strong><details><summary>Details</summary><p>${escapeHtml(alert.description || alert.instruction || 'See NOAA for details.')}</p></details></div>`;
 }
 function escapeHtml(value) { return String(value ?? '').replace(/[&<>'"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','"':'&quot;'}[ch])); }
+
+
+let beachLoadedAt = 0;
+$('beachVoice').value = localStorage.getItem('beachVoice') || 'random';
+
+$('refreshBeach').addEventListener('click', () => loadBeachData(true));
+$('beachVoice').addEventListener('change', () => {
+  localStorage.setItem('beachVoice', $('beachVoice').value);
+  if (APP.lastBeach) renderBeach(APP.lastBeach);
+});
+
+async function loadBeachData(force = false) {
+  if (!force && APP.lastBeach && Date.now() - beachLoadedAt < 5 * 60 * 1000) {
+    renderBeach(APP.lastBeach);
+    return;
+  }
+
+  $('beachNotice').textContent = 'Checking Marine Street weather, surf, tide, and ocean data…';
+  $('beachNotice').className = 'notice';
+
+  try {
+    const response = await fetch('/api/beach', { cache: 'no-store' });
+    const payload = await safeJson(response);
+    if (!response.ok) throw new Error(payload?.error || `Beach data request failed (${response.status})`);
+    beachLoadedAt = Date.now();
+    APP.lastBeach = payload;
+    renderBeach(payload);
+
+    if (payload.errors?.length) {
+      $('beachNotice').textContent = `Most beach data is live. A feed is temporarily unavailable: ${payload.errors.join(' · ')}`;
+      $('beachNotice').className = 'notice';
+    } else {
+      $('beachNotice').classList.add('hidden');
+    }
+  } catch (error) {
+    $('beachNotice').textContent = error.message || 'Beach data is temporarily unavailable.';
+    $('beachNotice').className = 'notice error-notice';
+  }
+}
+
+function renderBeach(data) {
+  APP.lastBeach = data;
+  const current = data.weather?.current || {};
+  const today = data.weather?.today || {};
+  const surf = data.surf?.today || {};
+  const ocean = data.ocean || {};
+  const tideEvents = data.tide?.events || [];
+
+  const [icon, condition] = WEATHER_CODES[current.weatherCode] || ['🏖️', 'Beach conditions'];
+  const rainChance = finiteOr(current.precipProbability, today.precipProbabilityMax);
+  const windMph = finiteOr(current.windMph, today.windMphMax);
+  const gustMph = finiteOr(today.windGustMphMax, current.windGustMph);
+
+  $('beachNowIcon').textContent = icon;
+  $('beachNowTitle').textContent = surf.weather || condition;
+  $('beachAirTemp').textContent = formatTempF(current.temperatureF);
+  $('beachFeelsTemp').textContent = formatTempF(current.apparentTemperatureF);
+  $('beachRainChance').textContent = rainChance == null ? '—' : `${Math.round(rainChance)}%`;
+  $('beachWindNow').textContent = formatWindMph(windMph);
+
+  const summaryBits = [];
+  if (today.highF != null) summaryBits.push(`High ${formatTempF(today.highF)}`);
+  if (rainChance != null) summaryBits.push(`${Math.round(rainChance)}% rain chance`);
+  if (surf.surfHeight) summaryBits.push(`surf ${surf.surfHeight.toLowerCase()}`);
+  if (surf.ripCurrentRisk) summaryBits.push(`${surf.ripCurrentRisk.toLowerCase()} rip-current risk`);
+  $('beachNowSummary').textContent = summaryBits.length
+    ? `${summaryBits.join(' · ')}.`
+    : 'Live beach conditions for Marine Street are partially available.';
+
+  const next = nextTide(tideEvents);
+  if (next) {
+    $('beachNextTide').textContent = `${next.type} ${formatTideTime(next.time)}`;
+    $('beachTideDetail').textContent = `${formatTideHeight(next.heightFt)} · MLLW · ~${data.tide?.distanceMilesApprox || 1.2} mi`;
+  } else {
+    $('beachNextTide').textContent = '—';
+    $('beachTideDetail').textContent = 'Beach Haven Coast Guard Station';
+  }
+
+  const nwsWaterF = parseWaterTempF(surf.waterTemperature);
+  const waterF = finiteOr(nwsWaterF, ocean.waterTemperatureF);
+  $('beachWaterTemp').textContent = formatTempF(waterF);
+  $('beachWaterDetail').textContent = surf.waterTemperature
+    ? `NWS LBI: ${surf.waterTemperature}`
+    : ocean.observed ? `Buoy 44091 · ${timeAgo(ocean.observed)}` : 'Long Beach Island surf zone';
+
+  $('beachWaves').textContent = formatWaveHeight(ocean.waveHeightFt);
+  const waveBits = [];
+  if (ocean.dominantPeriodSec != null) waveBits.push(`${Math.round(ocean.dominantPeriodSec)} s period`);
+  if (ocean.waveDirectionDeg != null) waveBits.push(`${cardinal(ocean.waveDirectionDeg)} swell`);
+  $('beachWaveDetail').textContent = waveBits.length
+    ? `${waveBits.join(' · ')} · buoy ~${ocean.distanceMilesApprox || 29} mi offshore`
+    : 'NOAA buoy 44091';
+
+  $('beachRipRisk').textContent = surf.ripCurrentRisk || '—';
+  $('beachRipDetail').textContent = surf.surfHeight ? `Surf ${surf.surfHeight}` : 'NWS Long Beach Island';
+
+  const uv = finiteOr(today.uvIndexMax, current.uvIndex);
+  $('beachUV').textContent = uv == null ? (surf.uvIndex || '—') : Number(uv).toFixed(1);
+  $('beachUVDetail').textContent = uv == null ? (surf.uvIndex || 'NWS / Marine St') : `${uvLabel(uv)} · daily maximum`;
+
+  $('beachWind').textContent = formatWindMph(today.windMphMax ?? current.windMph);
+  const windDetails = [];
+  if (current.windDirectionDeg != null) windDetails.push(cardinal(current.windDirectionDeg));
+  if (gustMph != null) windDetails.push(`gusts to ${formatWindMph(gustMph)}`);
+  $('beachWindDetail').textContent = windDetails.length ? windDetails.join(' · ') : (surf.winds || 'Marine St point forecast');
+
+  renderTideStrip(tideEvents);
+  renderBeachAdvisory(data, { rainChance, windMph, gustMph, waterF, uv });
+
+  const updated = data.updated ? new Date(data.updated) : new Date();
+  $('updated-beach').textContent = `Updated ${updated.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })} · tide: NOAA 8534208 · surf: NWS PHI · waves: NOAA 44091`;
+}
+
+function renderTideStrip(events) {
+  const strip = $('beachTideStrip');
+  if (!events?.length) {
+    strip.innerHTML = '<p class="muted">Tide predictions are temporarily unavailable.</p>';
+    return;
+  }
+  strip.innerHTML = events.slice(0, 8).map(event => `
+    <div class="tide-event">
+      <span>${escapeHtml(tideDayLabel(event.time))}</span>
+      <strong>${escapeHtml(event.type)} · ${escapeHtml(formatTideTime(event.time))}</strong>
+      <small>${escapeHtml(formatTideHeight(event.heightFt))} MLLW</small>
+    </div>`).join('');
+}
+
+function renderBeachAdvisory(data, context) {
+  const current = data.weather?.current || {};
+  const today = data.weather?.today || {};
+  const surf = data.surf?.today || {};
+  const rip = String(surf.ripCurrentRisk || '').toLowerCase();
+  const thunder = String(surf.thunderstormPotential || '').toLowerCase();
+  const rainChance = finiteOr(context.rainChance, 0);
+  const gust = finiteOr(context.gustMph, 0);
+  const uv = finiteOr(context.uv, 0);
+  const highF = finiteOr(today.apparentHighF, today.highF, current.apparentTemperatureF, current.temperatureF);
+  const waterF = context.waterF;
+
+  let title = 'A workable beach day with a few caveats.';
+  if (rip.includes('high')) title = 'Good sand day. Skip the surf.';
+  else if (thunder && !thunder.includes('none')) title = 'Beach day with an exit plan.';
+  else if (rainChance >= 60) title = 'Beach window, not an all-day lock.';
+  else if (gust >= 28) title = 'Windy setup. Keep the beach gear low-profile.';
+  else if (highF != null && highF >= 75 && rainChance < 40 && gust < 22) title = 'Marine Street looks beach-worthy.';
+  else if (highF != null && highF < 68) title = 'Beach walk weather more than bake-on-the-sand weather.';
+
+  const gear = beachGear({ highF, rainChance, gust, uv, waterF, rip, thunder });
+  $('beachGear').innerHTML = gear.map(item => `<span class="gear-chip">${escapeHtml(item)}</span>`).join('');
+
+  const factBits = [];
+  if (today.highF != null) factBits.push(`High around ${formatTempF(today.highF)}`);
+  if (rainChance != null) factBits.push(`${Math.round(rainChance)}% rain chance`);
+  if (surf.surfHeight) factBits.push(`surf ${surf.surfHeight.toLowerCase()}`);
+  if (surf.ripCurrentRisk) factBits.push(`${surf.ripCurrentRisk.toLowerCase()} rip-current risk`);
+  if (gust > 0) factBits.push(`gusts near ${formatWindMph(gust)}`);
+  const facts = factBits.length ? `${factBits.join(', ')}.` : 'The beach feeds are giving us a partial report today.';
+
+  const requestedVoice = $('beachVoice').value || 'random';
+  const voice = requestedVoice === 'random'
+    ? deterministicPick(['pikulin', 'dungeon', 'pirate', 'sponge', 'squid'], 'marine-st-beach-voice')
+    : requestedVoice;
+
+  $('beachAdvisoryTitle').textContent = title;
+  $('beachAdvisoryText').textContent = beachVoiceLine(voice, facts, gear, { rip, thunder, gust });
+  $('beachAdvisorySource').textContent = `${beachVoiceName(voice)} · safety calls still come from NWS / NOAA`;
+}
+
+function beachGear({ highF, rainChance, gust, uv, waterF, rip, thunder }) {
+  const items = ['Water'];
+  if (uv >= 3) items.push('SPF / sunscreen');
+  if (uv >= 6) items.push('Hat + real shade');
+
+  if (gust >= 28) items.push('Skip loose umbrellas / canopies');
+  else if (gust >= 20) items.push('Low-profile shade + serious sand anchor');
+  else items.push('Beach umbrella + sand anchor');
+
+  if (rainChance >= 35) items.push('Rain shell / compact umbrella');
+  if (highF != null && highF < 73) items.push('Light layer / hoodie');
+  if (waterF != null && waterF < 70) items.push('Extra dry towel / warm layer');
+
+  if (rip.includes('high')) items.push('Stay out of the surf');
+  else if (rip.includes('moderate')) items.push('Swim near a lifeguard');
+
+  if (thunder && !thunder.includes('none')) items.push('Fast exit plan for thunder');
+  return [...new Set(items)];
+}
+
+function beachVoiceLine(voice, facts, gear, context) {
+  const pack = gear.slice(0, 3).join(', ').toLowerCase();
+  const safety = context.rip.includes('high')
+    ? 'The ocean has veto power today, so keep the swimming out of the plan.'
+    : context.thunder && !context.thunder.includes('none')
+      ? 'Keep the sky on a short leash and be ready to leave.'
+      : context.gust >= 28
+        ? 'Anything light and sail-shaped is volunteering for a trip down the beach.'
+        : '';
+
+  const lines = {
+    pikulin: `Marine Street report: ${facts} Bring ${pack}. ${safety}`.trim(),
+    dungeon: `NEW ACHIEVEMENT: BEACH LOGISTICS. ${facts} Your loadout requires ${pack}. ${safety}`.trim(),
+    pirate: `Arrr, the Marine Street report says: ${facts} Stow ${pack}, matey. ${safety}`.trim(),
+    sponge: `Marine Street is looking pretty cheerful: ${facts} Beach-bag mission: ${pack}. ${safety}`.trim(),
+    squid: `Ah, yes. Sand, but with additional meteorology. ${facts} Bring ${pack} and try not to donate it to the wind. ${safety}`.trim(),
+  };
+  return lines[voice] || lines.pikulin;
+}
+
+function beachVoiceName(voice) {
+  return ({
+    pikulin: 'Pikulin',
+    dungeon: 'Dungeon AI-ish',
+    pirate: 'Pirate',
+    sponge: 'SpongeBob-ish',
+    squid: 'Squidward-ish',
+  })[voice] || 'Pikulin';
+}
+
+function parseWaterTempF(text) {
+  if (!text) return null;
+  const exact = String(text).match(/\b(\d{2,3})\s*(?:degrees?|°)?\b/i);
+  if (exact) return Number(exact[1]);
+  const range = String(text).match(/\b(lower|low|mid|middle|upper|high)\s+(\d{2})s\b/i);
+  if (!range) return null;
+  const base = Number(range[2]);
+  const offset = /lower|low/i.test(range[1]) ? 2 : /upper|high/i.test(range[1]) ? 8 : 5;
+  return base + offset;
+}
+
+function nextTide(events) {
+  if (!events?.length) return null;
+  const now = Date.now();
+  return events.find(event => tideDate(event.time)?.getTime() >= now) || events[0];
+}
+
+function tideDate(value) {
+  if (!value) return null;
+  const parsed = new Date(String(value).replace(' ', 'T'));
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+}
+
+function formatTideTime(value) {
+  const date = tideDate(value);
+  return date ? date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) : '—';
+}
+
+function tideDayLabel(value) {
+  const date = tideDate(value);
+  if (!date) return '';
+  const today = new Date();
+  if (date.toDateString() === today.toDateString()) return 'Today';
+  const tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate() + 1);
+  if (date.toDateString() === tomorrow.toDateString()) return 'Tomorrow';
+  return date.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' });
+}
+
+function formatTideHeight(feet) {
+  if (feet == null || Number.isNaN(Number(feet))) return '—';
+  return APP.unitSystem === 'imperial'
+    ? `${Number(feet).toFixed(1)} ft`
+    : `${(Number(feet) * 0.3048).toFixed(2)} m`;
+}
+
+function formatWaveHeight(feet) {
+  if (feet == null || Number.isNaN(Number(feet))) return '—';
+  return APP.unitSystem === 'imperial'
+    ? `${Number(feet).toFixed(1)} ft`
+    : `${(Number(feet) * 0.3048).toFixed(1)} m`;
+}
+
+function finiteOr(...values) {
+  for (const value of values) {
+    if (value != null && Number.isFinite(Number(value))) return Number(value);
+  }
+  return null;
+}
+
+function timeAgo(iso) {
+  const when = new Date(iso);
+  if (Number.isNaN(when.getTime())) return 'recent observation';
+  const minutes = Math.max(0, Math.round((Date.now() - when.getTime()) / 60000));
+  if (minutes < 2) return 'just updated';
+  if (minutes < 60) return `${minutes} min ago`;
+  return `${Math.round(minutes / 60)} hr ago`;
+}
 
 $('drawingImg').addEventListener('error', () => {
   $('drawingImg').classList.add('hidden');
