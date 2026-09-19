@@ -1,10 +1,60 @@
 [
   {
+    "slug": "charred-corn-chimichurri",
+    "title": "Charred Corn Chimichurri",
+    "description": "A tangy, herb-forward chimichurri folded with deeply charred sweet corn, jalapeño, shallot, lime, and a touch of smoked paprika.",
+    "category": "Sauces & Condiments",
+    "tags": [
+      "chimichurri",
+      "corn",
+      "charred corn",
+      "summer",
+      "jalapeño",
+      "sauce"
+    ],
+    "prepTime": "15 minutes",
+    "cookTime": "10 minutes",
+    "totalTime": "30 minutes",
+    "yield": "About 2 cups",
+    "created": "2026-09-19T04:20:00.000Z",
+    "updated": "2026-09-19T04:20:00.000Z",
+    "searchText": "Charred Corn Chimichurri A tangy, herb-forward chimichurri folded with deeply charred sweet corn, jalapeño, shallot, lime, and a touch of smoked paprika. Sauces & Condiments chimichurri corn charred corn summer jalapeño sauce 245 g fresh corn kernels (about 2 ears) 30 g flat-leaf parsley, finely chopped 5 g cilantro, finely chopped (optional) 40 g shallot, finely minced (or 40 g red onion) 3 g garlic (about 1 clove), minced 7 g jalapeño, finely minced 38 g red wine vinegar 15 g fresh lime juice 54 g extra-virgin olive oil 0.5 g dried oregano 0.2 g smoked paprika 2 g kosher salt, plus more to taste 0.5 g freshly ground black pepper"
+  },
+  {
+    "slug": "chimichurri",
+    "title": "Chimichurri",
+    "description": "A bright, herb-forward chimichurri with flat-leaf parsley, garlic, red wine vinegar, oregano, chile flakes, and extra-virgin olive oil.",
+    "category": "Sauces & Condiments",
+    "tags": [
+      "chimichurri",
+      "parsley",
+      "garlic",
+      "grilling",
+      "steak",
+      "sauce"
+    ],
+    "prepTime": "10 minutes",
+    "cookTime": "",
+    "totalTime": "30–60 minutes including rest",
+    "yield": "About 1 cup",
+    "created": "2026-09-19T04:20:00.000Z",
+    "updated": "2026-09-19T04:20:00.000Z",
+    "searchText": "Chimichurri A bright, herb-forward chimichurri with flat-leaf parsley, garlic, red wine vinegar, oregano, chile flakes, and extra-virgin olive oil. Sauces & Condiments chimichurri parsley garlic grilling steak sauce 60 g flat-leaf parsley, finely chopped and packed 9 g garlic (about 3 cloves), finely minced 30 g red wine vinegar 0.5 g dried oregano 0.2 g red pepper flakes, or to taste 2 g kosher salt 72 g extra-virgin olive oil 5–10 g fresh lemon juice (optional)"
+  },
+  {
     "slug": "charred-corn-tomato-avocado-salad-with-fish",
     "title": "Charred Corn, Cherry Tomato & Avocado Salad with Seared Fish",
     "description": "A bright summer salad of charred sweet corn, cherry tomatoes, avocado, scallions, cilantro, and seared mild white fish with a lime, cumin, paprika, and chile vinaigrette.",
     "category": "Fish",
-    "tags": ["summer", "corn", "tomato", "avocado", "fish", "mahi mahi", "salad"],
+    "tags": [
+      "summer",
+      "corn",
+      "tomato",
+      "avocado",
+      "fish",
+      "mahi mahi",
+      "salad"
+    ],
     "prepTime": "20 minutes",
     "cookTime": "15 minutes",
     "totalTime": "35 minutes",
@@ -18,7 +68,11 @@
     "title": "Corn Cacio y Pepe",
     "description": "A summer flavored corn forward cacio y Pepe inspired dish. Goes great over pasta. Could also work as a dip.",
     "category": "Sauces & Condiments",
-    "tags": ["Corn", "pepper", "summer"],
+    "tags": [
+      "Corn",
+      "pepper",
+      "summer"
+    ],
     "prepTime": "20 minutes",
     "cookTime": "15 minutes",
     "totalTime": "35",
@@ -32,7 +86,12 @@
     "title": "David’s Oven-Reduced Tomato Sauce",
     "description": "A deep, long-cooked tomato sauce built on onion, carrot, celery, garlic, toasted tomato paste, red wine, and Parmesan, then slowly reduced in the oven.",
     "category": "Sauces & Condiments",
-    "tags": ["tomato", "pasta sauce", "oven reduced", "batch cooking"],
+    "tags": [
+      "tomato",
+      "pasta sauce",
+      "oven reduced",
+      "batch cooking"
+    ],
     "prepTime": "30 minutes",
     "cookTime": "4–6 hours",
     "totalTime": "4½–6½ hours",
@@ -46,7 +105,12 @@
     "title": "Hot Elote Dip",
     "description": "A lighter hot elote-style corn dip built around deeply charred corn and a strained corn purée, with cotija, lime, garlic, and smoky chile instead of a heavy mayo base.",
     "category": "Appetizers & Dips",
-    "tags": ["corn", "elote", "hot dip", "summer"],
+    "tags": [
+      "corn",
+      "elote",
+      "hot dip",
+      "summer"
+    ],
     "prepTime": "20 minutes",
     "cookTime": "20 minutes",
     "totalTime": "40 minutes",
@@ -60,7 +124,12 @@
     "title": "Magic Cookie Bars",
     "description": "Graham-cracker bars layered with sweetened condensed milk, bittersweet chocolate, pecans, and coconut.",
     "category": "Desserts",
-    "tags": ["bars", "chocolate", "coconut", "pecans"],
+    "tags": [
+      "bars",
+      "chocolate",
+      "coconut",
+      "pecans"
+    ],
     "prepTime": "",
     "cookTime": "1 hour",
     "totalTime": "1 hour",
@@ -74,7 +143,12 @@
     "title": "Melting Potatoes",
     "description": "Thick-cut Yukon Gold potatoes roasted in butter and herbs, then finished with stock and garlic until crisp-edged and creamy inside.",
     "category": "Sides",
-    "tags": ["potatoes", "roasted", "garlic", "herbs"],
+    "tags": [
+      "potatoes",
+      "roasted",
+      "garlic",
+      "herbs"
+    ],
     "prepTime": "10 minutes",
     "cookTime": "45 minutes",
     "totalTime": "55 minutes",
@@ -88,7 +162,11 @@
     "title": "Sous Vide Mashed Potato",
     "description": "Creamy mashed potatoes cooked sous vide with butter, cream, milk, and seasoning, with an optional baked crust finish.",
     "category": "Sides",
-    "tags": ["potatoes", "sous vide", "mashed potatoes"],
+    "tags": [
+      "potatoes",
+      "sous vide",
+      "mashed potatoes"
+    ],
     "prepTime": "25 minutes",
     "cookTime": "45 minutes",
     "totalTime": "1 hour 10 minutes",
@@ -102,7 +180,11 @@
     "title": "Tattooed Potatoes",
     "description": "Halved baking potatoes roasted cut-side down over fresh herbs so the herbs imprint and flavor the browned surface.",
     "category": "Sides",
-    "tags": ["potatoes", "roasted", "herbs"],
+    "tags": [
+      "potatoes",
+      "roasted",
+      "herbs"
+    ],
     "prepTime": "15 minutes",
     "cookTime": "40–60 minutes",
     "totalTime": "55–75 minutes",
@@ -116,7 +198,12 @@
     "title": "Kit Kat Ice Cream",
     "description": "Chocolate malt ice cream with chopped milk chocolate and Kit Kat pieces folded through after churning.",
     "category": "Desserts",
-    "tags": ["ice cream", "chocolate", "Kit Kat", "malted milk"],
+    "tags": [
+      "ice cream",
+      "chocolate",
+      "Kit Kat",
+      "malted milk"
+    ],
     "prepTime": "",
     "cookTime": "",
     "totalTime": "",
@@ -130,7 +217,12 @@
     "title": "Homemade Ricotta",
     "description": "Simple fresh ricotta made from whole milk, cream, salt, and white wine vinegar.",
     "category": "Sauces & Condiments",
-    "tags": ["ricotta", "cheese", "homemade", "dairy"],
+    "tags": [
+      "ricotta",
+      "cheese",
+      "homemade",
+      "dairy"
+    ],
     "prepTime": "10 minutes",
     "cookTime": "10 minutes",
     "totalTime": "40–45 minutes including draining",
@@ -144,7 +236,11 @@
     "title": "Pan Seared Pork with Mustard Sauce",
     "description": "A Paprika recipe entry for pork tenderloin with stock, shallot, and onion. The exported recipe is incomplete and does not include the mustard quantity or directions.",
     "category": "Pork",
-    "tags": ["pork tenderloin", "mustard sauce", "pan seared"],
+    "tags": [
+      "pork tenderloin",
+      "mustard sauce",
+      "pan seared"
+    ],
     "prepTime": "15 minutes",
     "cookTime": "30 minutes",
     "totalTime": "45 minutes",
@@ -158,7 +254,11 @@
     "title": "Two-Minute Mayonnaise",
     "description": "Fast immersion-blender mayonnaise made with egg yolk, lemon juice, Dijon mustard, and neutral oil.",
     "category": "Sides",
-    "tags": ["mayonnaise", "immersion blender", "condiment"],
+    "tags": [
+      "mayonnaise",
+      "immersion blender",
+      "condiment"
+    ],
     "prepTime": "2 minutes",
     "cookTime": "2 minutes",
     "totalTime": "2 minutes",
