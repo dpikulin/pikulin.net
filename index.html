@@ -163,6 +163,104 @@
             <small id="updated-lbi" class="updated-text"></small>
           </article>
         </div>
+        <div class="beach-dashboard" aria-labelledby="beach-day-heading">
+          <div class="section-heading beach-heading">
+            <div>
+              <p class="eyebrow">Marine St · Beach Haven</p>
+              <h2 id="beach-day-heading">Beach day forecast</h2>
+              <p class="section-copy">Ocean + bay conditions for the stretch of beach you actually use.</p>
+            </div>
+            <button id="refreshBeach" class="secondary-button" type="button">Refresh beach data</button>
+          </div>
+
+          <div id="beachNotice" class="notice hidden"></div>
+
+          <div class="beach-overview">
+            <article class="beach-hero card">
+              <div class="card-kicker-row">
+                <span class="card-kicker">Marine St right now</span>
+                <span id="beachNowIcon" class="beach-hero-icon" aria-hidden="true">🏖️</span>
+              </div>
+              <h3 id="beachNowTitle">Checking the shoreline…</h3>
+              <p id="beachNowSummary" class="beach-hero-copy">Pulling weather, surf, tide, and buoy data.</p>
+              <div class="beach-now-grid">
+                <div><span>Air</span><strong id="beachAirTemp">--</strong></div>
+                <div><span>Feels</span><strong id="beachFeelsTemp">--</strong></div>
+                <div><span>Rain</span><strong id="beachRainChance">--</strong></div>
+                <div><span>Wind</span><strong id="beachWindNow">--</strong></div>
+              </div>
+            </article>
+
+            <article class="beach-advisory-card card">
+              <div class="beach-advisory-top">
+                <div>
+                  <span class="card-kicker">Beach Day Advisory™</span>
+                  <h3 id="beachAdvisoryTitle">Consulting the beach bag…</h3>
+                </div>
+                <label class="beach-voice-label" for="beachVoice">
+                  Narrator
+                  <select id="beachVoice">
+                    <option value="random">Surprise me</option>
+                    <option value="pikulin">Pikulin</option>
+                    <option value="dungeon">Dungeon AI-ish</option>
+                    <option value="pirate">Pirate</option>
+                    <option value="sponge">SpongeBob-ish</option>
+                    <option value="squid">Squidward-ish</option>
+                  </select>
+                </label>
+              </div>
+              <p id="beachAdvisoryText" class="beach-advisory-copy">The ocean is filing its paperwork.</p>
+              <div id="beachGear" class="gear-chips" aria-label="What to bring"></div>
+              <p id="beachAdvisorySource" class="wardrobe-source"></p>
+            </article>
+          </div>
+
+          <div class="beach-metric-grid" aria-label="Marine Street beach conditions">
+            <article class="beach-metric-card card">
+              <div class="beach-metric-top"><span class="metric-label">Next tide</span><span class="beach-zone bay">Bay / inlet</span></div>
+              <strong id="beachNextTide">--</strong>
+              <span id="beachTideDetail" class="metric-sub">Beach Haven CG Station</span>
+            </article>
+            <article class="beach-metric-card card">
+              <div class="beach-metric-top"><span class="metric-label">Water temp</span><span class="beach-zone ocean">Ocean</span></div>
+              <strong id="beachWaterTemp">--</strong>
+              <span id="beachWaterDetail" class="metric-sub">Long Beach Island surf zone</span>
+            </article>
+            <article class="beach-metric-card card">
+              <div class="beach-metric-top"><span class="metric-label">Waves</span><span class="beach-zone ocean">Ocean</span></div>
+              <strong id="beachWaves">--</strong>
+              <span id="beachWaveDetail" class="metric-sub">NOAA buoy 44091</span>
+            </article>
+            <article class="beach-metric-card card">
+              <div class="beach-metric-top"><span class="metric-label">Rip current</span><span class="beach-zone ocean">Ocean</span></div>
+              <strong id="beachRipRisk">--</strong>
+              <span id="beachRipDetail" class="metric-sub">NWS Long Beach Island</span>
+            </article>
+            <article class="beach-metric-card card">
+              <div class="beach-metric-top"><span class="metric-label">UV</span><span class="beach-zone shore">Beach</span></div>
+              <strong id="beachUV">--</strong>
+              <span id="beachUVDetail" class="metric-sub">Daily maximum</span>
+            </article>
+            <article class="beach-metric-card card">
+              <div class="beach-metric-top"><span class="metric-label">Wind</span><span class="beach-zone shore">Beach</span></div>
+              <strong id="beachWind">--</strong>
+              <span id="beachWindDetail" class="metric-sub">Marine St point forecast</span>
+            </article>
+          </div>
+
+          <article class="tide-card card">
+            <div class="tide-card-header">
+              <div>
+                <span class="card-kicker">Bay / inlet tide</span>
+                <h3>Beach Haven Coast Guard Station</h3>
+              </div>
+              <span class="zip-chip">NOAA 8534208 · ~1.2 mi</span>
+            </div>
+            <div id="beachTideStrip" class="tide-strip"><p class="muted">Loading tide times…</p></div>
+            <small id="updated-beach" class="updated-text"></small>
+          </article>
+        </div>
+
       </section>
 
       <section id="drawing" class="tab-panel" aria-labelledby="drawing-heading">
