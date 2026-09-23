@@ -38,3 +38,37 @@
   .span-2 { grid-column: auto; }
   .admin-card, .recipe-form, .admin-toolbar { padding: 20px; }
 }
+.email-drafts { margin-bottom: 1.25rem; }
+.drafts-heading, .draft-picker-row { display: flex; align-items: end; gap: 0.8rem; }
+.drafts-heading { justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+.drafts-heading h2 { margin-bottom: 0; }
+.draft-picker { flex: 1; }
+.danger-button {
+  border: 1px solid #a33a3a;
+  background: transparent;
+  color: #8b2727;
+  border-radius: 0.7rem;
+  padding: 0.7rem 1rem;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.danger-button:disabled { cursor: not-allowed; opacity: 0.45; }
+.draft-preview { margin-top: 1rem; border-top: 1px solid rgba(15, 39, 66, 0.14); padding-top: 1rem; }
+.draft-meta { color: var(--muted); font-size: 0.9rem; margin-bottom: 0.7rem; }
+.draft-preview pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 24rem;
+  overflow: auto;
+  background: rgba(15, 39, 66, 0.04);
+  border-radius: 0.7rem;
+  padding: 1rem;
+  font: inherit;
+  line-height: 1.5;
+}
+.draft-attachments { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 0.8rem; }
+.draft-attachments a { display: inline-block; padding: 0.5rem 0.7rem; border-radius: 0.6rem; background: rgba(15, 39, 66, 0.08); }
+@media (max-width: 720px) {
+  .draft-picker-row { align-items: stretch; flex-direction: column; }
+}

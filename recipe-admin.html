@@ -50,6 +50,27 @@
           </div>
         </div>
 
+        <section class="email-drafts card" aria-labelledby="emailDraftsTitle">
+          <div class="drafts-heading">
+            <div>
+              <p class="eyebrow">Email intake</p>
+              <h2 id="emailDraftsTitle">Pending recipe drafts</h2>
+            </div>
+            <button id="refreshDrafts" class="secondary-button" type="button">Refresh</button>
+          </div>
+          <div class="draft-picker-row">
+            <label class="field draft-picker"><span>Emailed recipe</span><select id="emailDraft"><option value="">No pending drafts</option></select></label>
+            <button id="loadDraft" class="secondary-button" type="button" disabled>Load into editor</button>
+            <button id="deleteDraft" class="danger-button" type="button" disabled>Delete draft</button>
+          </div>
+          <div id="draftNotice" class="save-status"></div>
+          <article id="draftPreview" class="draft-preview hidden">
+            <div id="draftMeta" class="draft-meta"></div>
+            <pre id="draftBody"></pre>
+            <div id="draftAttachments" class="draft-attachments"></div>
+          </article>
+        </section>
+
         <form id="recipeForm" class="recipe-form card">
           <input id="recipeSlug" type="hidden">
           <div class="form-grid">

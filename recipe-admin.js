@@ -1,5 +1,8 @@
 let ADMIN_PASSWORD = '';
 let RECIPE_INDEX = [];
+let EMAIL_DRAFTS = [];
+let ACTIVE_DRAFT = null;
+let ATTACHMENT_URLS = [];
 const $ = id => document.getElementById(id);
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -7,6 +10,10 @@ document.addEventListener('DOMContentLoaded', () => {
   $('recipeForm').addEventListener('submit', saveRecipe);
   $('newRecipe').addEventListener('click', resetForm);
   $('existingRecipe').addEventListener('change', loadExistingRecipe);
+  $('refreshDrafts').addEventListener('click', refreshEmailDrafts);
+  $('emailDraft').addEventListener('change', previewEmailDraft);
+  $('loadDraft').addEventListener('click', loadEmailDraft);
+  $('deleteDraft').addEventListener('click', deleteEmailDraft);
 });
 
 async function authenticate(event) {
@@ -20,9 +27,104 @@ async function authenticate(event) {
     $('adminPassword').value = '';
     $('loginPanel').classList.add('hidden');
     $('editorPanel').classList.remove('hidden');
-    await refreshRecipeIndex();
+    await Promise.all([refreshRecipeIndex(), refreshEmailDrafts()]);
   } catch (error) {
     showLoginNotice(error.message || 'Could not authenticate.', true);
+  }
+}
+
+async function refreshEmailDrafts() {
+  setDraftNotice('Checking for emailed recipes…');
+  try {
+    const response = await draftApi('list');
+    const payload = await safeJson(response);
+    if (!response.ok) throw new Error(payload?.error || 'Could not load emailed recipes.');
+    EMAIL_DRAFTS = Array.isArray(payload?.drafts) ? payload.drafts : [];
+    $('emailDraft').innerHTML = EMAIL_DRAFTS.length
+      ? '<option value="">Choose an emailed recipe</option>' + EMAIL_DRAFTS.map(draft => `<option value="${escapeAttr(draft.id)}">${escapeHtml(draft.subject)} · ${escapeHtml(formatDate(draft.received))}</option>`).join('')
+      : '<option value="">No pending drafts</option>';
+    clearDraftPreview();
+    setDraftNotice(EMAIL_DRAFTS.length ? `${EMAIL_DRAFTS.length} pending draft${EMAIL_DRAFTS.length === 1 ? '' : 's'}.` : 'No emailed recipes are waiting.');
+  } catch (error) {
+    EMAIL_DRAFTS = [];
+    $('emailDraft').innerHTML = '<option value="">Draft queue unavailable</option>';
+    clearDraftPreview();
+    setDraftNotice(error.message || 'Could not load emailed recipes.', true);
+  }
+}
+
+async function previewEmailDraft() {
+  const id = $('emailDraft').value;
+  clearDraftPreview();
+  if (!id) return;
+  setDraftNotice('Loading emailed recipe…');
+  try {
+    const response = await draftApi('get', { id });
+    const payload = await safeJson(response);
+    if (!response.ok) throw new Error(payload?.error || 'Could not load that draft.');
+    ACTIVE_DRAFT = payload;
+    $('draftMeta').textContent = `From ${payload.from || 'unknown sender'} · ${formatDate(payload.received)}`;
+    $('draftBody').textContent = payload.text || '(No text body. See attachments.)';
+    await renderAttachments(payload);
+    $('draftPreview').classList.remove('hidden');
+    $('loadDraft').disabled = false;
+    $('deleteDraft').disabled = false;
+    setDraftNotice('Draft ready to review.');
+  } catch (error) {
+    setDraftNotice(error.message || 'Could not load that draft.', true);
+  }
+}
+
+async function renderAttachments(draft) {
+  const container = $('draftAttachments');
+  container.innerHTML = '';
+  for (const attachment of (draft.attachments || [])) {
+    const response = await draftApi('attachment', { id: draft.id, index: attachment.index });
+    if (!response.ok) continue;
+    const url = URL.createObjectURL(await response.blob());
+    ATTACHMENT_URLS.push(url);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = attachment.filename || 'recipe-attachment';
+    link.textContent = `${attachment.filename} (${formatBytes(attachment.size)})`;
+    container.appendChild(link);
+  }
+}
+
+function loadEmailDraft() {
+  if (!ACTIVE_DRAFT) return;
+  const recipe = ACTIVE_DRAFT.recipe || {};
+  $('recipeSlug').value = recipe.slug || '';
+  $('recipeTitle').value = recipe.title || ACTIVE_DRAFT.subject || '';
+  $('recipeDescription').value = recipe.description || '';
+  $('recipeCategory').value = recipe.category || 'Other';
+  $('recipeTags').value = (recipe.tags || ['emailed recipe']).join(', ');
+  $('recipeImage').value = recipe.image || '';
+  $('recipePrep').value = recipe.prepTime || '';
+  $('recipeCook').value = recipe.cookTime || '';
+  $('recipeTotal').value = recipe.totalTime || '';
+  $('recipeYield').value = recipe.yield || '';
+  $('recipeIngredients').value = (recipe.ingredients || []).join('\n');
+  $('recipeSteps').value = (recipe.steps || []).join('\n');
+  $('recipeNotes').value = recipe.notes || '';
+  $('existingRecipe').value = '';
+  setSaveStatus('Email draft loaded. Review every field before publishing.');
+  $('recipeTitle').focus();
+  $('recipeForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+async function deleteEmailDraft() {
+  if (!ACTIVE_DRAFT) return;
+  const subject = ACTIVE_DRAFT.subject || 'this recipe';
+  if (!window.confirm(`Delete the emailed draft “${subject}”?`)) return;
+  setDraftNotice('Deleting draft…');
+  try {
+    const response = await draftApi('delete', { id: ACTIVE_DRAFT.id });
+    const payload = await safeJson(response);
+    if (!response.ok) throw new Error(payload?.error || 'Could not delete the draft.');
+    await refreshEmailDrafts();
+  } catch (error) {
+    setDraftNotice(error.message || 'Could not delete the draft.', true);
   }
 }
 
@@ -95,6 +197,11 @@ async function saveRecipe(event) {
     if (!response.ok) throw new Error(payload?.error || `Save failed (${response.status}).`);
     $('recipeSlug').value = payload.slug;
     setSaveStatus('Saved. Cloudflare will publish the new commit automatically.', false, true);
+    if (ACTIVE_DRAFT) {
+      const publishedDraftId = ACTIVE_DRAFT.id;
+      const deleteResponse = await draftApi('delete', { id: publishedDraftId });
+      if (deleteResponse.ok) await refreshEmailDrafts();
+    }
     await refreshRecipeIndex();
     $('existingRecipe').value = payload.slug;
   } catch (error) {
@@ -120,6 +227,43 @@ function apiRequest(action, password, body) {
     },
     body: JSON.stringify(body || {}),
   });
+}
+
+function draftApi(action, params = {}) {
+  const query = new URLSearchParams({ action, ...Object.fromEntries(Object.entries(params).map(([key, value]) => [key, String(value)])) });
+  return fetch(`/api/recipe-drafts?${query}`, {
+    method: 'POST',
+    headers: { 'authorization': `Bearer ${ADMIN_PASSWORD}` },
+  });
+}
+
+function clearDraftPreview() {
+  ACTIVE_DRAFT = null;
+  for (const url of ATTACHMENT_URLS) URL.revokeObjectURL(url);
+  ATTACHMENT_URLS = [];
+  $('draftPreview').classList.add('hidden');
+  $('draftMeta').textContent = '';
+  $('draftBody').textContent = '';
+  $('draftAttachments').innerHTML = '';
+  $('loadDraft').disabled = true;
+  $('deleteDraft').disabled = true;
+}
+
+function setDraftNotice(message, error = false) {
+  $('draftNotice').textContent = message;
+  $('draftNotice').className = `save-status${error ? ' error' : ''}`;
+}
+
+function formatDate(value) {
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? 'unknown date' : date.toLocaleString();
+}
+
+function formatBytes(value) {
+  const bytes = Number(value) || 0;
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
 function showLoginNotice(message, error = false) {

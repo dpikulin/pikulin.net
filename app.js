@@ -119,13 +119,13 @@ const WEATHER_CODES = {
 
 
 const DOODLES = [
-  { src: 'doodles/trex-goalie.svg', alt: 'T. rex loves playing goalie. Other teams hate it.' },
-  { src: 'doodles/trex-pullover.svg', alt: 'T. rex hates pullovers.' },
-  { src: 'doodles/bear-minimum.svg', alt: 'I’m doing the bear minimum.' },
-  { src: 'doodles/chicken-peep-pressure.svg', alt: 'Why don’t I share secrets? Too much peep pressure.' },
-  { src: 'doodles/pig-cuteness.svg', alt: 'I’m not chubby. I’m just hogging all the cuteness.' },
-  { src: 'doodles/squirrel-fund.svg', alt: 'I’m building my squirrel fund.' },
-  { src: 'doodles/giraffe-high-standards.svg', alt: 'I have really high standards.' },
+  { src: 'doodles/trex-goalie.png', alt: 'T. rex loves playing goalie. Other teams hate it.' },
+  { src: 'doodles/trex-pullover.png', alt: 'T. rex hates pullovers.' },
+  { src: 'doodles/bear-minimum.png', alt: 'I’m doing the bear minimum.' },
+  { src: 'doodles/chicken-peep-pressure.png', alt: 'Why don’t I share secrets? Too much peep pressure.' },
+  { src: 'doodles/pig-cuteness.png', alt: 'I’m not chubby. I’m just hogging all the cuteness.' },
+  { src: 'doodles/squirrel-fund.png', alt: 'I’m building my squirrel fund.' },
+  { src: 'doodles/giraffe-high-standards.png', alt: 'I have really high standards.' },
 ];
 
 let activeDoodleKey = null;
