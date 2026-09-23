@@ -1,0 +1,10 @@
+name = "pikulin-recipe-email"
+main = "src/index.js"
+compatibility_date = "2026-09-20"
+
+[[r2_buckets]]
+binding = "RECIPE_DRAFTS"
+bucket_name = "pikulin-recipe-drafts"
+
+# Set ALLOWED_RECIPE_SENDERS as a Worker secret or variable in Cloudflare.
+# It is a comma-separated list of email addresses allowed to submit drafts.
