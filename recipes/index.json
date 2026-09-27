@@ -1,5 +1,26 @@
 [
   {
+    "slug": "grammas-pretzels",
+    "title": "Gramma's Pretzels",
+    "description": "Gramma’s no bake ranch and dill pretzels, tossed with seasoned canola oil and left to absorb it overnight.",
+    "category": "Snacks",
+    "tags": [
+      "pretzels",
+      "ranch",
+      "dill",
+      "family recipe",
+      "no bake",
+      "party snack"
+    ],
+    "prepTime": "10 minutes plus overnight standing",
+    "cookTime": "",
+    "totalTime": "Overnight",
+    "yield": "2 bags of pretzels",
+    "created": "2026-09-27T16:18:32.000Z",
+    "updated": "2026-09-27T16:18:32.000Z",
+    "searchText": "Gramma's Pretzels Gramma’s no bake ranch and dill pretzels, tossed with seasoned canola oil and left to absorb it overnight. Snacks pretzels ranch dill family recipe no bake party snack 2 bags Tom Sturgis mini pretzels (about 794 g total if using 397 g / 14 oz bags; check the package) 218 g canola oil (1 cup) 28 g Hidden Valley Ranch dressing mix (1 packet, typically 1 oz) 2 g dried dill weed (2 teaspoons, approximate) 3 g garlic powder (1 teaspoon, approximate)"
+  },
+  {
     "slug": "moms-pancakes",
     "title": "Mom's Pancakes",
     "description": "Mom’s tender pancakes with buttermilk or milk, a short batter rest, and buttered skillet cooking.",
