@@ -185,22 +185,24 @@
   },
   {
     "slug": "davids-oven-reduced-tomato-sauce",
-    "title": "David’s Oven-Reduced Tomato Sauce",
-    "description": "A deep, long-cooked tomato sauce built on onion, carrot, celery, garlic, toasted tomato paste, red wine, and Parmesan, then slowly reduced in the oven.",
+    "title": "Dad's Tomato Sauce",
+    "description": "David’s large batch tomato sauce with a long stovetop simmer, Parmesan in two additions, optional red wine, and a final slow reduction in a 275°F / 135°C oven.",
     "category": "Sauces & Condiments",
     "tags": [
       "tomato",
       "pasta sauce",
       "oven reduced",
-      "batch cooking"
+      "family recipe",
+      "large batch",
+      "freezer"
     ],
-    "prepTime": "30 minutes",
-    "cookTime": "4–6 hours",
-    "totalTime": "4½–6½ hours",
-    "yield": "Large batch",
+    "prepTime": "45 minutes",
+    "cookTime": "2–3 hours on the stove, then oven reduction until 2.5–5 cm lower",
+    "totalTime": "Several hours, depending on the oven reduction",
+    "yield": "Large batch; portion into jars and freeze",
     "created": "2026-09-13T01:15:00.000Z",
-    "updated": "2026-09-13T01:15:00.000Z",
-    "searchText": "David’s Oven-Reduced Tomato Sauce A deep, long-cooked tomato sauce built on onion, carrot, celery, garlic, toasted tomato paste, red wine, and Parmesan, then slowly reduced in the oven. Sauces & Condiments tomato pasta sauce oven reduced batch cooking 10.9 kg crushed tomatoes 800 g tomato paste 6 onions about 900 g 450 g carrots 450 g celery 25–30 g garlic 1 cup red wine Parmesan herbs seasonings"
+    "updated": "2026-09-27T16:16:28.000Z",
+    "searchText": "Dad's Tomato Sauce David’s large batch tomato sauce with a long stovetop simmer, Parmesan in two additions, optional red wine, and a final slow reduction in a 275°F / 135°C oven. Sauces & Condiments tomato pasta sauce oven reduced family recipe large batch freezer 8,165 g tomatoes, whole, diced, crushed, or a mix (18 lb) 910 g tomato paste (2 lb) 1,361 g onion, roughly chopped 454 g carrot, roughly chopped 454 g celery, roughly chopped 30 g garlic, diced 28 g olive oil 300 g Parmesan cheese, divided into 100 g and 200 g additions About 236 mL red wine (about 235 g), optional Salt, oregano, basil, black pepper, garlic powder, parsley, onion powder, crushed red pepper, and Italian seasoning blend, to taste 2 bay leaves (about 0.4 g)"
   },
   {
     "slug": "hot-elote-dip",
