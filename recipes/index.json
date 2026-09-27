@@ -1,5 +1,26 @@
 [
   {
+    "slug": "dads-garlic-bread",
+    "title": "Dad's Garlic Bread",
+    "description": "A generous, layered garlic bread with olive oil, optional butter, three kinds of garlic, parsley, Italian seasoning, and Parmesan.",
+    "category": "Sides",
+    "tags": [
+      "garlic bread",
+      "bread",
+      "Parmesan",
+      "family recipe",
+      "Italian",
+      "side dish"
+    ],
+    "prepTime": "10 minutes",
+    "cookTime": "10–13 minutes",
+    "totalTime": "20–25 minutes",
+    "yield": "1 loaf",
+    "created": "2026-09-27T16:15:06.000Z",
+    "updated": "2026-09-27T16:15:06.000Z",
+    "searchText": "Dad's Garlic Bread A generous, layered garlic bread with olive oil, optional butter, three kinds of garlic, parsley, Italian seasoning, and Parmesan. Sides garlic bread bread Parmesan family recipe Italian side dish 1 loaf Italian bread or French baguette (about 300–400 g) 15 g olive oil, or enough to drizzle lightly 20 g butter, softened (optional) 2 g garlic powder 8 g minced garlic 3 g dried roasted garlic 1 g salt, or a light sprinkle 0.5 g freshly ground black pepper 5 g chopped parsley 2 g Italian seasoning 15 g grated Parmesan cheese"
+  },
+  {
     "slug": "dads-italian-chicken",
     "title": "Dad's Italian Chicken",
     "description": "A family notebook recipe for chicken, sweet peppers, onion, and cherry tomatoes in a honey and Italian dressing marinade, finished with apple cider vinegar.",
