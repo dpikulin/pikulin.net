@@ -1,0 +1,39 @@
+{
+  "slug": "moms-pancakes",
+  "title": "Mom's Pancakes",
+  "description": "Mom’s tender pancakes with buttermilk or milk, a short batter rest, and buttered skillet cooking.",
+  "category": "Breakfast",
+  "tags": [
+    "pancakes",
+    "buttermilk",
+    "family recipe",
+    "breakfast",
+    "skillet"
+  ],
+  "prepTime": "10 minutes plus 15 minutes resting",
+  "cookTime": "About 25–35 minutes for the batch",
+  "totalTime": "About 50–60 minutes; or refrigerate batter up to 12 hours",
+  "yield": "About 14–16 pancakes",
+  "ingredients": [
+    "240 g all purpose flour (2 cups)",
+    "8 g granulated sugar (2 teaspoons)",
+    "8 g baking powder (2 teaspoons)",
+    "3 g salt (½ teaspoon)",
+    "100 g beaten egg (about 2 large eggs, without shells)",
+    "610 g buttermilk (2½ cups), or 550 g milk (2¼ cups)",
+    "57 g butter, melted (4 tablespoons)",
+    "About 5 g additional butter per skillet batch, for cooking",
+    "About 60 g batter per pancake (¼ cup)"
+  ],
+  "steps": [
+    "Mix the flour, sugar, baking powder, and salt in a large bowl.",
+    "In a separate bowl, whisk together the eggs, buttermilk or milk, and melted butter.",
+    "Add the wet mixture to the dry ingredients and whisk just until combined. Some lumps are fine.",
+    "Let the batter rest for 15 minutes. Alternatively, cover and refrigerate for up to 12 hours.",
+    "Heat a skillet over medium high heat and melt about 5 g butter in it.",
+    "Spoon about 60 g batter into the skillet for each pancake. Cook until bubbles start to appear, then turn carefully and cook until golden brown, about 2–3 minutes more. Repeat with the remaining batter, adding butter as needed."
+  ],
+  "notes": "Transcribed from Mom's handwritten pancake recipe. Choose either 610 g buttermilk or 550 g milk; the original specifies 2½ cups buttermilk versus 2¼ cups milk. The gram weights are practical conversions from the handwritten US measures. Do not whisk the batter smooth.",
+  "created": "2026-09-27T16:17:39.000Z",
+  "updated": "2026-09-27T16:17:39.000Z"
+}
