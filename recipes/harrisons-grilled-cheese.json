@@ -1,0 +1,31 @@
+{
+  "slug": "harrisons-grilled-cheese",
+  "title": "Harrison's Grilled Cheese",
+  "description": "Harrison’s method toasts the inside of the bread first, adds optional mayo to the toasted sides, then grills the assembled sandwich.",
+  "category": "Lunch",
+  "tags": [
+    "grilled cheese",
+    "Harrison",
+    "sandwich",
+    "family recipe"
+  ],
+  "prepTime": "5 minutes",
+  "cookTime": "6–10 minutes",
+  "totalTime": "11–15 minutes",
+  "yield": "1 sandwich",
+  "ingredients": [
+    "2 slices bread (about 70–90 g total, depending on the bread)",
+    "2 slices cheese (about 40 g total, or any cheese you like)",
+    "10 g butter, approximately, to spread on both sides of the bread",
+    "10 g mayonnaise, approximately (optional)"
+  ],
+  "steps": [
+    "Spread butter on both sides of both slices of bread.",
+    "Grill the sides that will become the inside of the sandwich until toasted.",
+    "Spread the optional mayonnaise on the toasted sides. Put the cheese between those sides to assemble the sandwich.",
+    "Grill the buttered outsides until browned and the cheese melts."
+  ],
+  "notes": "Transcribed from Harrison's handwritten recipe, which says any cheese on any bread. The bread, cheese, butter, and optional mayo gram weights are suggested amounts because the original gives slice counts and no butter or mayo measures.",
+  "created": "2026-09-27T16:21:44.000Z",
+  "updated": "2026-09-27T16:21:44.000Z"
+}
