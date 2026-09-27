@@ -1,42 +1,45 @@
 {
   "slug": "davids-oven-reduced-tomato-sauce",
-  "title": "David’s Oven-Reduced Tomato Sauce",
-  "description": "A deep, long-cooked tomato sauce built on onion, carrot, celery, garlic, toasted tomato paste, red wine, and Parmesan, then slowly reduced in the oven.",
+  "title": "Dad's Tomato Sauce",
+  "description": "David’s large batch tomato sauce with a long stovetop simmer, Parmesan in two additions, optional red wine, and a final slow reduction in a 275°F / 135°C oven.",
   "category": "Sauces & Condiments",
   "tags": [
     "tomato",
     "pasta sauce",
     "oven reduced",
-    "batch cooking"
+    "family recipe",
+    "large batch",
+    "freezer"
   ],
-  "prepTime": "30 minutes",
-  "cookTime": "4–6 hours",
-  "totalTime": "4½–6½ hours",
-  "yield": "Large batch",
+  "prepTime": "45 minutes",
+  "cookTime": "2–3 hours on the stove, then oven reduction until 2.5–5 cm lower",
+  "totalTime": "Several hours, depending on the oven reduction",
+  "yield": "Large batch; portion into jars and freeze",
   "ingredients": [
-    "10.9 kg crushed tomatoes",
-    "800 g tomato paste",
-    "6 onions, about 900 g, diced",
-    "450 g carrots, diced",
-    "450 g celery, diced",
-    "25–30 g garlic, minced",
-    "1 cup red wine",
-    "Parmesan, freshly grated, to taste",
-    "Herbs and seasonings, to taste",
-    "Cooking fat as needed for sautéing"
+    "8,165 g tomatoes, whole, diced, crushed, or a mix (18 lb)",
+    "910 g tomato paste (2 lb)",
+    "1,361 g onion, roughly chopped",
+    "454 g carrot, roughly chopped",
+    "454 g celery, roughly chopped",
+    "30 g garlic, diced",
+    "28 g olive oil",
+    "300 g Parmesan cheese, divided into 100 g and 200 g additions",
+    "About 236 mL red wine (about 235 g), optional",
+    "Salt, oregano, basil, black pepper, garlic powder, parsley, onion powder, crushed red pepper, and Italian seasoning blend, to taste",
+    "2 bay leaves (about 0.4 g)"
   ],
   "steps": [
-    "Heat a large oven-safe pot or roasting vessel and sauté the onion, carrot, and celery until softened and aromatic.",
-    "Add the garlic and cook briefly, just until fragrant.",
-    "Add the tomato paste and cook it until it darkens slightly and loses its raw taste.",
-    "Add the crushed tomatoes and blend to the desired consistency.",
-    "Season the sauce, add the red wine, and stir in Parmesan.",
-    "Heat the oven to 300°F.",
-    "Transfer the sauce to the oven with the lid cracked so moisture can escape.",
-    "Reduce for 4–6 hours, stirring periodically, until the sauce has dropped roughly 2–3 inches in the pot and reached the desired richness and consistency.",
-    "Taste and adjust the final seasoning before serving, cooling, or portioning for storage."
+    "Roughly chop the onion, carrot, and celery while the olive oil heats in a large oven safe pot.",
+    "Add the onion, carrot, and celery. Sauté until soft without browning. Add the diced garlic for the final minute and season lightly with salt.",
+    "Add the tomato paste and cook with the vegetables for 1–3 minutes.",
+    "Add all the tomatoes, stir well, and salt generously.",
+    "Add 100 g of the Parmesan and the dried seasonings to taste. The handwritten guide is about 1½ tablespoons of each spice, with the blend adjusted by taste. Blend the sauce with a stick blender to the texture you like.",
+    "Add the bay leaves. Simmer on the stovetop for another 2–3 hours, stirring occasionally.",
+    "Heat the oven to 275°F / 135°C. Add the remaining 200 g Parmesan and, if using, about 236 mL red wine. Stir and simmer a little longer, then taste and adjust the seasonings.",
+    "Partially cover the pot and transfer it to the oven. Stir every 45–60 minutes. Let the sauce darken and reduce until its level falls about 2.5–5 cm (1–2 inches).",
+    "Remove the bay leaves, taste and adjust the seasonings again. Let cool, portion into jars, and freeze."
   ],
-  "notes": "The oven reduction is the defining move. The long, gentle reduction concentrates the tomato without requiring constant stovetop attention. Stir more frequently as the sauce gets thicker near the end.",
+  "notes": "This replaces the earlier reconstruction with David's handwritten method. The tomato quantity is 18 lb / 8.165 kg and the tomato paste is 2 lb / 0.91 kg. Wine may be omitted or added at any point from the tomato addition through the final stovetop stage. The original gives seasonings by taste and suggests roughly 1½ tablespoons of each spice, so exact gram weights would imply precision the recipe does not have. Keep the two Parmesan additions and the 2–3 hour stovetop simmer before the oven reduction.",
   "created": "2026-09-13T01:15:00.000Z",
-  "updated": "2026-09-13T01:15:00.000Z"
+  "updated": "2026-09-27T16:16:28.000Z"
 }
