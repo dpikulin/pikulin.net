@@ -1,5 +1,25 @@
 [
   {
+    "slug": "moms-pancakes",
+    "title": "Mom's Pancakes",
+    "description": "Mom’s tender pancakes with buttermilk or milk, a short batter rest, and buttered skillet cooking.",
+    "category": "Breakfast",
+    "tags": [
+      "pancakes",
+      "buttermilk",
+      "family recipe",
+      "breakfast",
+      "skillet"
+    ],
+    "prepTime": "10 minutes plus 15 minutes resting",
+    "cookTime": "About 25–35 minutes for the batch",
+    "totalTime": "About 50–60 minutes; or refrigerate batter up to 12 hours",
+    "yield": "About 14–16 pancakes",
+    "created": "2026-09-27T16:17:39.000Z",
+    "updated": "2026-09-27T16:17:39.000Z",
+    "searchText": "Mom's Pancakes Mom’s tender pancakes with buttermilk or milk, a short batter rest, and buttered skillet cooking. Breakfast pancakes buttermilk family recipe breakfast skillet 240 g all purpose flour (2 cups) 8 g granulated sugar (2 teaspoons) 8 g baking powder (2 teaspoons) 3 g salt (½ teaspoon) 100 g beaten egg (about 2 large eggs, without shells) 610 g buttermilk (2½ cups), or 550 g milk (2¼ cups) 57 g butter, melted (4 tablespoons) About 5 g additional butter per skillet batch, for cooking About 60 g batter per pancake (¼ cup)"
+  },
+  {
     "slug": "dads-garlic-bread",
     "title": "Dad's Garlic Bread",
     "description": "A generous, layered garlic bread with olive oil, optional butter, three kinds of garlic, parsley, Italian seasoning, and Parmesan.",
