@@ -126,6 +126,11 @@ const DOODLES = [
   { src: 'doodles/pig-cuteness.png', alt: 'I’m not chubby. I’m just hogging all the cuteness.' },
   { src: 'doodles/squirrel-fund.png', alt: 'I’m building my squirrel fund.' },
   { src: 'doodles/giraffe-high-standards.png', alt: 'I have really high standards.' },
+  { src: 'doodles/trex-pushups.jpeg', alt: 'T-Rex hates pushups.' },
+  { src: 'doodles/chicken-zoom.jpeg', alt: 'Zoom. Love Dad xoxo.' },
+  { src: 'doodles/chonky-bear-season.jpeg', alt: 'Chonky bear season. Love Dad xoxo.' },
+  { src: 'doodles/crazed-chicken.jpeg', alt: 'Crazed Chicken. Love Dad xoxo.' },
+  { src: 'doodles/evolution-is-cruel.jpeg', alt: 'Evolution is cruel. Love Dad xoxo.' },
 ];
 
 let activeDoodleKey = null;
