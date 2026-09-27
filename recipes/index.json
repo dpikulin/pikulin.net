@@ -1,5 +1,84 @@
 [
   {
+    "slug": "harrisons-grilled-cheese",
+    "title": "Harrison's Grilled Cheese",
+    "description": "Harrison’s method toasts the inside of the bread first, adds optional mayo to the toasted sides, then grills the assembled sandwich.",
+    "category": "Lunch",
+    "tags": [
+      "grilled cheese",
+      "Harrison",
+      "sandwich",
+      "family recipe"
+    ],
+    "prepTime": "5 minutes",
+    "cookTime": "6–10 minutes",
+    "totalTime": "11–15 minutes",
+    "yield": "1 sandwich",
+    "created": "2026-09-27T16:21:44.000Z",
+    "updated": "2026-09-27T16:21:44.000Z",
+    "searchText": "Harrison's Grilled Cheese Harrison’s method toasts the inside of the bread first, adds optional mayo to the toasted sides, then grills the assembled sandwich. Lunch grilled cheese Harrison sandwich family recipe 2 slices bread (about 70–90 g total, depending on the bread) 2 slices cheese (about 40 g total, or any cheese you like) 10 g butter, approximately, to spread on both sides of the bread 10 g mayonnaise, approximately (optional)"
+  },
+  {
+    "slug": "dads-tomato-sauce-small-batch",
+    "title": "Dad's Tomato Sauce (Small Batch)",
+    "description": "A smaller version of Dad’s sauce with a softened vegetable base, blended tomatoes and Parmesan, a stovetop simmer, and a short oven reduction.",
+    "category": "Sauces & Condiments",
+    "tags": [
+      "tomato sauce",
+      "small batch",
+      "family recipe",
+      "pasta",
+      "oven reduced"
+    ],
+    "prepTime": "20 minutes",
+    "cookTime": "About 1½ hours plus oven reduction",
+    "totalTime": "About 2 hours or longer",
+    "yield": "Small batch",
+    "created": "2026-09-27T16:21:44.000Z",
+    "updated": "2026-09-27T16:21:44.000Z",
+    "searchText": "Dad's Tomato Sauce (Small Batch) A smaller version of Dad’s sauce with a softened vegetable base, blended tomatoes and Parmesan, a stovetop simmer, and a short oven reduction. Sauces & Condiments tomato sauce small batch family recipe pasta oven reduced 2 lb / 907 g crushed tomatoes 1 can tomato paste (the notebook does not state its size; a 6 oz can is about 170 g) 1 onion (about 150 g), roughly chopped 1 celery stalk (about 40 g), roughly chopped 1 carrot (about 70 g), roughly chopped 1 large garlic clove (about 5 g), chopped 50 g Parmesan cheese, divided; 25 g specified for blending 14 g olive oil 50 mL red wine (about 50 g) Salt, pepper, basil, oregano, crushed red pepper, onion powder, garlic powder, and Italian seasoning blend, to taste 1 bay leaf"
+  },
+  {
+    "slug": "dads-meatballs",
+    "title": "Dad's Meatballs",
+    "description": "Ground beef meatballs with seasoned breadcrumbs, herbs, a generous helping of Parmesan, and a pan sear before baking and simmering in sauce.",
+    "category": "Beef",
+    "tags": [
+      "meatballs",
+      "ground beef",
+      "Parmesan",
+      "family recipe",
+      "tomato sauce"
+    ],
+    "prepTime": "20 minutes",
+    "cookTime": "Until browned and fully cooked, then simmered in sauce",
+    "totalTime": "Varies with meatball size and sauce simmer",
+    "yield": "About 900 g of beef mixture",
+    "created": "2026-09-27T16:21:44.000Z",
+    "updated": "2026-09-27T16:21:44.000Z",
+    "searchText": "Dad's Meatballs Ground beef meatballs with seasoned breadcrumbs, herbs, a generous helping of Parmesan, and a pan sear before baking and simmering in sauce. Beef meatballs ground beef Parmesan family recipe tomato sauce 900 g ground beef (2 lb) 1 egg (about 50 g without shell) About 35 g seasoned breadcrumbs (⅓ cup) 5 g garlic powder 5 g onion powder 5 g Italian seasoning blend A generous amount of parsley, to taste Salt and pepper, to taste About 30 g milk, a large splash (approximate) About 120 g grated Parmesan, a very generous heaping cup (approximate) 27 g avocado oil (2 tablespoons)"
+  },
+  {
+    "slug": "moms-chocolate-chip-cookies-half-batch",
+    "title": "Mom's Chocolate Chip Cookies (Half Batch)",
+    "description": "Mom’s half batch of chocolate chip cookies, with a long butter creaming step, flexible mix ins, and a 375°F / 190°C bake.",
+    "category": "Desserts",
+    "tags": [
+      "chocolate chip cookies",
+      "cookies",
+      "half batch",
+      "family recipe",
+      "baking"
+    ],
+    "prepTime": "20 minutes",
+    "cookTime": "10–12 minutes per tray",
+    "totalTime": "About 30–45 minutes",
+    "yield": "About 28–32 small cookies",
+    "created": "2026-09-27T16:21:44.000Z",
+    "updated": "2026-09-27T16:21:44.000Z",
+    "searchText": "Mom's Chocolate Chip Cookies (Half Batch) Mom’s half batch of chocolate chip cookies, with a long butter creaming step, flexible mix ins, and a 375°F / 190°C bake. Desserts chocolate chip cookies cookies half batch family recipe baking 113 g butter, room temperature (½ cup / 1 stick) 110 g packed brown sugar (½ cup) 50 g granulated sugar (¼ cup) 2 g vanilla extract (½ teaspoon) 1 egg (about 50 g without shell) 150 g all purpose flour (1¼ cups) 3 g salt (½ teaspoon) 5 g baking soda (1 teaspoon) 170 g chocolate chips (1 cup), or a similar amount of M&M's or other mix ins"
+  },
+  {
     "slug": "moms-chocolate-chip-cookie-dough-dip",
     "title": "Mom's Chocolate Chip Cookie Dough Dip",
     "description": "A creamy, no bake cookie dough dip with cream cheese, butter, brown sugar, vanilla, and mini chocolate chips.",
