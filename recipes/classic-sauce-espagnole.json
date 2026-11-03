@@ -1,0 +1,41 @@
+{
+  "slug": "classic-sauce-espagnole",
+  "title": "Classic Sauce Espagnole",
+  "description": "The classic brown mother sauce: brown veal or beef stock, brown roux, mirepoix, and tomato. A savory foundation for other brown sauces.",
+  "category": "Sauces & Condiments",
+  "tags": [
+    "French",
+    "mother sauce",
+    "brown sauce",
+    "beef",
+    "veal"
+  ],
+  "prepTime": "15 minutes",
+  "cookTime": "About 90 minutes",
+  "totalTime": "About 1 hour 45 minutes",
+  "yield": "About 750 mL (3 cups)",
+  "ingredients": [
+    "50 g clarified butter, divided: 35 g for roux and 15 g for vegetables",
+    "50 g all purpose flour",
+    "100 g onion, finely diced",
+    "50 g carrot, finely diced",
+    "50 g celery, finely diced",
+    "30 g tomato paste",
+    "1.25 L unsalted brown veal or beef stock, plus a little extra as needed",
+    "1 bay leaf",
+    "2 thyme sprigs",
+    "3 parsley stems",
+    "6 black peppercorns",
+    "Salt, to taste"
+  ],
+  "steps": [
+    "In a heavy saucepan, heat 35 g clarified butter. Stir in the flour and cook over medium-low heat, stirring constantly, until evenly nut brown, about 10–15 minutes. Do not scorch it; discard and restart if burnt.",
+    "In a separate pan, heat the remaining 15 g butter. Brown the onion, carrot, and celery for 8–10 minutes. Add tomato paste and cook 2 minutes, until brick red.",
+    "Take the roux off the heat briefly. Gradually whisk in the stock until smooth, then add the browned vegetables, tomato paste, herbs, and peppercorns.",
+    "Bring to a gentle simmer. Cook uncovered for 60–90 minutes, stirring along the bottom and skimming fat and foam. Aim for about 750 mL and a sauce that lightly coats a spoon; add stock if it gets too thick before the flour flavor cooks out.",
+    "Strain through a fine sieve without forcing the vegetables through. Adjust consistency with stock or gentle reduction. Salt only after reduction."
+  ],
+  "notes": "Use unsalted, well made brown stock; ordinary salty broth becomes too salty when reduced. Espagnole is usually a foundation for finished sauces, rather than a heavily seasoned table sauce. Pair finished brown sauces with beef, roasted meats, or mushrooms. For a traditional demi-glace approach, combine equal volumes espagnole and brown stock and reduce by about half. Stock-making time is not included.",
+  "created": "2026-11-03T12:00:00.000Z",
+  "updated": "2026-11-03T12:00:00.000Z"
+}

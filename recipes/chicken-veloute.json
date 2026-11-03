@@ -1,0 +1,33 @@
+{
+  "slug": "chicken-veloute",
+  "title": "Chicken Velouté",
+  "description": "A pale, silky mother sauce made from chicken stock and a blond roux. The base for sauce suprême and a chicken version of allemande.",
+  "category": "Sauces & Condiments",
+  "tags": [
+    "French",
+    "mother sauce",
+    "veloute",
+    "chicken",
+    "pork"
+  ],
+  "prepTime": "5 minutes",
+  "cookTime": "30–35 minutes",
+  "totalTime": "35–40 minutes",
+  "yield": "About 500 mL (2 cups)",
+  "ingredients": [
+    "30 g unsalted butter",
+    "30 g all purpose flour",
+    "600 mL unsalted white chicken stock, plus extra as needed",
+    "Salt and ground white pepper, to taste"
+  ],
+  "steps": [
+    "Melt the butter in a heavy saucepan over medium-low heat. Stir in the flour and cook 2–3 minutes, stirring, until pale blond with no raw flour aroma. Do not brown it.",
+    "Remove briefly from the heat and gradually whisk in the stock, starting with small additions to make a smooth paste.",
+    "Bring to a gentle simmer while stirring, then cook on low for 25–30 minutes. Stir frequently along the bottom and skim any skin or foam.",
+    "Aim for about 500 mL and a light coating consistency. Thin with stock if necessary, or simmer a little longer to thicken. Strain for an especially smooth finish.",
+    "Season lightly if using as a base for another sauce; season to taste if serving directly."
+  ],
+  "notes": "White chicken stock is made without roasting the bones and keeps the sauce pale. A stock rich in gelatin gives better body. Serve with chicken, pork tenderloin, vegetables, or rice. Use this recipe as the base for Sauce Suprême or Sauce Allemande. For a traditional veal velouté, substitute unsalted white veal stock.",
+  "created": "2026-11-03T12:00:00.000Z",
+  "updated": "2026-11-03T12:00:00.000Z"
+}

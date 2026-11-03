@@ -1,0 +1,35 @@
+{
+  "slug": "sauce-supreme",
+  "title": "Sauce Suprême",
+  "description": "Chicken velouté enriched with cream and finished with butter: silky, rich, and especially good with chicken or pork.",
+  "category": "Sauces & Condiments",
+  "tags": [
+    "French",
+    "supreme",
+    "chicken",
+    "cream sauce",
+    "pork",
+    "veloute"
+  ],
+  "prepTime": "5 minutes",
+  "cookTime": "15–20 minutes",
+  "totalTime": "20–25 minutes with prepared velouté",
+  "yield": "About 500–550 mL",
+  "ingredients": [
+    "500 mL prepared chicken velouté (see Chicken Velouté)",
+    "150 mL heavy cream, divided",
+    "20 g cold unsalted butter, cubed",
+    "5 mL fresh lemon juice (1 teaspoon), or to taste",
+    "Salt and ground white pepper, to taste"
+  ],
+  "steps": [
+    "Bring the velouté to a gentle simmer in a heavy saucepan. Add 100 mL of the cream.",
+    "Simmer gently for 10–15 minutes, stirring frequently, until the sauce coats the back of a spoon. Do not reduce it to a paste.",
+    "Stir in the remaining 50 mL cream and warm through. If too thick, loosen with a small splash of unsalted chicken stock or water.",
+    "Remove from the heat and whisk in the cold butter a few cubes at a time.",
+    "Add the lemon juice gradually, then season with salt and white pepper. Strain if desired and serve warm."
+  ],
+  "notes": "Pair with poached or roasted chicken, pork tenderloin, asparagus, or mushrooms. The lemon should brighten the sauce without making it taste lemony. This is a streamlined cream-and-butter version; classical versions may include mushroom cooking liquor. Timing assumes the velouté is already made. Once finished with butter, avoid a hard boil.",
+  "created": "2026-11-03T12:00:00.000Z",
+  "updated": "2026-11-03T12:00:00.000Z"
+}

@@ -1,0 +1,37 @@
+{
+  "slug": "sauce-allemande",
+  "title": "Sauce Allemande (Veal or Chicken)",
+  "description": "Velouté enriched with an egg yolk and cream liaison, finished with lemon. Traditionally made with veal; chicken velouté makes a lovely lighter-meat sauce.",
+  "category": "Sauces & Condiments",
+  "tags": [
+    "French",
+    "allemande",
+    "veal",
+    "chicken",
+    "pork",
+    "egg yolk",
+    "veloute"
+  ],
+  "prepTime": "5 minutes",
+  "cookTime": "10–15 minutes",
+  "totalTime": "15–20 minutes with prepared velouté",
+  "yield": "About 550 mL",
+  "ingredients": [
+    "500 mL prepared veal or chicken velouté",
+    "2 large egg yolks (about 36 g)",
+    "75 mL heavy cream",
+    "15 g cold unsalted butter",
+    "5–10 mL fresh lemon juice (1–2 teaspoons), to taste",
+    "Salt and ground white pepper, to taste"
+  ],
+  "steps": [
+    "Warm the velouté to a gentle simmer and adjust it to a light coating consistency before adding the yolks.",
+    "In a bowl, whisk the egg yolks and cream together until smooth. This mixture is the liaison.",
+    "Remove the velouté from the heat. Slowly whisk about 150 mL of the hot sauce into the yolk mixture, adding it in small portions so the yolks warm gradually.",
+    "Whisk the tempered mixture back into the saucepan. Heat very gently, stirring constantly, until slightly thickened and the sauce reaches 160°F / 71°C. Do not boil.",
+    "Remove from the heat immediately. Whisk in the butter, then add lemon juice, salt, and white pepper to taste. Strain through a fine sieve and serve promptly."
+  ],
+  "notes": "For the traditional base, make the Chicken Velouté recipe using white veal stock instead of chicken stock. For the chicken option, use it as written. Pair with chicken, pork, veal, or vegetables. Finish the liaison shortly before serving; for advance preparation, make only the velouté and add the yolks and cream at serving time. Timing assumes prepared velouté. Technique reference: Professional Cooking, Wayne Gisslen, https://resources.escoffier.edu/textbooks/gisslen/professional_cooking_09.pdf. Quantities and wording adapted for this kitchen batch.",
+  "created": "2026-11-03T12:00:00.000Z",
+  "updated": "2026-11-03T12:00:00.000Z"
+}
