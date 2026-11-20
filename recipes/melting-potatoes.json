@@ -3,7 +3,12 @@
   "title": "Melting Potatoes",
   "description": "Thick-cut Yukon Gold potatoes roasted in butter and herbs, then finished with stock and garlic until crisp-edged and creamy inside.",
   "category": "Sides",
-  "tags": ["potatoes", "roasted", "garlic", "herbs"],
+  "tags": [
+    "potatoes",
+    "roasted",
+    "garlic",
+    "herbs"
+  ],
   "prepTime": "10 minutes",
   "cookTime": "45 minutes",
   "totalTime": "55 minutes",
@@ -25,5 +30,6 @@
   ],
   "notes": "Source: Real Simple. Volume and count measurements were converted to approximate gram weights.",
   "created": "2026-09-13T02:01:00.000Z",
-  "updated": "2026-09-13T02:01:00.000Z"
+  "updated": "2026-09-13T02:01:00.000Z",
+  "tested": true
 }
