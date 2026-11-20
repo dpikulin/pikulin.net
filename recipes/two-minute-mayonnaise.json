@@ -3,7 +3,11 @@
   "title": "Two-Minute Mayonnaise",
   "description": "Fast immersion-blender mayonnaise made with egg yolk, lemon juice, Dijon mustard, and neutral oil.",
   "category": "Sides",
-  "tags": ["mayonnaise", "immersion blender", "condiment"],
+  "tags": [
+    "mayonnaise",
+    "immersion blender",
+    "condiment"
+  ],
   "prepTime": "2 minutes",
   "cookTime": "2 minutes",
   "totalTime": "2 minutes",
@@ -24,5 +28,6 @@
   ],
   "notes": "Source: Serious Eats. Volume and count measurements were converted to approximate gram weights.",
   "created": "2026-09-13T02:07:00.000Z",
-  "updated": "2026-09-13T02:07:00.000Z"
+  "updated": "2026-09-13T02:07:00.000Z",
+  "tested": true
 }
