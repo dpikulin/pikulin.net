@@ -99,6 +99,7 @@ function loadEmailDraft() {
   $('recipeDescription').value = recipe.description || '';
   $('recipeCategory').value = recipe.category || 'Other';
   $('recipeTags').value = (recipe.tags || ['emailed recipe']).join(', ');
+  $('recipeTested').checked = false;
   $('recipeImage').value = recipe.image || '';
   $('recipePrep').value = recipe.prepTime || '';
   $('recipeCook').value = recipe.cookTime || '';
@@ -139,7 +140,7 @@ async function refreshRecipeIndex() {
   $('existingRecipe').innerHTML = '<option value="">New recipe</option>' + RECIPE_INDEX
     .slice()
     .sort((a, b) => a.title.localeCompare(b.title))
-    .map(recipe => `<option value="${escapeAttr(recipe.slug)}">${escapeHtml(recipe.title)}</option>`)
+    .map(recipe => `<option value="${escapeAttr(recipe.slug)}">${recipe.tested === true ? "✓ " : "○ "}${escapeHtml(recipe.title)}</option>`)
     .join('');
 }
 
@@ -156,6 +157,8 @@ async function loadExistingRecipe() {
     $('recipeDescription').value = recipe.description || '';
     $('recipeCategory').value = recipe.category || '';
     $('recipeTags').value = (recipe.tags || []).join(', ');
+    const indexed = RECIPE_INDEX.find(item => item.slug === slug);
+    $('recipeTested').checked = recipe.tested === true || (recipe.tested == null && indexed?.tested === true);
     $('recipeImage').value = recipe.image || '';
     $('recipePrep').value = recipe.prepTime || '';
     $('recipeCook').value = recipe.cookTime || '';
@@ -179,6 +182,7 @@ async function saveRecipe(event) {
     description: $('recipeDescription').value.trim(),
     category: $('recipeCategory').value.trim(),
     tags: splitCsv($('recipeTags').value),
+    tested: $('recipeTested').checked,
     image: $('recipeImage').value.trim(),
     prepTime: $('recipePrep').value.trim(),
     cookTime: $('recipeCook').value.trim(),

@@ -72,3 +72,10 @@
 @media (max-width: 720px) {
   .draft-picker-row { align-items: stretch; flex-direction: column; }
 }
+
+/* Status is intentionally a single explicit confirmation, not a rating. */
+.recipe-tested-toggle { display: flex; align-items: flex-start; gap: 13px; padding: 15px 17px; border: 1px solid var(--line); border-radius: 14px; background: var(--sky-50); cursor: pointer; }
+.recipe-tested-toggle input { flex: 0 0 auto; width: 20px; height: 20px; margin: 2px 0 0; accent-color: var(--navy-900); }
+.recipe-tested-toggle span { display: grid; gap: 4px; }
+.recipe-tested-toggle strong { font-size: 0.96rem; color: var(--ink); }
+.recipe-tested-toggle small { max-width: 690px; color: var(--muted); line-height: 1.4; font-size: 0.81rem; }
