@@ -250,3 +250,12 @@
   .recipe-detail-grid { grid-template-columns: 0.8fr 1.2fr !important; gap: 0.35in !important; }
   .recipe-notes { background: #fff !important; border-color: #bbb !important; break-inside: avoid; }
 }
+
+/* Recipe development filter and experimental recipe labels */
+.recipe-display-tools { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px 18px; margin: 14px 2px 4px; }
+.recipe-development-toggle { display: inline-flex; align-items: center; gap: 10px; padding: 11px 15px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--navy-900); font-size: 0.88rem; font-weight: 760; cursor: pointer; }
+.recipe-development-toggle input { width: 17px; height: 17px; margin: 0; accent-color: var(--navy-900); cursor: pointer; }
+.recipe-development-hint { color: var(--muted); font-size: 0.78rem; }
+.recipe-card-labels { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
+.recipe-status-chip { display: inline-flex; align-items: center; padding: 5px 8px; border: 1px solid #b8d7ed; border-radius: 999px; background: #edf7fd; color: #245b7f; font-size: 0.72rem; font-weight: 800; }
+@media (max-width: 520px) { .recipe-display-tools { align-items: flex-start; flex-direction: column; } }

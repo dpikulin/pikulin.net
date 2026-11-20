@@ -2,6 +2,7 @@ const RECIPE_STATE = {
   recipes: [],
   category: 'All',
   query: '',
+  showDevelopment: false,
 };
 
 const $ = id => document.getElementById(id);
@@ -12,6 +13,11 @@ async function initRecipes() {
     renderRecipes();
   });
   $('clearFilters').addEventListener('click', clearFilters);
+  $('showDevelopment').addEventListener('change', event => {
+    RECIPE_STATE.showDevelopment = event.target.checked;
+    renderCategories();
+    renderRecipes();
+  });
   $('closeRecipe').addEventListener('click', () => $('recipeDialog').close());
   $('printRecipe').addEventListener('click', () => window.print());
   $('recipeDialog').addEventListener('click', event => {
@@ -35,13 +41,17 @@ async function initRecipes() {
 }
 
 function renderCategories() {
+  const visible = RECIPE_STATE.recipes.filter(recipe => RECIPE_STATE.showDevelopment || recipe.tested === true);
   const counts = new Map();
-  RECIPE_STATE.recipes.forEach(recipe => {
+  visible.forEach(recipe => {
     const category = recipe.category || 'Other';
     counts.set(category, (counts.get(category) || 0) + 1);
   });
+  if (RECIPE_STATE.category !== 'All' && !counts.has(RECIPE_STATE.category)) {
+    RECIPE_STATE.category = 'All';
+  }
   const categories = [...counts.keys()].sort((a, b) => a.localeCompare(b));
-  const rows = [['All', RECIPE_STATE.recipes.length], ...categories.map(category => [category, counts.get(category)])];
+  const rows = [['All', visible.length], ...categories.map(category => [category, counts.get(category)])];
   $('categoryList').innerHTML = rows.map(([category, count]) => `
     <button class="category-button ${RECIPE_STATE.category === category ? 'active' : ''}" type="button" data-category="${escapeAttr(category)}">
       <span>${escapeHtml(category)}</span><span class="category-count">${count}</span>
@@ -60,7 +70,7 @@ function filteredRecipes() {
     const categoryMatch = RECIPE_STATE.category === 'All' || recipe.category === RECIPE_STATE.category;
     const search = (recipe.searchText || [recipe.title, recipe.description, recipe.category, ...(recipe.tags || [])].join(' ')).toLowerCase();
     const queryMatch = !RECIPE_STATE.query || search.includes(RECIPE_STATE.query);
-    return categoryMatch && queryMatch;
+    return (RECIPE_STATE.showDevelopment || recipe.tested === true) && categoryMatch && queryMatch;
   });
 }
 
@@ -68,7 +78,11 @@ function renderRecipes() {
   const recipes = filteredRecipes();
   const hasFilter = RECIPE_STATE.category !== 'All' || Boolean(RECIPE_STATE.query);
   $('clearFilters').classList.toggle('hidden', !hasFilter);
-  $('resultsEyebrow').textContent = RECIPE_STATE.category === 'All' ? 'All recipes' : RECIPE_STATE.category;
+  $('resultsEyebrow').textContent = RECIPE_STATE.category === 'All'
+    ? (RECIPE_STATE.showDevelopment ? 'All recipes' : 'Made & tested')
+    : RECIPE_STATE.category;
+  const developmentCount = RECIPE_STATE.recipes.filter(recipe => recipe.tested !== true).length;
+  $('developmentHint').textContent = `${developmentCount} recipe${developmentCount === 1 ? '' : 's'} in development or awaiting verification`;
   $('resultsTitle').textContent = RECIPE_STATE.query ? `Results for “${RECIPE_STATE.query}”` : 'Recipe box';
   $('recipeCount').textContent = `${recipes.length} ${recipes.length === 1 ? 'recipe' : 'recipes'}`;
   $('emptyState').classList.toggle('hidden', recipes.length > 0);
@@ -79,7 +93,10 @@ function renderRecipes() {
       <article class="recipe-card${image ? ' has-image' : ''}" tabindex="0" role="button" data-slug="${escapeAttr(recipe.slug)}" aria-label="Open ${escapeAttr(recipe.title)}">
         ${image}
         <div class="recipe-card-body">
-          <div><span class="recipe-category-chip">${escapeHtml(recipe.category || 'Other')}</span></div>
+          <div class="recipe-card-labels">
+            <span class="recipe-category-chip">${escapeHtml(recipe.category || 'Other')}</span>
+            ${recipe.tested === true ? '' : '<span class="recipe-status-chip">In development</span>'}
+          </div>
           <h3>${escapeHtml(recipe.title)}</h3>
           <p>${escapeHtml(recipe.description || 'A Pikulin kitchen keeper.')}</p>
           <div class="recipe-card-meta">
@@ -130,7 +147,10 @@ function renderRecipeDetail(recipe) {
   $('recipeDetail').innerHTML = `
     ${image}
     <header class="recipe-detail-head">
-      <span class="recipe-category-chip">${escapeHtml(recipe.category || 'Other')}</span>
+      <div class="recipe-card-labels">
+        <span class="recipe-category-chip">${escapeHtml(recipe.category || 'Other')}</span>
+        ${recipe.tested === true ? '' : '<span class="recipe-status-chip">In development</span>'}
+      </div>
       <h2>${escapeHtml(recipe.title || 'Recipe')}</h2>
       ${recipe.description ? `<p class="lead">${escapeHtml(recipe.description)}</p>` : ''}
       ${tags ? `<div class="recipe-tags">${tags}</div>` : ''}
