@@ -3,7 +3,12 @@
   "title": "Homemade Ricotta",
   "description": "Simple fresh ricotta made from whole milk, cream, salt, and white wine vinegar.",
   "category": "Sauces & Condiments",
-  "tags": ["ricotta", "cheese", "homemade", "dairy"],
+  "tags": [
+    "ricotta",
+    "cheese",
+    "homemade",
+    "dairy"
+  ],
   "prepTime": "10 minutes",
   "cookTime": "10 minutes",
   "totalTime": "40–45 minutes including draining",
@@ -23,5 +28,6 @@
   ],
   "notes": "Source: Food Network / Ina Garten. Volume measurements were converted to approximate gram weights.",
   "created": "2026-09-13T02:05:00.000Z",
-  "updated": "2026-09-13T02:05:00.000Z"
+  "updated": "2026-09-13T02:05:00.000Z",
+  "tested": true
 }

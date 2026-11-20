@@ -3,7 +3,11 @@
   "title": "Sous Vide Mashed Potato",
   "description": "Creamy mashed potatoes cooked sous vide with butter, cream, milk, and seasoning, with an optional baked crust finish.",
   "category": "Sides",
-  "tags": ["potatoes", "sous vide", "mashed potatoes"],
+  "tags": [
+    "potatoes",
+    "sous vide",
+    "mashed potatoes"
+  ],
   "prepTime": "25 minutes",
   "cookTime": "45 minutes",
   "totalTime": "1 hour 10 minutes",
@@ -28,5 +32,6 @@
   ],
   "notes": "Paprika source recipe. Liquid measures were converted to approximate gram weights.",
   "created": "2026-09-13T02:02:00.000Z",
-  "updated": "2026-09-13T02:02:00.000Z"
+  "updated": "2026-09-13T02:02:00.000Z",
+  "tested": true
 }

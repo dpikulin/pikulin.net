@@ -3,7 +3,12 @@
   "title": "Kit Kat Ice Cream",
   "description": "Chocolate malt ice cream with chopped milk chocolate and Kit Kat pieces folded through after churning.",
   "category": "Desserts",
-  "tags": ["ice cream", "chocolate", "Kit Kat", "malted milk"],
+  "tags": [
+    "ice cream",
+    "chocolate",
+    "Kit Kat",
+    "malted milk"
+  ],
   "prepTime": "",
   "cookTime": "",
   "totalTime": "",
@@ -33,5 +38,6 @@
   ],
   "notes": "Source: Baked Bree. Volume and count measurements were converted to approximate gram weights; Kit Kat bar mass varies by package size.",
   "created": "2026-09-13T02:04:00.000Z",
-  "updated": "2026-09-13T02:04:00.000Z"
+  "updated": "2026-09-13T02:04:00.000Z",
+  "tested": true
 }
