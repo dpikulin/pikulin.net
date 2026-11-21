@@ -75,6 +75,7 @@ function renderPicker() {
     [recipe.title, recipe.category, ...(recipe.tags || [])].join(' ').toLowerCase().includes(query)
   );
   $('selectedCount').textContent = `${SHOP.selected.size} selected`;
+  const oldScrollTop = $('recipePicker').scrollTop;
   $('recipePicker').innerHTML = shown.length ? shown.map(recipe => `
     <label class="shopping-recipe-choice">
       <input type="checkbox" data-slug="${escapeAttr(recipe.slug)}" ${SHOP.selected.has(recipe.slug) ? 'checked' : ''}>
@@ -83,6 +84,7 @@ function renderPicker() {
       </span>
     </label>
   `).join('') : '<p class="shopping-help">No recipes match that search.</p>';
+  $('recipePicker').scrollTop = oldScrollTop;
   $('recipePicker').querySelectorAll('input[data-slug]').forEach(box => {
     box.addEventListener('change', () => {
       if (box.checked) SHOP.selected.add(box.dataset.slug);
