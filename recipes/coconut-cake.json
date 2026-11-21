@@ -1,0 +1,45 @@
+{
+  "slug": "coconut-cake",
+  "title": "Coconut Cake",
+  "description": "A traditional coconut cake made with fresh coconut, margarine, and separated eggs, baked until golden.",
+  "category": "Cake",
+  "tags": [
+    "coconut",
+    "cake",
+    "homemade",
+    "classic"
+  ],
+  "tested": false,
+  "image": "",
+  "prepTime": "",
+  "cookTime": "35 min",
+  "totalTime": "",
+  "yield": "",
+  "ingredients": [
+    "4 eggs, separated",
+    "3 c. flour",
+    "3 tsp. baking powder",
+    "1/4 tsp. salt",
+    "2 c. sugar",
+    "1 c. margarine",
+    "1/2 tsp. vanilla",
+    "1/2 tsp. coconut extract",
+    "1 c. milk",
+    "1 c. fresh coconut"
+  ],
+  "steps": [
+    "Bake at 375° for 35 min.",
+    "Sift together flour, baking powder, and salt.",
+    "Cream together sugar and margarine.",
+    "Add vanilla and coconut extract to the creamed mixture.",
+    "Add dry ingredients and milk to creamed mixture in 3 separate times. Mix well after each.",
+    "Add coconut and mix well.",
+    "Beat egg whites till stiff but not dry.",
+    "Fold egg whites into mixture.",
+    "Pour into 2 9\" cake pans, greased and floured, or 9x13 pan.",
+    "Bake about 40 min."
+  ],
+  "notes": "",
+  "created": "2026-11-21T23:21:05.289Z",
+  "updated": "2026-11-21T23:21:05.289Z"
+}
