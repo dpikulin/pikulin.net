@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0f2742">
+  <meta name="description" content="Build a shopping list from Pikulin Kitchen recipes.">
+  <title>Shopping List · Pikulin Kitchen</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="recipes.css">
+  <link rel="stylesheet" href="shopping-list.css">
+  <script src="shopping-list.js" defer></script>
+</head>
+<body>
+  <div class="site-shell shopping-shell">
+    <header class="site-header shopping-site-header">
+      <div class="brand-wrap">
+        <div class="brand-mark" aria-hidden="true">🛒</div>
+        <div>
+          <p class="eyebrow">Pikulin.net · family recipe box</p>
+          <h1>Shopping List</h1>
+          <p class="tagline">Choose recipes, check the pantry, then shop.</p>
+        </div>
+      </div>
+      <a class="header-home-link" href="recipes.html">← Recipe box</a>
+    </header>
+    <main class="shopping-main">
+      <section class="shopping-intro card">
+        <div>
+          <p class="eyebrow">Plan a meal or a whole holiday</p>
+          <h2>What's on the menu?</h2>
+          <p>Select as many recipes as you need. Identical ingredient lines are combined; quantities written differently stay separate so nothing gets miscalculated. You can edit, add, remove, and check off items below.</p>
+        </div>
+        <a class="shopping-add-recipe" href="recipe-admin.html">Add a recipe to the kitchen</a>
+      </section>
+      <div id="shoppingNotice" class="notice hidden" role="status"></div>
+      <div class="shopping-layout">
+        <aside class="shopping-picker card" aria-labelledby="shoppingPickerTitle">
+          <div class="shopping-picker-title">
+            <div>
+              <p class="eyebrow">Step 1</p>
+              <h2 id="shoppingPickerTitle">Choose recipes</h2>
+            </div>
+            <span id="selectedCount" class="shopping-count">0 selected</span>
+          </div>
+          <label for="recipeFilter" class="shopping-filter-label">Find a recipe</label>
+          <input id="recipeFilter" class="shopping-filter-input" type="search" placeholder="Search recipes…" autocomplete="off">
+          <p class="shopping-help">Development recipes are included so you can plan a new dish before it's tested.</p>
+          <div id="recipePicker" class="shopping-recipe-picker" role="group" aria-label="Recipes to include"></div>
+          <button id="clearRecipes" class="shopping-small-button" type="button">Deselect recipes</button>
+        </aside>
+        <section class="shopping-results card" aria-labelledby="shoppingResultsTitle">
+          <div class="shopping-results-header">
+            <div>
+              <p class="eyebrow">Step 2</p>
+              <h2 id="shoppingResultsTitle">Your grocery list</h2>
+              <p id="itemCount" class="shopping-help" aria-live="polite">Select a recipe to begin.</p>
+            </div>
+            <div class="shopping-actions">
+              <button id="copyShoppingList" class="shopping-action-button" type="button">Copy list</button>
+              <button id="shareShoppingList" class="shopping-action-button" type="button">Share</button>
+              <button id="printShoppingList" class="shopping-action-button" type="button">Print</button>
+            </div>
+          </div>
+          <div id="listLoading" class="shopping-loading hidden" role="status">Gathering ingredients…</div>
+          <div id="shoppingEmpty" class="shopping-empty">Select one or more recipes on the left to build your shopping list.</div>
+          <div id="shoppingSections" class="shopping-sections"></div>
+          <form id="manualItemForm" class="shopping-add-item-form">
+            <label for="manualItem">Add an extra item</label>
+            <div class="shopping-add-item-row">
+              <input id="manualItem" type="text" maxlength="240" placeholder="e.g. Paper towels, 2 rolls">
+              <button type="submit">Add</button>
+            </div>
+          </form>
+          <div class="shopping-footer-actions">
+            <button id="resetShoppingList" class="shopping-reset-button" type="button">Start a fresh list</button>
+            <p class="shopping-device-note">This list is saved on this device. Use Share or Copy to send it to another phone; changes won't sync automatically.</p>
+          </div>
+        </section>
+      </div>
+    </main>
+    <footer>Pikulin Kitchen · A little less math in the grocery aisle.</footer>
+  </div>
+</body>
+</html>
