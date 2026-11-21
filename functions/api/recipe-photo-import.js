@@ -72,7 +72,10 @@ export async function onRequestPost({ request, env }) {
   ].join(' ');
   const content = [
     { type: 'input_text', text: `Read these ${images.length} recipe photo(s) as one complete recipe in page order. ${hint ? 'Context from uploader: ' + hint : ''}` },
-    ...images.map((image, index) => ({ type: 'input_text', text: `Recipe image ${index + 1} of ${images.length}` }, { type: 'input_image', image_url: image.data, detail: 'high' })).flat(),
+    ...images.flatMap((image, index) => [
+      { type: 'input_text', text: `Recipe image ${index + 1} of ${images.length}` },
+      { type: 'input_image', image_url: image.data, detail: 'high' },
+    ]),
   ];
 
   let response;
