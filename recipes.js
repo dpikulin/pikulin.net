@@ -152,6 +152,7 @@ function renderRecipeDetail(recipe) {
         ${recipe.tested === true ? '' : '<span class="recipe-status-chip">In development</span>'}
       </div>
       <h2>${escapeHtml(recipe.title || 'Recipe')}</h2>
+      <a class="recipe-add-shopping" href="shopping-list.html?add=${encodeURIComponent(recipe.slug)}">🛒 Add ingredients to shopping list</a>
       ${recipe.description ? `<p class="lead">${escapeHtml(recipe.description)}</p>` : ''}
       ${tags ? `<div class="recipe-tags">${tags}</div>` : ''}
     </header>
