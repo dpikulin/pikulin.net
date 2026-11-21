@@ -9,7 +9,7 @@
     "homemade",
     "classic"
   ],
-  "tested": false,
+  "tested": true,
   "image": "",
   "prepTime": "",
   "cookTime": "35 min",
@@ -41,5 +41,5 @@
   ],
   "notes": "",
   "created": "2026-11-21T23:21:05.289Z",
-  "updated": "2026-11-21T23:21:05.289Z"
+  "updated": "2026-11-21T23:21:12.014Z"
 }
