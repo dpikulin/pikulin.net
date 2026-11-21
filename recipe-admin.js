@@ -14,6 +14,9 @@ document.addEventListener('DOMContentLoaded', () => {
   $('emailDraft').addEventListener('change', previewEmailDraft);
   $('loadDraft').addEventListener('click', loadEmailDraft);
   $('deleteDraft').addEventListener('click', deleteEmailDraft);
+  $('photoFiles').addEventListener('change', previewPhotoSelection);
+  $('clearPhotoSelection').addEventListener('click', clearPhotoSelection);
+  $('photoImportForm').addEventListener('submit', importRecipePhotos);
 });
 
 async function authenticate(event) {
@@ -283,3 +286,180 @@ function splitCsv(value) { return value.split(',').map(v => v.trim()).filter(Boo
 async function safeJson(response) { try { return await response.json(); } catch { return null; } }
 function escapeHtml(value = '') { return String(value).replace(/[&<>'"]/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' }[char])); }
 function escapeAttr(value = '') { return escapeHtml(value); }
+
+
+const PHOTO_IMPORT_MAX = 8;
+let PHOTO_PREVIEW_URLS = [];
+
+function previewPhotoSelection() {
+  clearPhotoPreviews();
+  const files = [...$('photoFiles').files];
+  $('photoImportWarnings').classList.add('hidden');
+  if (files.length > PHOTO_IMPORT_MAX) {
+    setPhotoNotice(`Please choose up to ${PHOTO_IMPORT_MAX} photos of one recipe at a time.`, true);
+    return;
+  }
+  setPhotoNotice(files.length
+    ? `${files.length} photo${files.length === 1 ? '' : 's'} selected. Check their order before importing.`
+    : '');
+  for (const [index, file] of files.entries()) {
+    const figure = document.createElement('figure');
+    figure.className = 'photo-preview';
+    const img = document.createElement('img');
+    img.alt = `Photo ${index + 1}: ${file.name}`;
+    const url = URL.createObjectURL(file);
+    PHOTO_PREVIEW_URLS.push(url);
+    img.src = url;
+    const caption = document.createElement('figcaption');
+    caption.textContent = `${index + 1}. ${file.name}`;
+    figure.append(img, caption);
+    $('photoPreviews').appendChild(figure);
+  }
+}
+
+function clearPhotoPreviews() {
+  PHOTO_PREVIEW_URLS.forEach(url => URL.revokeObjectURL(url));
+  PHOTO_PREVIEW_URLS = [];
+  $('photoPreviews').replaceChildren();
+}
+
+function clearPhotoSelection() {
+  $('photoFiles').value = '';
+  $('photoHint').value = '';
+  clearPhotoPreviews();
+  setPhotoNotice('');
+  $('photoImportWarnings').classList.add('hidden');
+}
+
+function setPhotoNotice(message, error = false, success = false) {
+  $('photoImportNotice').textContent = message;
+  $('photoImportNotice').className = `save-status${error ? ' error' : success ? ' success' : ''}`;
+}
+
+async function importRecipePhotos(event) {
+  event.preventDefault();
+  if (!ADMIN_PASSWORD) return;
+  const files = [...$('photoFiles').files];
+  if (!files.length || files.length > PHOTO_IMPORT_MAX) {
+    setPhotoNotice(`Select 1 to ${PHOTO_IMPORT_MAX} photos of a single recipe.`, true);
+    return;
+  }
+  if ($('recipeTitle').value.trim() || $('recipeSlug').value) {
+    if (!window.confirm('Replace the unsaved fields currently in the editor with the recipe read from these photos?')) return;
+  }
+  const button = $('photoImportButton');
+  button.disabled = true;
+  $('clearPhotoSelection').disabled = true;
+  $('photoImportWarnings').classList.add('hidden');
+  try {
+    const images = [];
+    let totalCharacters = 0;
+    for (let i = 0; i < files.length; i++) {
+      setPhotoNotice(`Preparing photo ${i + 1} of ${files.length}…`);
+      const data = await convertPhotoToJpeg(files[i]);
+      totalCharacters += data.length;
+      if (totalCharacters > 15_000_000) throw new Error('These photos are too large as a group. Try uploading fewer at once.');
+      images.push({ data });
+    }
+    setPhotoNotice(`Reading ${images.length} photos and building the recipe draft…`);
+    const response = await fetch('/api/recipe-photo-import', {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'authorization': `Bearer ${ADMIN_PASSWORD}`,
+      },
+      body: JSON.stringify({ images, hint: $('photoHint').value.trim() }),
+    });
+    const result = await safeJson(response);
+    if (!response.ok) throw new Error(result?.error || `Photo import failed (${response.status}).`);
+    if (!result?.recipe) throw new Error('No recipe was returned.');
+    loadPhotoRecipe(result.recipe);
+    showPhotoWarnings(result.warnings || []);
+    setPhotoNotice('Recipe draft ready in the editor below. Review the measurements, then save when satisfied.', false, true);
+    $('recipeForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    clearPhotoPreviews();
+    $('photoFiles').value = '';
+  } catch (error) {
+    setPhotoNotice(error.message || 'Could not read those photos.', true);
+  } finally {
+    button.disabled = false;
+    $('clearPhotoSelection').disabled = false;
+  }
+}
+
+async function convertPhotoToJpeg(file) {
+  if (!file.type.startsWith('image/') && !/\.(?:heic|heif|jpg|jpeg|png|webp)$/i.test(file.name)) {
+    throw new Error(`${file.name} is not an image. Select photos, not PDFs or documents.`);
+  }
+  if (file.size > 30_000_000) throw new Error(`${file.name} is too large to process on this device.`);
+  const url = URL.createObjectURL(file);
+  const image = new Image();
+  try {
+    await new Promise((resolve, reject) => {
+      image.onload = resolve;
+      image.onerror = () => reject(new Error(`Could not read ${file.name}. On some devices, HEIC photos must first be exported as JPEG.`));
+      image.src = url;
+    });
+    if (!image.naturalWidth || !image.naturalHeight) throw new Error(`${file.name} could not be decoded.`);
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    if (!context) throw new Error('Image processing is not available in this browser.');
+    let maxEdge = 2600;
+    let data = '';
+    for (let attempt = 0; attempt < 5; attempt++) {
+      const scale = Math.min(1, maxEdge / Math.max(image.naturalWidth, image.naturalHeight));
+      canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
+      canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
+      context.fillStyle = '#ffffff';
+      context.fillRect(0, 0, canvas.width, canvas.height);
+      context.drawImage(image, 0, 0, canvas.width, canvas.height);
+      data = canvas.toDataURL('image/jpeg', attempt < 2 ? 0.88 : 0.8);
+      if (data.length <= 3_500_000) return data;
+      maxEdge = Math.floor(maxEdge * 0.78);
+    }
+    throw new Error(`${file.name} could not be compressed enough. Try a smaller photo.`);
+  } finally {
+    URL.revokeObjectURL(url);
+  }
+}
+
+function loadPhotoRecipe(recipe) {
+  // The imported draft replaces the form, but never publishes or overwrites a saved recipe.
+  if (ACTIVE_DRAFT) clearDraftPreview();
+  $('recipeForm').reset();
+  $('recipeSlug').value = '';
+  $('existingRecipe').value = '';
+  $('recipeTitle').value = recipe.title || '';
+  $('recipeDescription').value = recipe.description || '';
+  $('recipeCategory').value = recipe.category || 'Other';
+  $('recipeTags').value = Array.isArray(recipe.tags) ? recipe.tags.join(', ') : '';
+  $('recipeTested').checked = false;
+  $('recipeImage').value = '';
+  $('recipePrep').value = recipe.prepTime || '';
+  $('recipeCook').value = recipe.cookTime || '';
+  $('recipeTotal').value = recipe.totalTime || '';
+  $('recipeYield').value = recipe.yield || '';
+  $('recipeIngredients').value = Array.isArray(recipe.ingredients) ? recipe.ingredients.join('\n') : '';
+  $('recipeSteps').value = Array.isArray(recipe.steps) ? recipe.steps.join('\n') : '';
+  $('recipeNotes').value = recipe.notes || '';
+  setSaveStatus('Photo import loaded. Verify the ingredients and directions before publishing.');
+}
+
+function showPhotoWarnings(warnings) {
+  const list = $('photoImportWarnings');
+  list.replaceChildren();
+  if (!warnings.length) {
+    list.classList.add('hidden');
+    return;
+  }
+  const title = document.createElement('h3');
+  title.textContent = 'Check these readings before saving';
+  const ul = document.createElement('ul');
+  for (const warning of warnings) {
+    const li = document.createElement('li');
+    li.textContent = String(warning).slice(0, 350);
+    ul.appendChild(li);
+  }
+  list.append(title, ul);
+  list.classList.remove('hidden');
+}
