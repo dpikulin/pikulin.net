@@ -44,3 +44,11 @@ When a cooking discussion results in a finalized recipe, the normal Pikulin.net 
 6. Commit both changes together when possible.
 
 The browser-based editor at `/recipe-admin.html` performs these same repository updates through the authenticated Cloudflare Pages Function at `/api/recipes`.
+
+## Shopping list
+
+The public recipe box links to `/shopping-list.html`. Shoppers may select multiple recipes (including untested recipes), and each selection loads its full JSON `ingredients` list. Identical ingredient lines are grouped with an explicit multiplier rather than silently dropping repeated quantities. Differently written ingredient lines are kept separate for manual review; the application does not attempt unreliable unit conversion or synonym matching.
+
+The shopping list supports manual items, per-item edits, removals, checkoffs, print, copy, and native share when available. Local list state is persisted in browser `localStorage` only, without authentication, cross-device synchronization, or server-side storage. Copy and share export unchecked items so the list can be transferred to another device.
+
+Use `shopping-list.html?add=<recipe-slug>` to add a recipe to the current device's saved selection. The recipe editor remains the source of truth for recipe content; shopping-list edits never change original recipe JSON.
