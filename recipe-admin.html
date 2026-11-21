@@ -71,6 +71,35 @@
           </article>
         </section>
 
+        <section class="photo-import card" aria-labelledby="photoImportTitle">
+          <div class="drafts-heading">
+            <div>
+              <p class="eyebrow">Photo to recipe</p>
+              <h2 id="photoImportTitle">Import from photos</h2>
+            </div>
+            <span class="photo-import-label">Password protected</span>
+          </div>
+          <p class="section-copy">Take photos of a handwritten recipe, cookbook, or recipe card. Select up to 8 images of <strong>one recipe</strong> (front, back, and additional pages). AI will read them together and fill in the editor below. Nothing is published until you review and save it.</p>
+          <form id="photoImportForm" class="photo-import-form">
+            <label class="field" for="photoFiles">
+              <span>Recipe photos (up to 8)</span>
+              <input id="photoFiles" type="file" accept="image/*,.heic,.heif" multiple required>
+            </label>
+            <label class="field" for="photoHint">
+              <span>Optional context</span>
+              <input id="photoHint" type="text" maxlength="300" placeholder="e.g. Linda's Thanksgiving stuffing, pages in order">
+            </label>
+            <div id="photoPreviews" class="photo-previews" aria-live="polite"></div>
+            <div class="photo-import-actions">
+              <button id="photoImportButton" class="primary-button" type="submit">Read photos into editor</button>
+              <button id="clearPhotoSelection" class="secondary-button" type="button">Clear photos</button>
+            </div>
+          </form>
+          <div id="photoImportNotice" class="save-status" role="status"></div>
+          <div id="photoImportWarnings" class="photo-import-warnings hidden" role="alert"></div>
+          <p class="photo-import-explainer">Photos are processed by the OpenAI API, not by this ChatGPT conversation. They are not stored with the recipe. Please double-check handwritten measurements and directions before publishing.</p>
+        </section>
+
         <form id="recipeForm" class="recipe-form card">
           <input id="recipeSlug" type="hidden">
           <div class="form-grid">
