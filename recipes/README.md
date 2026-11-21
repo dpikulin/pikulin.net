@@ -52,3 +52,21 @@ The public recipe box links to `/shopping-list.html`. Shoppers may select multip
 The shopping list supports manual items, per-item edits, removals, checkoffs, print, copy, and native share when available. Local list state is persisted in browser `localStorage` only, without authentication, cross-device synchronization, or server-side storage. Copy and share export unchecked items so the list can be transferred to another device.
 
 Use `shopping-list.html?add=<recipe-slug>` to add a recipe to the current device's saved selection. The recipe editor remains the source of truth for recipe content; shopping-list edits never change original recipe JSON.
+
+## Photo import (private editor)
+
+`/recipe-admin.html` has a **Photo to recipe** panel available after the normal editor password is accepted. It can receive 1–8 images of the **same recipe** in one submission, such as the front and back of a handwritten card or several consecutive cookbook pages. The device resizes / converts decodable images to JPEG before sending them to the authenticated `POST /api/recipe-photo-import` Cloudflare Pages Function.
+
+The function uses the OpenAI Responses API (vision + strict JSON schema) to transcribe the photos into the recipe editor's existing fields and return warnings for questionable readings. This does **not** send content into a ChatGPT conversation. The import does **not** commit a recipe, does not mark it as tested, and does not save the uploaded images in GitHub or the recipe data. The user reviews and adjusts the new draft, then presses the existing **Save recipe to Pikulin.net** button to publish it.
+
+### Enable in Cloudflare Pages
+
+In the site's Cloudflare Pages project, add the following **secret environment variable**, in both Production and Preview where needed:
+
+- `OPENAI_API_KEY`: an OpenAI Platform API key with Responses API model access. Never commit this key or put it in browser JavaScript. OpenAI Platform billing is separate from ChatGPT subscription billing.
+
+Optional variable: `RECIPE_IMPORT_MODEL` (default `gpt-4.1`, a vision-capable model). The site's existing `RECIPE_ADMIN_PASSWORD` is required and used by the import endpoint, so no second password is needed. Redeploy Pages after saving the secret if Cloudflare requires it.
+
+Photos are transient; they are transmitted to the OpenAI API only for the requested extraction using `store: false`. API retention/privacy rules and token-based usage charges still apply. The editor exposes uncertainty warnings and never silently invents ambiguous quantities.
+
+For **multiple different recipes**, repeat the upload/import/review/save flow once per recipe. This avoids unintentionally merging distinct cards into a single recipe. The interface supports iPhone photo picking; HEIC/HEIF pictures must be decodable by the browser for conversion to JPEG. If conversion fails, export them as JPEG first.
