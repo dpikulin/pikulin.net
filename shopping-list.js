@@ -122,14 +122,17 @@ function buildItems() {
     if (!SHOP.selected.has(recipe.slug)) continue;
     for (const original of SHOP.ingredientCache.get(recipe.slug) || []) {
       const key = 'r:' + original.trim().replace(/\s+/g, ' ').toLowerCase();
-      if (!combined.has(key)) combined.set(key, { key, text: original.trim(), sources: [] });
+      if (!combined.has(key)) combined.set(key, { key, text: original.trim(), sources: [], count: 0 });
       const item = combined.get(key);
+      item.count += 1;
       if (!item.sources.includes(recipe.title)) item.sources.push(recipe.title);
     }
   }
   const items = [...combined.values()].map(item => ({
     ...item,
-    text: typeof SHOP.overrides[item.key] === 'string' ? SHOP.overrides[item.key] : item.text,
+    text: typeof SHOP.overrides[item.key] === 'string'
+      ? SHOP.overrides[item.key]
+      : (item.count > 1 ? `${item.count} × (${item.text})` : item.text),
     manual: false,
   }));
   for (const extra of SHOP.extras) {
@@ -181,9 +184,9 @@ function renderItems() {
       <div class="shopping-items">
       ${group.map(item => `
         <div class="shopping-item ${SHOP.checked.has(item.key) ? 'done' : ''}">
-          <input type="checkbox" id="check-${escapeAttr(item.key)}" data-check="${escapeAttr(item.key)}" ${SHOP.checked.has(item.key) ? 'checked' : ''}>
+          <input type="checkbox" id="check-${escapeAttr(encodeURIComponent(item.key))}" data-check="${escapeAttr(item.key)}" ${SHOP.checked.has(item.key) ? 'checked' : ''}>
           <div class="shopping-item-main">
-            <label for="check-${escapeAttr(item.key)}">${escapeHtml(item.text)}</label>
+            <label for="check-${escapeAttr(encodeURIComponent(item.key))}">${escapeHtml(item.text)}</label>
             ${item.sources.length ? `<span class="shopping-item-source">${escapeHtml(item.sources.join(' · '))}</span>` : '<span class="shopping-item-source">Extra item</span>'}
           </div>
           <button class="shopping-inline-button" type="button" data-edit="${escapeAttr(item.key)}" aria-label="Edit item">Edit</button>
