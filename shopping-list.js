@@ -10,6 +10,7 @@ const SHOP = {
   ingredientCache: new Map(),
   loadErrors: new Map(),
   requestVersion: 0,
+  unitMode: 'both',
 };
 const $ = id => document.getElementById(id);
 
@@ -29,6 +30,11 @@ async function initShopping() {
   $('copyShoppingList').addEventListener('click', copyShopping);
   $('shareShoppingList').addEventListener('click', shareShopping);
   $('printShoppingList').addEventListener('click', () => window.print());
+  $('shoppingUnitMode').addEventListener('change', event => {
+    SHOP.unitMode = SHOP_UNITS.modes.includes(event.target.value) ? event.target.value : 'both';
+    saveShopping();
+    renderItems();
+  });
 
   try {
     const response = await fetch('/recipes/index.json', { cache: 'no-store' });
@@ -57,6 +63,8 @@ function restoreShopping() {
     SHOP.removed = new Set(Array.isArray(raw.removed) ? raw.removed.filter(s => typeof s === 'string') : []);
     SHOP.overrides = raw.overrides && typeof raw.overrides === 'object' && !Array.isArray(raw.overrides) ? raw.overrides : {};
     SHOP.extras = Array.isArray(raw.extras) ? raw.extras.filter(x => x && typeof x.id === 'string' && typeof x.text === 'string') : [];
+    SHOP.unitMode = SHOP_UNITS.modes.includes(raw.unitMode) ? raw.unitMode : 'both';
+    $('shoppingUnitMode').value = SHOP.unitMode;
   } catch { /* Browser storage may be disabled. The list still works for this visit. */ }
 }
 
@@ -64,7 +72,7 @@ function saveShopping() {
   try {
     localStorage.setItem(SHOP_STORAGE_KEY, JSON.stringify({
       selected: [...SHOP.selected], checked: [...SHOP.checked],
-      removed: [...SHOP.removed], overrides: SHOP.overrides, extras: SHOP.extras,
+      removed: [...SHOP.removed], overrides: SHOP.overrides, extras: SHOP.extras, unitMode: SHOP.unitMode,
     }));
   } catch { /* Local storage is optional. */ }
 }
@@ -134,11 +142,11 @@ function buildItems() {
     ...item,
     text: typeof SHOP.overrides[item.key] === 'string'
       ? SHOP.overrides[item.key]
-      : (item.count > 1 ? `${item.count} × (${item.text})` : item.text),
+      : SHOP_UNITS.formatIngredient(item.text, item.count, SHOP.unitMode),
     manual: false,
   }));
   for (const extra of SHOP.extras) {
-    items.push({ key: 'x:' + extra.id, text: extra.text, sources: [], manual: true });
+    items.push({ key: 'x:' + extra.id, text: SHOP_UNITS.formatIngredient(extra.text, 1, SHOP.unitMode), sources: [], manual: true });
   }
   return items.filter(item => !SHOP.removed.has(item.key) && item.text.trim());
 }
