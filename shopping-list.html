@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="recipes.css">
   <link rel="stylesheet" href="shopping-list.css">
+  <script src="shopping-units.js" defer></script>
   <script src="shopping-list.js" defer></script>
 </head>
 <body>
@@ -29,7 +30,7 @@
         <div>
           <p class="eyebrow">Plan a meal or a whole holiday</p>
           <h2>What's on the menu?</h2>
-          <p>Select as many recipes as you need. Identical ingredient lines are grouped with a multiplier; quantities written differently stay separate so nothing gets miscalculated. You can edit, add, remove, and check off items below.</p>
+          <p>Select recipes, choose your measurement units, and build a grocery list. Matching ingredient measurements are combined when safe, and whole produce gets an approximate standard weight. You can edit, add, remove, and check off items below.</p>
         </div>
         <a class="shopping-add-recipe" href="recipe-admin.html">Add a recipe to the kitchen</a>
       </section>
@@ -62,6 +63,19 @@
               <button id="printShoppingList" class="shopping-action-button" type="button" disabled>Print</button>
             </div>
           </div>
+          <div class="shopping-measurement-options">
+            <label for="shoppingUnitMode">Measurements</label>
+            <select id="shoppingUnitMode" aria-describedby="shoppingUnitHint">
+              <option value="both" selected>Both metric &amp; US</option>
+              <option value="metric">Metric</option>
+              <option value="imperial">US customary</option>
+            </select>
+            <p id="shoppingUnitHint">Produce counts use approximate standard weights. Volume conversions stay as volume, not grams.</p>
+          </div>
+          <details class="shopping-standards">
+            <summary>Standard produce sizes used</summary>
+            <p>Per average item unless stated otherwise: white/yellow/red onion 148 g, medium banana 118 g (peeled), medium apple 182 g, lemon 58 g, carrot 61 g, tomato 123 g, potato 173 g, garlic clove 3 g. These are estimates, not guarantees; you can edit any item.</p>
+          </details>
           <div id="listLoading" class="shopping-loading hidden" role="status">Gathering ingredients…</div>
           <div id="shoppingEmpty" class="shopping-empty">Select one or more recipes on the left to build your shopping list.</div>
           <div id="shoppingSections" class="shopping-sections"></div>
