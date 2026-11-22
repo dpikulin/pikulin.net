@@ -153,10 +153,11 @@ function buildItems() {
 
 function aisleOf(text) {
   const t = text.toLowerCase();
+  if (/\b(bell peppers?|sweet peppers?|hot peppers?|jalapeños?|jalapenos?)\b/.test(t)) return 'Produce';
   if (/\b(salt|pepper|paprika|oregano|thyme|rosemary|bay leaf|cumin|chile flakes|chili powder|cinnamon|nutmeg|dill|basil|parsley|sage|seasoning|garlic powder|onion powder)\b/.test(t)) return 'Herbs & spices';
-  if (/\b(milk|cream|butter|egg|yogurt|cheese|parmesan|cheddar|mozzarella|ricotta|cream cheese|sour cream)\b/.test(t)) return 'Dairy & eggs';
+  if (/\b(milk|cream|butter|eggs?|yogurt|cheese|parmesan|cheddar|mozzarella|ricotta|cream cheese|sour cream)\b/.test(t)) return 'Dairy & eggs';
   if (/\b(broth|stock|bouillon)\b/.test(t)) return 'Pantry & baking';
-  if (/\b(potato|potatoes|garlic|onion|shallot|carrot|celery|tomato|corn|avocado|lemon|lime|orange|apple|banana|lettuce|spinach|jalapeño|pepperoncini|cabbage|peach|scallion|zucchini|pepper(?:s)?|fresh ginger)\b/.test(t) && !/ground pepper/.test(t)) return 'Produce';
+  if (/\b(potato(?:es)?|garlic|onions?|shallots?|carrots?|celery|tomato(?:es)?|corn|avocados?|lemons?|limes?|oranges?|apples?|bananas?|cucumbers?|lettuce|spinach|jalapeños?|jalapenos?|pepperoncini|cabbage|peach(?:es)?|scallions?|zucchini|peppers?|fresh ginger)\b/.test(t) && !/ground pepper/.test(t)) return 'Produce';
   if (/\b(beef|chicken|pork|turkey|steak|fish|salmon|cod|mahi|tenderloin|bacon|ham)\b/.test(t)) return 'Meat & fish';
   if (/\b(towel|napkin|foil|bag|soap|cleaner|plate)\b/.test(t)) return 'Other';
   return 'Pantry & baking';
