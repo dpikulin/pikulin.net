@@ -58,3 +58,13 @@
   .shopping-item input[type="checkbox"] { appearance: none; width: 13px; height: 13px; border: 1px solid #555; border-radius: 2px; }
   .shopping-item.done input[type="checkbox"] { background: #bbb; }
 }
+
+/* Metric, US customary, and combined grocery measurements */
+.shopping-measurement-options { display: flex; align-items: center; flex-wrap: wrap; gap: 9px 14px; padding: 14px; margin: 16px 0 8px; border: 1px solid var(--line); border-radius: 13px; background: var(--sky-50); }
+.shopping-measurement-options label { color: var(--navy-900); font-size: .85rem; font-weight: 800; }
+.shopping-measurement-options select { min-width: 160px; max-width: 100%; padding: 9px 11px; border: 1px solid var(--line); border-radius: 9px; background: #fff; color: var(--ink); font: inherit; }
+.shopping-measurement-options p { flex-basis: 100%; margin: 0; color: var(--muted); font-size: .77rem; line-height: 1.4; }
+.shopping-standards { margin: 0 0 18px; padding: 0 4px; font-size: .79rem; color: var(--muted); }
+.shopping-standards summary { color: var(--blue-600); font-weight: 730; cursor: pointer; }
+.shopping-standards p { margin: 8px 0 0; line-height: 1.6; }
+@media print { .shopping-measurement-options,.shopping-standards { display: none !important; } }
