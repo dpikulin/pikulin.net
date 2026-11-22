@@ -22,10 +22,16 @@ const SHOP_UNITS = (() => {
     { name: 'banana', plural: 'bananas', find: 'bananas?', weights: {small: 101, medium: 118, large: 136} },
     { name: 'apple', plural: 'apples', find: 'apples?', weights: {small: 149, medium: 182, large: 223} },
     { name: 'lemon', plural: 'lemons', find: 'lemons?', weights: {medium: 58} },
+    { name: 'lime', plural: 'limes', find: 'limes?', weights: {medium: 67} },
+    { name: 'orange', plural: 'oranges', find: 'oranges?', weights: {medium: 131} },
+    { name: 'avocado', plural: 'avocados', find: 'avocados?', weights: {medium: 201} },
+    { name: 'cucumber', plural: 'cucumbers', find: 'cucumbers?', weights: {medium: 201} },
+    { name: 'bell pepper', plural: 'bell peppers', find: 'bell peppers?', weights: {medium: 119} },
+    { name: 'celery stalk', plural: 'celery stalks', find: '(?:celery stalks?|stalks? of celery)', weights: {medium: 40} },
     { name: 'carrot', plural: 'carrots', find: 'carrots?', weights: {medium: 61} },
     { name: 'tomato', plural: 'tomatoes', find: 'tomato(?:es)?', weights: {small: 91, medium: 123, large: 182} },
     { name: 'potato', plural: 'potatoes', find: 'potato(?:es)?', weights: {medium: 173} },
-    { name: 'garlic clove', plural: 'garlic cloves', find: '(?:garlic cloves?|cloves? of garlic)', weights: {medium: 3} },
+    { name: 'garlic clove', plural: 'garlic cloves', find: '(?:garlic cloves?|cloves? (?:of )?garlic)', weights: {medium: 3} },
   ];
   const PRODUCE_RE = new RegExp('^(\\s*' + PREFIX + ')(' + NUMBER + ')\\s+(?:(small|medium|large)\\s+)?(' +
     PRODUCE.map(entry => entry.find).join('|') + ')(?=$|[\\s,;(])\\s*(.*)$', 'i');
@@ -87,7 +93,7 @@ const SHOP_UNITS = (() => {
     const tbsp = ml / VOLUME_FACTORS.tbsp;
     const tsp = ml / VOLUME_FACTORS.tsp;
     if (cups >= 0.25 && Math.abs(cups * 8 - Math.round(cups * 8)) < 0.045) {
-      return formatCount(Math.round(cups * 8) / 8) + ' cup' + (Math.abs(cups - 1) < 0.01 ? '' : 's');
+      return formatCount(Math.round(cups * 8) / 8) + ' cup' + (cups > 1.01 ? 's' : '');
     }
     if (tbsp >= 0.5 && tbsp <= 4 && Math.abs(tbsp * 2 - Math.round(tbsp * 2)) < 0.045) {
       return formatCount(Math.round(tbsp * 2) / 2) + ' tbsp';
@@ -135,12 +141,13 @@ const SHOP_UNITS = (() => {
     const rest = match[4] || '';
     const prefix = match[1] || '';
     if (mode === 'both' && repeat === 1 && hasOriginalEquivalent(rest)) return raw;
+    const sourceIsMetric = isMass
+      ? ['g','gram','grams','kg','kilogram','kilograms'].includes(unit)
+      : ['ml','milliliter','milliliters','millilitre','millilitres','l','liter','liters','litre','litres'].includes(unit);
+    const originalQuantityAndUnit = match[2] + ' ' + match[3];
+    const native = repeat === 1 ? originalQuantityAndUnit : (sourceIsMetric ? metric : imperial);
     const measure = mode === 'metric' ? metric : mode === 'imperial' ? imperial :
-      (isMass
-        ? (Object.hasOwn(WEIGHT_FACTORS, unit) && ['g','gram','grams','kg','kilogram','kilograms'].includes(unit)
-          ? metric + ' (' + imperial + ')' : imperial + ' (' + metric + ')')
-        : (['ml','milliliter','milliliters','millilitre','millilitres','l','liter','liters','litre','litres'].includes(unit)
-          ? metric + ' (' + imperial + ')' : imperial + ' (' + metric + ')'));
+      native + ' (' + (sourceIsMetric ? imperial : metric) + ')';
     // Parenthetical matching-unit equivalents would otherwise appear twice.
     const cleanRest = rest.replace(/(\s*\(\s*(?:~\s*|about\s+|approx\.?\s+)?\d+(?:\.\d+)?\s*(?:g|kg|oz|lb|lbs)\s*\))/gi, '');
     return prefix + measure + (cleanRest ? ' ' + cleanRest : '');
