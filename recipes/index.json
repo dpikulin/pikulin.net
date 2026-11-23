@@ -260,28 +260,6 @@
     "tested": true
   },
   {
-    "slug": "davids-oven-reduced-tomato-sauce",
-    "title": "Dad's Tomato Sauce",
-    "description": "David’s large batch tomato sauce with a long stovetop simmer, Parmesan in two additions, optional red wine, and a final slow reduction in a 275°F / 135°C oven.",
-    "category": "Sauces & Condiments",
-    "tags": [
-      "tomato",
-      "pasta sauce",
-      "oven reduced",
-      "family recipe",
-      "large batch",
-      "freezer"
-    ],
-    "prepTime": "45 minutes",
-    "cookTime": "2–3 hours on the stove, then oven reduction until 2.5–5 cm lower",
-    "totalTime": "Several hours, depending on the oven reduction",
-    "yield": "Large batch; portion into jars and freeze",
-    "created": "2026-09-13T01:15:00.000Z",
-    "updated": "2026-09-27T16:16:28.000Z",
-    "searchText": "Dad's Tomato Sauce David’s large batch tomato sauce with a long stovetop simmer, Parmesan in two additions, optional red wine, and a final slow reduction in a 275°F / 135°C oven. Sauces & Condiments tomato pasta sauce oven reduced family recipe large batch freezer 8,165 g tomatoes, whole, diced, crushed, or a mix (18 lb) 910 g tomato paste (2 lb) 1,361 g onion, roughly chopped 454 g carrot, roughly chopped 454 g celery, roughly chopped 30 g garlic, diced 28 g olive oil 300 g Parmesan cheese, divided into 100 g and 200 g additions About 236 mL red wine (about 235 g), optional Salt, oregano, basil, black pepper, garlic powder, parsley, onion powder, crushed red pepper, and Italian seasoning blend, to taste 2 bay leaves (about 0.4 g)",
-    "tested": true
-  },
-  {
     "slug": "dads-tomato-sauce-small-batch",
     "title": "Dad's Tomato Sauce (Small Batch)",
     "description": "A smaller version of Dad’s sauce with a softened vegetable base, blended tomatoes and Parmesan, a stovetop simmer, and a short oven reduction.",
@@ -321,6 +299,28 @@
     "created": "2026-09-19T04:30:00.000Z",
     "updated": "2026-09-19T04:30:00.000Z",
     "searchText": "Dark Chocolate Ice Cream Deep, bittersweet chocolate ice cream made with 92% cacao chocolate, a rich light-cream base, and just enough cinnamon to give it a subtle Mexican-hot-chocolate character. Desserts ice cream dark chocolate 92% cacao cinnamon house recipe 476 g light cream 244 g whole milk 100 g whole egg (about 2 large eggs, without shells) 165 g granulated sugar 100 g 92% cacao dark chocolate, finely chopped 5 g pure vanilla extract 1 g kosher salt 0.3 g ground cinnamon",
+    "tested": true
+  },
+  {
+    "slug": "davids-oven-reduced-tomato-sauce",
+    "title": "Dad's Tomato Sauce",
+    "description": "David’s large batch tomato sauce with a long stovetop simmer, Parmesan in two additions, optional red wine, and a final slow reduction in a 275°F / 135°C oven.",
+    "category": "Sauces & Condiments",
+    "tags": [
+      "tomato",
+      "pasta sauce",
+      "oven reduced",
+      "family recipe",
+      "large batch",
+      "freezer"
+    ],
+    "prepTime": "45 minutes",
+    "cookTime": "2–3 hours on the stove, then oven reduction until 2.5–5 cm lower",
+    "totalTime": "Several hours, depending on the oven reduction",
+    "yield": "Large batch; portion into jars and freeze",
+    "created": "2026-09-13T01:15:00.000Z",
+    "updated": "2026-09-27T16:16:28.000Z",
+    "searchText": "Dad's Tomato Sauce David’s large batch tomato sauce with a long stovetop simmer, Parmesan in two additions, optional red wine, and a final slow reduction in a 275°F / 135°C oven. Sauces & Condiments tomato pasta sauce oven reduced family recipe large batch freezer 8,165 g tomatoes, whole, diced, crushed, or a mix (18 lb) 910 g tomato paste (2 lb) 1,361 g onion, roughly chopped 454 g carrot, roughly chopped 454 g celery, roughly chopped 30 g garlic, diced 28 g olive oil 300 g Parmesan cheese, divided into 100 g and 200 g additions About 236 mL red wine (about 235 g), optional Salt, oregano, basil, black pepper, garlic powder, parsley, onion powder, crushed red pepper, and Italian seasoning blend, to taste 2 bay leaves (about 0.4 g)",
     "tested": true
   },
   {
@@ -424,6 +424,30 @@
     "updated": "2026-09-19T04:30:00.000Z",
     "searchText": "House Vanilla Ice Cream A rich vanilla ice cream built on a light-cream, whole-milk, and whole-egg base with an intentionally generous dose of vanilla. Desserts ice cream vanilla house recipe frozen dessert 476 g light cream 244 g whole milk 100 g whole egg (about 2 large eggs, without shells) 150 g granulated sugar 28 g pure vanilla extract",
     "tested": true
+  },
+  {
+    "slug": "julia-child-inspired-glazed-pearl-onions",
+    "title": "Julia Child-Inspired Glazed Pearl Onions with Demi-Glace",
+    "description": "Tender pearl onions browned in butter, braised with beef demi-glace and herbs, and reduced to a rich, glossy glaze. A red wine vinegar finish balances the richness if needed.",
+    "category": "Sides",
+    "tags": [
+      "pearl onions",
+      "glazed onions",
+      "Julia Child",
+      "French",
+      "demi-glace",
+      "beef",
+      "Thanksgiving",
+      "vegetables"
+    ],
+    "prepTime": "20 minutes (with peeled onions: 5 minutes)",
+    "cookTime": "40–60 minutes",
+    "totalTime": "About 1 hour with peeled onions; about 1 hour 20 minutes if peeling",
+    "yield": "4–6 side servings",
+    "created": "2026-11-23T00:25:00.000Z",
+    "updated": "2026-11-23T00:25:00.000Z",
+    "searchText": "Julia Child-Inspired Glazed Pearl Onions with Demi-Glace Tender pearl onions browned in butter, braised with beef demi-glace and herbs, and reduced to a rich, glossy glaze. A red wine vinegar finish balances the richness if needed. Sides pearl onions glazed onions Julia Child French demi-glace beef Thanksgiving vegetables 454 g (1 lb) peeled pearl onions, preferably fresh 15 g (1 tbsp) unsalted butter, for browning 10–12 g More Than Gourmet Demi-Glace Gold concentrate (not pre-diluted) 120–150 mL (½–⅔ cup) water 2 fresh thyme sprigs 1 small bay leaf Freshly ground black pepper, to taste 5–10 g (1–2 tsp) cold unsalted butter, for finishing ¼–½ tsp red wine vinegar, only if needed after tasting Salt, only if needed after tasting",
+    "tested": false
   },
   {
     "slug": "kit-kat-ice-cream",
