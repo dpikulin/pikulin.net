@@ -1,5 +1,29 @@
 [
   {
+    "slug": "apple-pie-ice-cream",
+    "title": "Apple Pie Ice Cream",
+    "description": "Apple peel-infused sweet cream ice cream with homemade eightfold boiled cider, warm pie spices, a bourbon apple compote swirl and buttery pie crumb.",
+    "category": "Desserts",
+    "tags": [
+      "ice cream",
+      "apple",
+      "apple pie",
+      "boiled cider",
+      "streusel",
+      "bourbon",
+      "Thanksgiving",
+      "frozen dessert"
+    ],
+    "tested": false,
+    "prepTime": "30–45 minutes steeping, plus preparation",
+    "cookTime": "Varies; allow several hours if making boiled cider",
+    "totalTime": "Overnight chilling plus churning and freezing",
+    "yield": "About 1 quart before inclusions (estimate)",
+    "created": "2026-11-26T02:15:00.000Z",
+    "updated": "2026-11-26T02:15:00.000Z",
+    "searchText": "Apple Pie Ice Cream Apple peel-infused sweet cream ice cream with homemade eightfold boiled cider, warm pie spices, a bourbon apple compote swirl and buttery pie crumb. Desserts ice cream apple apple pie boiled cider streusel bourbon Thanksgiving frozen dessert 244 g 2% milk (approximately 1 cup) 476 g light cream (approximately 2 cups) 8 large apples, peels for infusion; reserve flesh for compote as needed 2 large whole eggs (use pasteurized eggs if making an uncooked base) 135 g granulated sugar 42 g homemade boiled cider (8× volumetric concentration) Ground cinnamon, a dash Ground nutmeg, a dash Salt, a dash Apple compote with bourbon, chilled (quantity TBD) Butter crumb streusel, baked and cooled (quantity TBD)"
+  },
+  {
     "slug": "blackstone-carne-asada",
     "title": "Blackstone Carne Asada with Taco Seasoning",
     "description": "Tender skirt steak with orange, garlic, smoked paprika, and a light touch of taco seasoning, seared on the Blackstone and finished with fresh lime.",

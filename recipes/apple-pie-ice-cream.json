@@ -1,0 +1,45 @@
+{
+  "slug": "apple-pie-ice-cream",
+  "title": "Apple Pie Ice Cream",
+  "description": "Apple peel-infused sweet cream ice cream with homemade eightfold boiled cider, warm pie spices, a bourbon apple compote swirl and buttery pie crumb.",
+  "category": "Desserts",
+  "tags": [
+    "ice cream",
+    "apple",
+    "apple pie",
+    "boiled cider",
+    "streusel",
+    "bourbon",
+    "Thanksgiving",
+    "frozen dessert"
+  ],
+  "tested": false,
+  "prepTime": "30–45 minutes steeping, plus preparation",
+  "cookTime": "Varies; allow several hours if making boiled cider",
+  "totalTime": "Overnight chilling plus churning and freezing",
+  "yield": "About 1 quart before inclusions (estimate)",
+  "ingredients": [
+    "244 g 2% milk (approximately 1 cup)",
+    "476 g light cream (approximately 2 cups)",
+    "8 large apples, peels for infusion; reserve flesh for compote as needed",
+    "2 large whole eggs (use pasteurized eggs if making an uncooked base)",
+    "135 g granulated sugar",
+    "42 g homemade boiled cider (8× volumetric concentration)",
+    "Ground cinnamon, a dash",
+    "Ground nutmeg, a dash",
+    "Salt, a dash",
+    "Apple compote with bourbon, chilled (quantity TBD)",
+    "Butter crumb streusel, baked and cooled (quantity TBD)"
+  ],
+  "steps": [
+    "Make boiled cider if needed: simmer 3.785 L fresh unspiced apple cider uncovered in a wide pot until approximately 473 mL remains. Stir more frequently as it concentrates, reduce heat near the endpoint, and cool. Refrigerate excess syrup.",
+    "Wash the apples thoroughly, peel, and reserve the flesh for the compote. Gently warm the 2% milk and light cream with the peels from all eight apples. Cover and steep to extract apple aroma, then strain out the peels.",
+    "Whisk the two whole eggs with the 135 g sugar until light and well combined. Combine with the strained dairy. For an uncooked Ben & Jerry’s-style base, use pasteurized eggs and cool the dairy before mixing; if using ordinary eggs, gently heat the combined base with constant stirring to at least 71°C (160°F), then cool promptly.",
+    "Add 42 g cooled boiled cider gradually to the cooled base, along with a dash each of cinnamon, nutmeg and salt. Whisk until smooth. Chill thoroughly overnight.",
+    "Prepare the apple compote using the Baked in Brooklyn apple pie filling recipe as the reference, including a little bourbon. Chill thoroughly. Prepare a buttery crumb streusel and cool completely. Exact inclusion amounts and formulations are pending the finished-product test.",
+    "Churn the chilled base according to the ice cream maker instructions. Layer or gently swirl in the chilled compote and crisp crumb during packing, then freeze until firm."
+  ],
+  "notes": "IN DEVELOPMENT — Thanksgiving 2026, Batch 001. Base sensory test: tastes like apple pie filling; finished ice cream not yet evaluated. Modified Ben & Jerry’s easy home sweet cream base (whole eggs, not a yolk custard), with reduced sugar and light cream rather than heavy cream. Dairy weights are approximate equivalents based on the house vanilla recipe; actual weighed dairy quantities were not recorded in the discussion. The original heat treatment of the combined egg and dairy base was not specified; the method includes safe preparation options. Boiled cider was made from one gallon of fresh cider reduced to two cups and had an intensely apple-forward taste with a touch of acidity. Final compote and crumb quantities and procedures remain to be documented after churning.",
+  "created": "2026-11-26T02:15:00.000Z",
+  "updated": "2026-11-26T02:15:00.000Z"
+}
