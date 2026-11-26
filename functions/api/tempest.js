@@ -46,7 +46,7 @@ export async function onRequestGet(context) {
   if (!stationId) return json({ error: 'TEMPEST_STATION_ID is not configured in Cloudflare Pages.' }, 500);
 
   try {
-    if (action === 'current') return await currentObservation(token, stationId);
+    if (action === 'current') return await currentObservation(token, stationId, context);
     if (action === 'archive') {
       const days = Number(url.searchParams.get('days') || 1);
       if (![1, 7, 30, 365].includes(days)) return json({ error: 'Unsupported archive range.' }, 400);
@@ -58,17 +58,49 @@ export async function onRequestGet(context) {
   }
 }
 
-async function currentObservation(token, stationId) {
-  const upstream = `${WEATHERFLOW_BASE}/observations/station/${encodeURIComponent(stationId)}?token=${encodeURIComponent(token)}`;
-  const response = await fetch(upstream, { headers: { Accept: 'application/json' } });
-  if (!response.ok) throw new Error(`Tempest current observation failed (${response.status}).`);
-  const payload = await response.json();
-  const observation = sanitizeCurrentObservation(payload);
-  if (!observation) throw new Error('Tempest returned no usable current observation.');
+async function currentObservation(token, stationId, context) {
+  // Edge cache is opportunistic and region-local. The browser also persists
+  // the last valid observation across reloads. Neither cache contains secrets.
+  const cacheKey = new Request(new URL('/api/tempest-last-good-v1', context.request.url).href);
+  let cached = null;
+  try {
+    const entry = await caches.default.match(cacheKey);
+    if (entry) {
+      const data = await entry.json();
+      if (validCurrent(data.ob)) cached = data.ob;
+    }
+  } catch { /* cache is optional */ }
 
-  // Return only the weather values the browser needs. Do not proxy station
-  // metadata, identifiers, coordinates, or other upstream account details.
-  return json({ ob: observation }, 200, 'public, max-age=30');
+  try {
+    const upstream = `${WEATHERFLOW_BASE}/observations/station/${encodeURIComponent(stationId)}?token=${encodeURIComponent(token)}`;
+    const response = await fetch(upstream, { headers: { Accept: 'application/json' }, signal: AbortSignal.timeout(8000) });
+    if (!response.ok) throw new Error('Upstream status ' + response.status);
+    const observation = sanitizeCurrentObservation(await response.json());
+    if (!validCurrent(observation)) throw new Error('Invalid current observation');
+    if (cached && Number(cached.timestamp) > Number(observation.timestamp)) {
+      return json({ ob: cached, source: 'cached' });
+    }
+    const age = Date.now() / 1000 - Number(observation.timestamp);
+    if (age < 600) {
+      // Only fresh observations replace the last-known-good edge cache.
+      try {
+        const pending = caches.default.put(cacheKey, json({ ob: observation }, 200, 'public, max-age=604800')).catch(() => {});
+        context.waitUntil(pending);
+      } catch { /* cache unavailable */ }
+    }
+    return json({ ob: observation, source: 'tempest' }, 200, age < 600 ? 'public, max-age=30' : 'no-store');
+  } catch {
+    if (cached) return json({ ob: cached, source: 'cached' });
+    // Do not expose upstream URLs, credentials or raw exception messages.
+    return json({ error: 'Backyard station observation unavailable.', source: 'unavailable' }, 503);
+  }
+}
+
+function validCurrent(obs) {
+  const timestamp = nullableNumber(obs?.timestamp);
+  const temperature = nullableNumber(obs?.air_temperature);
+  return timestamp !== null && timestamp > 0 && timestamp * 1000 <= Date.now() + 120000
+    && temperature !== null && temperature >= -100 && temperature <= 70;
 }
 
 function sanitizeCurrentObservation(payload) {

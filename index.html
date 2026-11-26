@@ -7,8 +7,8 @@
   <meta name="description" content="Pikulin Weather: backyard weather, forecasts, radar, alerts, archives, and highly opinionated wardrobe advice.">
   <title>Pikulin Weather</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" defer></script>
-  <link rel="stylesheet" href="styles.css">
-  <script src="app.js?v=20260923-1" defer></script>
+  <link rel="stylesheet" href="styles.css?v=20261126-1">
+  <script src="app.js?v=20261126-1" defer></script>
 </head>
 <body>
   <div class="site-shell">
@@ -39,10 +39,10 @@
       <section id="live" class="tab-panel active" aria-labelledby="live-heading">
         <div class="section-heading compact-heading">
           <div>
-            <p class="eyebrow">Tempest station · live observation</p>
+            <p class="eyebrow">Tempest station · backyard observations</p>
             <h2 id="live-heading">Right now at home</h2>
           </div>
-          <div class="live-status"><span class="pulse-dot"></span><span id="liveUpdated">Connecting…</span></div>
+          <div id="liveStatus" class="live-status" data-state="connecting" role="status"><span class="pulse-dot" aria-hidden="true"></span><span id="liveUpdated">Connecting…</span></div>
         </div>
 
         <div id="liveError" class="notice error-notice hidden" role="alert"></div>
@@ -51,7 +51,7 @@
           <article class="hero-weather card">
             <div class="hero-topline">
               <span id="liveWeatherIcon" class="weather-emoji" aria-hidden="true">⛅</span>
-              <span class="station-label">Pikulin Backyard Station</span>
+              <span id="liveStationLabel" class="station-label">Pikulin Backyard Station</span>
             </div>
             <div class="temperature-row">
               <span id="liveTemp" class="hero-temp">--°</span>
@@ -85,6 +85,20 @@
           <article class="metric-card card"><span class="metric-label">Solar</span><strong id="solarRadiation">--</strong><span class="metric-sub">W/m²</span></article>
           <article class="metric-card card"><span class="metric-label">Lightning</span><strong id="lightningCount">--</strong><span id="lightningDetail" class="metric-sub">last 3 hr</span></article>
         </div>
+        <article id="regionalWeather" class="card regional-weather hidden" aria-labelledby="regionalHeading">
+          <p class="eyebrow">Regional fallback · not our backyard</p>
+          <h3 id="regionalHeading">Somerset Airport (KSMQ)</h3>
+          <p class="section-copy">National Weather Service airport observations. These are not Tempest readings.</p>
+          <p id="regionalUpdated" class="muted" role="status">Checking regional weather…</p>
+          <div id="regionalDetails" class="hidden">
+            <p id="regionalCondition"></p>
+            <div class="mini-stats">
+              <div><span>Temperature</span><strong id="regionalTemp">—</strong></div>
+              <div><span>Humidity</span><strong id="regionalHumidity">—</strong></div>
+              <div><span>Wind</span><strong id="regionalWind">—</strong></div>
+            </div>
+          </div>
+        </article>
       </section>
 
       <section id="forecast" class="tab-panel" aria-labelledby="forecast-heading">

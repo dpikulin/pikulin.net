@@ -4,6 +4,8 @@ const APP = {
   archiveData: [],
   archiveChart: null,
   lastCurrent: null,
+  liveConfirmed: false,
+  lastRegional: null,
   lastBeach: null,
 };
 
@@ -312,13 +314,65 @@ function normalizeCurrent(payload) {
   return obs;
 }
 
+const LIVE_FRESH_SECONDS = 10 * 60;
+const LIVE_OFFLINE_SECONDS = 30 * 60;
+const LIVE_CACHE_KEY = 'pikulin.weather.lastObservation.v1';
+let liveTimer;
+let liveBusy = false;
+let regionalAttemptAt = 0;
+
+function validLiveObservation(obs) {
+  const timestamp = finiteOr(obs?.timestamp);
+  const temperature = finiteOr(obs?.air_temperature);
+  return timestamp !== null && timestamp > 0 && timestamp * 1000 <= Date.now() + 120000
+    && temperature !== null && temperature >= -100 && temperature <= 70;
+}
+
+function observationAge(obs) {
+  return Math.max(0, Math.floor(Date.now() / 1000 - Number(obs.timestamp)));
+}
+
+function observationAgeLabel(obs) {
+  const minutes = Math.floor(observationAge(obs) / 60);
+  if (minutes < 1) return 'less than a minute ago';
+  if (minutes < 60) return `${minutes} min ago`;
+  if (minutes < 1440) return `${Math.floor(minutes / 60)} hr ${minutes % 60} min ago`;
+  return `${Math.floor(minutes / 1440)}d ${Math.floor(minutes % 1440 / 60)}h ago`;
+}
+
+function observationTime(obs) {
+  return new Date(Number(obs.timestamp) * 1000).toLocaleString('en-US', {
+    timeZone: 'America/New_York', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short'
+  });
+}
+
+function readLastObservation() {
+  try {
+    const obs = JSON.parse(localStorage.getItem(LIVE_CACHE_KEY));
+    return validLiveObservation(obs) ? obs : null;
+  } catch { return null; }
+}
+
+function rememberObservation(obs) {
+  if (!validLiveObservation(obs)) return;
+  if (APP.lastCurrent && Number(obs.timestamp) < Number(APP.lastCurrent.timestamp)) return;
+  APP.lastCurrent = obs;
+  try {
+    const saved = readLastObservation();
+    if (!saved || Number(obs.timestamp) >= Number(saved.timestamp)) localStorage.setItem(LIVE_CACHE_KEY, JSON.stringify(obs));
+  } catch { /* private mode or storage quota: keep in memory */ }
+}
+
 async function fetchCurrentWeather() {
   try {
-    const response = await fetch('/api/tempest?action=current', { cache: 'no-store' });
+    const response = await fetch('/api/tempest?action=current', { cache: 'no-store', signal: AbortSignal.timeout(12000) });
     if (!response.ok) throw new Error((await safeJson(response))?.error || `Tempest request failed (${response.status})`);
-    return normalizeCurrent(await response.json());
+    const payload = await response.json();
+    const obs = normalizeCurrent(payload);
+    if (!validLiveObservation(obs)) throw new Error('No valid timestamped backyard observation.');
+    return { obs, confirmed: payload.source !== 'cached' };
   } catch (error) {
-    if (isLocalPreview()) return DEMO_CURRENT;
+    if (isLocalPreview()) return { obs: { ...DEMO_CURRENT, timestamp: Math.floor(Date.now() / 1000) }, confirmed: true, demo: true };
     throw error;
   }
 }
@@ -330,19 +384,20 @@ async function safeJson(response) {
 function renderCurrent(obs) {
   APP.lastCurrent = obs;
   const tempF = cToF(Number(obs.air_temperature));
-  const humidity = Number(obs.relative_humidity ?? 0);
-  const windMps = Number(obs.wind_avg ?? 0);
-  const gustMps = Number(obs.wind_gust ?? windMps);
-  const windMph = windMps * 2.236936;
-  const gustMph = gustMps * 2.236936;
-  const feelsF = Number.isFinite(Number(obs.feels_like)) ? cToF(Number(obs.feels_like)) : computeFeelsLike(tempF, humidity, windMph);
-  const rainTodayMm = Number(obs.precip_accum_local_day ?? obs.precip_accum_local_yesterday ?? 0);
-  const rainTodayIn = rainTodayMm / 25.4;
-  const rain1hMm = Number(obs.precip_accum_last_1hr ?? obs.precip ?? 0);
+  const humidity = finiteOr(obs.relative_humidity);
+  const windMps = finiteOr(obs.wind_avg);
+  const gustMps = finiteOr(obs.wind_gust);
+  const windMph = windMps === null ? null : windMps * 2.236936;
+  const gustMph = gustMps === null ? null : gustMps * 2.236936;
+  const feelsC = finiteOr(obs.feels_like);
+  const feelsF = feelsC !== null ? cToF(feelsC) : (humidity !== null && windMph !== null ? computeFeelsLike(tempF, humidity, windMph) : tempF);
+  const rainTodayMm = finiteOr(obs.precip_accum_local_day);
+  const rainTodayIn = rainTodayMm === null ? null : rainTodayMm / 25.4;
+  const rain1hMm = finiteOr(obs.precip_accum_last_1hr, obs.precip) ?? 0;
 
   $('liveTemp').textContent = formatTempF(tempF);
   $('liveFeels').textContent = formatTempF(feelsF);
-  $('liveHumidity').textContent = `${Math.round(humidity)}%`;
+  $('liveHumidity').textContent = humidity === null ? '—' : `${Math.round(humidity)}%`;
   $('livePressure').textContent = formatPressureMb(obs.sea_level_pressure ?? obs.barometric_pressure ?? obs.station_pressure);
   $('liveRain').textContent = formatRainIn(rainTodayIn);
   $('windAvg').textContent = formatWindMph(windMph, 1);
@@ -350,7 +405,7 @@ function renderCurrent(obs) {
   $('uvIndex').textContent = obs.uv == null ? '—' : Number(obs.uv).toFixed(1);
   $('uvDetail').textContent = uvLabel(obs.uv);
   $('solarRadiation').textContent = obs.solar_radiation == null ? '—' : Math.round(Number(obs.solar_radiation));
-  $('lightningCount').textContent = obs.lightning_strike_count_last_3hr ?? '0';
+  $('lightningCount').textContent = obs.lightning_strike_count_last_3hr ?? '—';
   $('lightningDetail').textContent = obs.lightning_strike_last_distance ? `last strike ~${Math.round(Number(obs.lightning_strike_last_distance) * 0.621371)} mi` : 'last 3 hr';
   $('liveSummary').textContent = currentSummary(feelsF, windMph, rain1hMm, humidity);
   $('liveWeatherIcon').textContent = rain1hMm > 0 ? '🌧️' : feelsF < 35 ? '❄️' : obs.solar_radiation > 500 ? '☀️' : '⛅';
@@ -361,8 +416,7 @@ function renderCurrent(obs) {
   $('wardrobeAdvice').textContent = advice.text;
   $('wardrobeSource').textContent = advice.source;
 
-  const updated = obs.timestamp ? new Date(Number(obs.timestamp) * 1000) : new Date();
-  $('liveUpdated').textContent = `Updated ${updated.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}`;
+  applyLiveStatus();
   $('unitToggle').textContent = APP.unitSystem === 'imperial' ? '°F / mph' : '°C / km/h';
 }
 
@@ -376,8 +430,8 @@ function currentSummary(feelsF, windMph, rainMm, humidity) {
 }
 
 function uvLabel(value) {
-  const uv = Number(value);
-  if (!Number.isFinite(uv)) return 'UV unavailable';
+  const uv = finiteOr(value);
+  if (uv === null) return 'UV unavailable';
   if (uv < 3) return 'Low';
   if (uv < 6) return 'Moderate';
   if (uv < 8) return 'High';
@@ -385,14 +439,103 @@ function uvLabel(value) {
   return 'Extreme';
 }
 
-async function updateLiveWeather() {
-  $('liveError').classList.add('hidden');
+function applyLiveStatus() {
+  const obs = APP.lastCurrent;
+  const age = obs ? observationAge(obs) : Infinity;
+  const fresh = APP.liveConfirmed && age < LIVE_FRESH_SECONDS;
+  const state = fresh ? 'live' : age < LIVE_OFFLINE_SECONDS ? 'stale' : 'offline';
+  $('liveStatus').dataset.state = state;
+  $('liveUpdated').textContent = fresh ? 'Live · ' + observationAgeLabel(obs)
+    : state === 'stale' ? 'Stale data' : 'Station offline';
+  $('live-heading').textContent = fresh ? 'Right now at home' : 'Last known backyard weather';
+  $('liveStationLabel').textContent = fresh ? 'Pikulin Backyard Station' : 'Pikulin Backyard Station · not live';
+  $('liveError').classList.toggle('hidden', fresh);
+  $('liveError').classList.toggle('error-notice', state === 'offline');
+  $('liveError').classList.toggle('stale-notice', state === 'stale');
+  if (!fresh) {
+    $('liveError').textContent = obs
+      ? `Backyard data is not live. Last observation: ${observationTime(obs)} (${observationAgeLabel(obs)}). Retrying automatically.`
+      : 'Backyard station unavailable. No saved observation yet. Retrying automatically.';
+    $('liveSummary').textContent = obs ? `Last backyard observation: ${observationTime(obs)} (${observationAgeLabel(obs)}). Not current conditions.` : 'No backyard observation available.';
+    $('wardrobeTitle').textContent = 'The closet council is on standby.';
+    $('wardrobeAdvice').textContent = 'Backyard readings are not live. Check the regional observation below for current conditions.';
+    $('wardrobeSource').textContent = '';
+  }
+  $('regionalWeather').classList.toggle('hidden', fresh);
+  if (fresh) {
+    $('regionalWeather').classList.add('hidden');
+    regionalAttemptAt = 0;
+  }
+  return fresh;
+}
+
+function renderRegionalWeather() {
+  const obs = APP.lastRegional;
+  if (!obs || observationAge(obs) > 3 * 3600) {
+    $('regionalDetails').classList.add('hidden');
+    $('regionalUpdated').textContent = 'No recent regional observation available.';
+    return;
+  }
+  $('regionalDetails').classList.remove('hidden');
+  $('regionalUpdated').textContent = `Observed ${observationTime(obs)} (${observationAgeLabel(obs)}).`;
+  $('regionalCondition').textContent = obs.condition || 'Condition not reported';
+  $('regionalTemp').textContent = formatTempF(cToF(obs.air_temperature));
+  $('regionalHumidity').textContent = obs.humidity === null ? '—' : `${Math.round(obs.humidity)}%`;
+  $('regionalWind').textContent = formatWindMph(obs.windMph, 1);
+}
+
+async function updateRegionalWeather() {
+  if (Date.now() - regionalAttemptAt < 5 * 60 * 1000) return;
+  regionalAttemptAt = Date.now();
+  $('regionalUpdated').textContent = 'Checking the latest regional observation…';
   try {
-    renderCurrent(await fetchCurrentWeather());
-  } catch (error) {
-    $('liveError').textContent = `${error.message} The site is configured to keep the Tempest token server-side; check the Cloudflare Pages secret if this persists.`;
-    $('liveError').classList.remove('hidden');
-    $('liveUpdated').textContent = 'Station unavailable';
+    let response;
+    try {
+      response = await fetch('/api/regional-weather', { signal: AbortSignal.timeout(10000) });
+      if (!response.ok) throw new Error('Regional proxy unavailable');
+    } catch {
+      response = await fetch('https://api.weather.gov/stations/KSMQ/observations/latest', { signal: AbortSignal.timeout(10000), headers: { Accept: 'application/geo+json' } });
+    }
+    if (!response.ok) throw new Error('Regional observation unavailable');
+    const p = (await response.json()).properties;
+    const obs = {
+      timestamp: Date.parse(p?.timestamp) / 1000,
+      air_temperature: finiteOr(p?.temperature?.value),
+      humidity: finiteOr(p?.relativeHumidity?.value),
+      windMph: p?.windSpeed?.unitCode === 'wmoUnit:km_h-1' && finiteOr(p.windSpeed.value) !== null ? p.windSpeed.value / 1.609344
+        : p?.windSpeed?.unitCode === 'wmoUnit:m_s-1' && finiteOr(p.windSpeed.value) !== null ? p.windSpeed.value * 2.236936 : null,
+      condition: typeof p?.textDescription === 'string' ? p.textDescription : '',
+    };
+    if (!validLiveObservation(obs) || observationAge(obs) > 3 * 3600) throw new Error('Regional observation missing or too old');
+    APP.lastRegional = obs;
+  } catch { /* keep only a recent regional observation, if one exists */ }
+  renderRegionalWeather();
+}
+
+async function updateLiveWeather() {
+  if (liveBusy) return;
+  liveBusy = true;
+  clearTimeout(liveTimer);
+  try {
+    const { obs, confirmed, demo } = await fetchCurrentWeather();
+    if (!APP.lastCurrent || Number(obs.timestamp) >= Number(APP.lastCurrent.timestamp)) {
+      if (demo) APP.lastCurrent = obs;
+      else rememberObservation(obs);
+      APP.liveConfirmed = confirmed;
+    } else {
+      APP.liveConfirmed = false;
+    }
+  } catch {
+    APP.liveConfirmed = false;
+  } finally {
+    if (APP.lastCurrent) renderCurrent(APP.lastCurrent);
+    const fresh = applyLiveStatus();
+    if (!fresh) {
+      if (APP.lastRegional) renderRegionalWeather();
+      void updateRegionalWeather();
+    }
+    liveBusy = false;
+    liveTimer = setTimeout(updateLiveWeather, fresh ? 5 * 60 * 1000 : 60 * 1000);
   }
 }
 
@@ -410,6 +553,7 @@ $('unitToggle').addEventListener('click', () => {
   APP.unitSystem = APP.unitSystem === 'imperial' ? 'metric' : 'imperial';
   localStorage.setItem('unitSystem', APP.unitSystem);
   if (APP.lastCurrent) renderCurrent(APP.lastCurrent);
+  if (APP.lastRegional) renderRegionalWeather();
   if (APP.archiveData.length) renderArchive(APP.archiveData, APP.archiveDays);
   if (APP.lastBeach) renderBeach(APP.lastBeach);
   if (!$('forecastGrid').hasChildNodes()) return;
@@ -980,10 +1124,13 @@ function boot() {
   const requestedTab = location.hash.replace('#','');
   if (document.getElementById(requestedTab)?.classList.contains('tab-panel')) setTab(requestedTab);
   $('unitToggle').textContent = APP.unitSystem === 'imperial' ? '°F / mph' : '°C / km/h';
+  APP.lastCurrent = readLastObservation();
+  if (APP.lastCurrent) renderCurrent(APP.lastCurrent);
   updateLiveWeather();
   loadAlerts(false);
   loadDailyDoodle();
-  setInterval(updateLiveWeather, 5 * 60 * 1000);
+  window.addEventListener('online', updateLiveWeather);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) updateLiveWeather(); });
   setInterval(loadDailyDoodle, 30 * 1000);
 }
 

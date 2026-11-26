@@ -484,3 +484,14 @@ footer { padding: 0 6px 34px; color: var(--muted); font-size: 0.78rem; text-alig
   .chart-wrap { min-height: 300px; }
   iframe { height: 300px; }
 }
+
+/* Weather health: neutral while connecting; never show green for stale data. */
+.live-status[data-state="connecting"] .pulse-dot { background: #8795a1; box-shadow: none; }
+.live-status[data-state="stale"] .pulse-dot { background: #b7791f; box-shadow: 0 0 0 5px rgba(183,121,31,.14); }
+.live-status[data-state="offline"] .pulse-dot { background: #b42318; box-shadow: 0 0 0 5px rgba(180,35,24,.13); }
+.live-status[data-state="stale"] { color: #805309; }
+.live-status[data-state="offline"] { color: #b42318; }
+.stale-notice { background: #fff7e4; color: #805309; border: 1px solid #e8cd93; }
+.regional-weather { padding: 22px; margin-top: 18px; border-left: 4px solid #8298aa; }
+.regional-weather h3 { margin: 4px 0 8px; }
+.regional-weather .mini-stats { margin-top: 12px; }
