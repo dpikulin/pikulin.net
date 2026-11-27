@@ -471,12 +471,16 @@ function applyLiveStatus() {
 
 function renderRegionalWeather() {
   const obs = APP.lastRegional;
-  if (!obs || observationAge(obs) > 3 * 3600) {
+  if (!obs || observationAge(obs) > (obs.source === 'N51' ? 3600 : 3 * 3600)) {
+    $('regionalHeading').textContent = 'Regional airport weather';
+    $('regionalSource').textContent = 'Checking Solberg first, then Somerset. These are not Tempest readings.';
     $('regionalDetails').classList.add('hidden');
     $('regionalUpdated').textContent = 'No recent regional observation available.';
     return;
   }
   $('regionalDetails').classList.remove('hidden');
+  $('regionalHeading').textContent = obs.source === 'N51' ? 'Solberg Airport (N51)' : 'Somerset Airport (KSMQ)';
+  $('regionalSource').textContent = obs.source === 'N51' ? 'DigiWx on-airport advisory weather. Not Tempest readings or official flight-planning data.' : 'National Weather Service airport observations. Solberg unavailable or stale. Not Tempest readings.';
   $('regionalUpdated').textContent = `Observed ${observationTime(obs)} (${observationAgeLabel(obs)}).`;
   $('regionalCondition').textContent = obs.condition || 'Condition not reported';
   $('regionalTemp').textContent = formatTempF(cToF(obs.air_temperature));
@@ -491,14 +495,16 @@ async function updateRegionalWeather() {
   try {
     let response;
     try {
-      response = await fetch('/api/regional-weather', { signal: AbortSignal.timeout(10000) });
+      response = await fetch('/api/regional-weather', { signal: AbortSignal.timeout(15000) });
       if (!response.ok) throw new Error('Regional proxy unavailable');
     } catch {
       response = await fetch('https://api.weather.gov/stations/KSMQ/observations/latest', { signal: AbortSignal.timeout(10000), headers: { Accept: 'application/geo+json' } });
     }
     if (!response.ok) throw new Error('Regional observation unavailable');
-    const p = (await response.json()).properties;
+    const payload = await response.json();
+    const p = payload.properties;
     const obs = {
+      source: payload.source === 'N51' ? 'N51' : 'KSMQ',
       timestamp: Date.parse(p?.timestamp) / 1000,
       air_temperature: finiteOr(p?.temperature?.value),
       humidity: finiteOr(p?.relativeHumidity?.value),
@@ -506,7 +512,7 @@ async function updateRegionalWeather() {
         : p?.windSpeed?.unitCode === 'wmoUnit:m_s-1' && finiteOr(p.windSpeed.value) !== null ? p.windSpeed.value * 2.236936 : null,
       condition: typeof p?.textDescription === 'string' ? p.textDescription : '',
     };
-    if (!validLiveObservation(obs) || observationAge(obs) > 3 * 3600) throw new Error('Regional observation missing or too old');
+    if (!validLiveObservation(obs) || observationAge(obs) > (obs.source === 'N51' ? 3600 : 3 * 3600)) throw new Error('Regional observation missing or too old');
     APP.lastRegional = obs;
   } catch { /* keep only a recent regional observation, if one exists */ }
   renderRegionalWeather();

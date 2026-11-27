@@ -8,7 +8,7 @@
   <title>Pikulin Weather</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" defer></script>
   <link rel="stylesheet" href="styles.css?v=20261126-1">
-  <script src="app.js?v=20261126-1" defer></script>
+  <script src="app.js?v=20261126-2" defer></script>
 </head>
 <body>
   <div class="site-shell">
@@ -87,8 +87,8 @@
         </div>
         <article id="regionalWeather" class="card regional-weather hidden" aria-labelledby="regionalHeading">
           <p class="eyebrow">Regional fallback · not our backyard</p>
-          <h3 id="regionalHeading">Somerset Airport (KSMQ)</h3>
-          <p class="section-copy">National Weather Service airport observations. These are not Tempest readings.</p>
+          <h3 id="regionalHeading">Regional airport weather</h3>
+          <p id="regionalSource" class="section-copy">Checking Solberg first, then Somerset. These are not Tempest readings.</p>
           <p id="regionalUpdated" class="muted" role="status">Checking regional weather…</p>
           <div id="regionalDetails" class="hidden">
             <p id="regionalCondition"></p>
